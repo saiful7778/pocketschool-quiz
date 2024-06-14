@@ -1,0 +1,30 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "restoreTerminals.runOnStartup": true,
+    "restoreTerminals.terminals": [
+      {
+        "splitTerminals": [
+          {
+            "name": "frontend",
+            "icon": "globe",
+            "commands": ["cd frontend", "export PROMPT_DIRTRIM=1", "cls"]
+          }
+        ]
+      },
+      {
+        "splitTerminals": [
+          {
+            "name": "backend",
+            "icon": "server",
+            "commands": ["cd backend", "export PROMPT_DIRTRIM=1", "cls"]
+          }
+        ]
+      }
+    ]
+  }
+}
