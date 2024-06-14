@@ -10,7 +10,7 @@ interface InputFieldProps extends InputProps {
 }
 
 const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ className, label, ...props }, ref) => {
+  ({ className, label, disabled, ...props }, ref) => {
     const [showPass, setShowPass] = useState<boolean>(false);
 
     return (
@@ -26,6 +26,7 @@ const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(
               ref={ref}
               className={className}
               type={showPass ? "text" : "password"}
+              disabled={disabled}
               {...props}
             />
             <div className="absolute right-2 top-[15%]">
@@ -34,6 +35,7 @@ const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(
                 type="button"
                 size="icon"
                 variant="ghost"
+                disabled={disabled}
               >
                 {showPass ? <Eye /> : <EyeOff />}
               </Button>

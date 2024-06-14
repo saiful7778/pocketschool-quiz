@@ -49,7 +49,7 @@ const UserDropdown: FC<UserAuthDropdownProps> = ({ user }) => {
         <DropdownMenu.separator />
         <Button
           className="w-full"
-          onClick={async () => await logOut()}
+          onClick={logOut}
           variant="destructive"
           size="sm"
         >

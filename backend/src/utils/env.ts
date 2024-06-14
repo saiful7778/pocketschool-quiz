@@ -9,6 +9,8 @@ if (envFound.error) {
 const envVars = {
   port: process.env.PORT || 5000,
   frontendUrl: process.env.FRONTEND_URL,
+  nodeEnv: process.env.NODE_ENV,
+  dbConnect: process.env.DB_CONNECT,
 };
 
 export default function getEnv(varName: string): string {

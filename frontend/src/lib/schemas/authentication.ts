@@ -16,19 +16,21 @@ export const registerSchema = z
       required_error: "Confirm password is required",
     }),
     classroomId: z.string().optional(),
+    adminAccess: z.boolean().default(false).optional(),
     access: z.boolean().default(true),
-    role: z.enum(["user", "admin", "superAdmin"]).default("admin"),
+    role: z.enum(["user", "admin", "superAdmin"]).default("user"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
-  })
-  .refine(
-    (data) =>
-      data.role !== "user" ||
-      (data.role === "user" && data.classroomId && data.classroomId.length > 0),
-    {
-      message: "Classroom is required for users",
-      path: ["classroomId"], // This points to the field that causes the error
-    },
-  );
+  });
+
+export const loginSchema = z.object({
+  email: z
+    .string({ required_error: "Email is required" })
+    .email({ message: "Email is invalid" }),
+  password: z
+    .string({ required_error: "Password is required" })
+    .min(6, "Password must be at least 6 characters")
+    .max(10, "Password not bigger than 10 characters"),
+});

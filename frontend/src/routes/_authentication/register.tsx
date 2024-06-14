@@ -12,6 +12,8 @@ import Spinner from "@/components/Spinner";
 import useAuth from "@/hooks/useAuth";
 import toast from "@/lib/toast/toast";
 import errorStatus from "@/lib/errorStatus";
+import Switch from "@/components/ui/switch";
+import { useAxios } from "@/hooks/useAxios";
 
 export const Route = createFileRoute("/_authentication/register")({
   validateSearch: z.object({
@@ -23,6 +25,7 @@ export const Route = createFileRoute("/_authentication/register")({
 function RegisterPage(): JSX.Element {
   const { classroomId } = Route.useSearch();
   const [loading, setLoading] = useState<boolean>(false);
+  const axios = useAxios();
   const { register } = useAuth();
 
   const form = useForm<z.infer<typeof registerSchema>>({
@@ -30,11 +33,12 @@ function RegisterPage(): JSX.Element {
     defaultValues: {
       fullName: "",
       email: "",
-      classroomId: classroomId || "",
-      access: true,
-      role: classroomId ? "user" : "admin",
       password: "",
       confirmPassword: "",
+      classroomId: classroomId,
+      adminAccess: false,
+      access: true,
+      role: "user",
     },
   });
 
@@ -55,32 +59,40 @@ function RegisterPage(): JSX.Element {
       const { updateProfile, sendEmailVerification } = await import(
         "firebase/auth"
       );
-      const { collection, addDoc } = await import("firebase/firestore");
-      const { db } = await import("@/lib/firebase");
 
       await updateProfile(user, {
         displayName: e.fullName,
       });
 
       await sendEmailVerification(user);
-
-      const userData = {
-        fullName: e.fullName,
-        email: e.email,
-        image: user.photoURL,
-        uid: user.uid,
-        role: e.role,
-        access: e.access,
-        classroomId: e.classroomId,
-        createdAt: user.metadata.creationTime,
-        lastSign: user.metadata.lastSignInTime,
+      type userDataType = {
+        fullName: string;
+        email: string;
+        uid: string;
+        classroomId?: string;
+        adminAccess?: boolean;
+        role: "user" | "admin" | "superAdmin";
+        access: boolean;
       };
 
-      await addDoc(collection(db, "users"), userData);
+      const userData: userDataType = {
+        fullName: e.fullName,
+        email: e.email,
+        uid: user.uid,
+        adminAccess: e?.adminAccess,
+        role: e?.adminAccess ? "admin" : e.role,
+        access: e.access,
+      };
+
+      if (e.role === "user") {
+        userData.classroomId = e?.classroomId;
+      }
+
+      await axios.post("/user", userData);
 
       toast({
-        title: "Successful",
-        description: "Your account is created",
+        title: "Successfully account is created",
+        description: "Verification mail is sended in your mail",
       });
     } catch (err) {
       if (err instanceof Error) {
@@ -122,21 +134,6 @@ function RegisterPage(): JSX.Element {
               />
             )}
           />
-          {classroomId || (
-            <Form.field
-              control={form.control}
-              name="classroomId"
-              render={({ field }) => (
-                <InputField
-                  type="text"
-                  label="Classroom ID"
-                  placeholder="Classroom ID"
-                  disabled={loading}
-                  {...field}
-                />
-              )}
-            />
-          )}
           <Form.field
             control={form.control}
             name="password"
@@ -161,6 +158,27 @@ function RegisterPage(): JSX.Element {
               />
             )}
           />
+          {typeof classroomId === "undefined" && (
+            <Form.field
+              control={form.control}
+              name="adminAccess"
+              render={({ field }) => (
+                <Form.item>
+                  <div className="flex items-center justify-between rounded-md border p-4">
+                    <Form.label>Request for admin access</Form.label>
+                    <Form.control>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={loading}
+                      />
+                    </Form.control>
+                  </div>
+                  <Form.message />
+                </Form.item>
+              )}
+            />
+          )}
           <Button className="w-full" type="submit" disabled={loading}>
             {loading ? <Spinner size={20} /> : "Register"}
           </Button>

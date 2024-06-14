@@ -2,6 +2,22 @@ import express from "express";
 import type { Request, Response, Application } from "express";
 import cors from "cors";
 import getEnv from "./utils/env";
+import { user } from "./routes/user";
+import { connect } from "mongoose";
+
+(async () => {
+  try {
+    const dbUrl = getEnv("dbConnect");
+    console.log("connecting...");
+    await connect(dbUrl);
+    console.log("connected DB");
+  } catch (err) {
+    if (err instanceof Error) {
+      console.log("connection failed");
+      console.log(err.message);
+    }
+  }
+})();
 
 function mainServer() {
   const app: Application = express();
@@ -24,6 +40,8 @@ function mainServer() {
       message: "server is running",
     });
   });
+
+  app.use("/user", user);
 
   app.get("*", (_req: Request, res: Response) => {
     res.status(404).send({

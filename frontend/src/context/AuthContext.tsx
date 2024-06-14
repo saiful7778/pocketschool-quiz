@@ -9,6 +9,7 @@ import { FC, createContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
   user: User | null;
+  login: (email: string, password: string) => Promise<UserCredential>;
   register: (email: string, password: string) => Promise<UserCredential>;
   logOut: () => Promise<void>;
   loading: boolean;
@@ -31,6 +32,15 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
+  const login = async (
+    email: string,
+    password: string,
+  ): Promise<UserCredential> => {
+    setLoading(true);
+    const { signInWithEmailAndPassword } = await import("firebase/auth");
+    return signInWithEmailAndPassword(auth, email, password);
+  };
+
   const logOut = async (): Promise<void> => {
     setLoading(true);
     const { signOut } = await import("firebase/auth");
@@ -39,10 +49,10 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
 
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        if (currentUser.emailVerified) {
-          setUser(currentUser);
-        }
+      if (currentUser && currentUser.emailVerified) {
+        setUser(currentUser);
+      } else {
+        setUser(null);
       }
       setLoading(false);
     });
@@ -53,7 +63,7 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, register, logOut, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logOut, loading }}>
       {children}
     </AuthContext.Provider>
   );
