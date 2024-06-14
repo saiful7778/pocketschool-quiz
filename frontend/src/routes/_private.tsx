@@ -1,4 +1,4 @@
-import LoadingProtector from "@/protector/LoadingProtector";
+import PrivateProtector from "@/protector/PrivateProtector";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_private")({
@@ -7,8 +7,8 @@ export const Route = createFileRoute("/_private")({
 
 function Private(): JSX.Element {
   return (
-    <LoadingProtector>
+    <PrivateProtector>
       <Outlet />
-    </LoadingProtector>
+    </PrivateProtector>
   );
 }

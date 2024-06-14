@@ -60,10 +60,13 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
 
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser && currentUser.emailVerified) {
-        axios
-          .post("/authentication/login", { email: currentUser.email })
-          .then(({ data }: AxiosResponse<ApiResponse<UserLoginResponse>>) => {
+      (async () => {
+        try {
+          if (currentUser && currentUser.emailVerified) {
+            const { data }: AxiosResponse<ApiResponse<UserLoginResponse>> =
+              await axios.post("/authentication/login", {
+                email: currentUser.email,
+              });
             if (!data.success) {
               throw new Error(data.message);
             }
@@ -72,20 +75,21 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
               setToken(data?.data.token);
               setUserData(data?.data.userData);
             }
-          })
-          .catch((err) => {
-            if (err instanceof AxiosError) {
-              toast({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description: err?.response?.data?.message,
-              });
-            }
-          });
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
+          } else {
+            setUser(null);
+          }
+        } catch (err) {
+          if (err instanceof AxiosError) {
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: err?.response?.data?.message,
+            });
+          }
+        } finally {
+          setLoading(false);
+        }
+      })();
     });
 
     return () => {
