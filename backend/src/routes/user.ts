@@ -10,13 +10,9 @@ const route = Router();
 
 route.post("/", (req: Request, res: Response) => {
   const userData = req.body;
-  const { fullName, email, uid, classroomId, adminAccess, role, access } =
-    userData;
+  const { fullName, email, uid, classroomId, role, access } = userData;
 
-  const check = inputCheck(
-    [fullName, email, uid, adminAccess, role, access],
-    res
-  );
+  const check = inputCheck([fullName, email, uid, role, access], res);
 
   if (!check) return;
 
@@ -25,7 +21,6 @@ route.post("/", (req: Request, res: Response) => {
       fullName,
       email,
       uid,
-      adminAccess,
       role,
       access,
     });

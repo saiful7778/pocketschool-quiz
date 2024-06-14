@@ -1,4 +1,5 @@
 import type { Response } from "express";
+import devDebug from "./devDebug";
 
 export default function inputCheck(
   inputs: string[] | number[] | undefined[] | null[],
@@ -12,6 +13,7 @@ export default function inputCheck(
   }
   if (inputDataType.includes(undefined)) {
     res.status(400).send({ success: false, message: "invalid input data" });
+    devDebug("invalid input data");
     return false;
   }
   return true;

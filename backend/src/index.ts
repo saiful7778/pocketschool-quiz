@@ -4,6 +4,7 @@ import cors from "cors";
 import getEnv from "./utils/env";
 import { user } from "./routes/user";
 import { connect } from "mongoose";
+import { authentication } from "./routes/authectication";
 
 (async () => {
   try {
@@ -42,6 +43,7 @@ function mainServer() {
   });
 
   app.use("/user", user);
+  app.use("/authentication", authentication);
 
   app.get("*", (_req: Request, res: Response) => {
     res.status(404).send({

@@ -1,5 +1,6 @@
 import axiosConfig from "@/configs/axios.config";
+import { useCallback } from "react";
 
 export function useAxios() {
-  return axiosConfig;
+  return useCallback(axiosConfig, []);
 }

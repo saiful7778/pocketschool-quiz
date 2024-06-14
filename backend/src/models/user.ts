@@ -15,10 +15,6 @@ const userSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    adminAccess: {
-      type: Boolean,
-      default: false,
-    },
   },
   { timestamps: true }
 );

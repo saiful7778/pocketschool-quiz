@@ -1,5 +1,9 @@
+import { useAxios } from "@/hooks/useAxios";
 import { auth } from "@/lib/firebase";
-import { type ContextProps } from "@/types/context";
+import toast from "@/lib/toast/toast";
+import type { ApiResponse, UserLoginResponse } from "@/types/apiResponse";
+import type { ContextProps } from "@/types/context";
+import { AxiosError, AxiosResponse } from "axios";
 import {
   type User,
   type UserCredential,
@@ -9,6 +13,8 @@ import { FC, createContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
   user: User | null;
+  token: string | null;
+  userData: UserLoginResponse["userData"] | null;
   login: (email: string, password: string) => Promise<UserCredential>;
   register: (email: string, password: string) => Promise<UserCredential>;
   logOut: () => Promise<void>;
@@ -22,6 +28,11 @@ export const AuthContext = createContext<AuthContextProps>(
 const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [token, setToken] = useState<string | null>(null);
+  const [userData, setUserData] = useState<
+    UserLoginResponse["userData"] | null
+  >(null);
+  const axios = useAxios();
 
   const register = async (
     email: string,
@@ -50,7 +61,27 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser && currentUser.emailVerified) {
-        setUser(currentUser);
+        axios
+          .post("/authentication/login", { email: currentUser.email })
+          .then(({ data }: AxiosResponse<ApiResponse<UserLoginResponse>>) => {
+            if (!data.success) {
+              throw new Error(data.message);
+            }
+            if (data?.data) {
+              setUser(currentUser);
+              setToken(data?.data.token);
+              setUserData(data?.data.userData);
+            }
+          })
+          .catch((err) => {
+            if (err instanceof AxiosError) {
+              toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: err?.response?.data?.message,
+              });
+            }
+          });
       } else {
         setUser(null);
       }
@@ -60,10 +91,12 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
     return () => {
       unSubscribe();
     };
-  }, []);
+  }, [axios]);
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logOut, loading }}>
+    <AuthContext.Provider
+      value={{ user, token, userData, login, register, logOut, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );

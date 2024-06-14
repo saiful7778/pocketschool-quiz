@@ -11,6 +11,7 @@ const envVars = {
   frontendUrl: process.env.FRONTEND_URL,
   nodeEnv: process.env.NODE_ENV,
   dbConnect: process.env.DB_CONNECT,
+  accessToken: process.env.ACCESS_TOKEN,
 };
 
 export default function getEnv(varName: string): string {
