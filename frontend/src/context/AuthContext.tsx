@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import { useAxios } from "@/hooks/useAxios";
 import { auth } from "@/lib/firebase";
 import toast from "@/lib/toast/toast";
@@ -62,21 +63,25 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       (async () => {
         try {
-          if (currentUser && currentUser.emailVerified) {
-            const { data }: AxiosResponse<ApiResponse<UserLoginResponse>> =
-              await axios.post("/authentication/login", {
-                email: currentUser.email,
-              });
-            if (!data.success) {
-              throw new Error(data.message);
-            }
-            if (data?.data) {
-              setUser(currentUser);
-              setToken(data?.data.token);
-              setUserData(data?.data.userData);
+          if (currentUser) {
+            if (currentUser.emailVerified) {
+              const { data }: AxiosResponse<ApiResponse<UserLoginResponse>> =
+                await axios.post("/authentication/login", {
+                  email: currentUser.email,
+                });
+              if (!data.success) {
+                throw new Error(data.message);
+              }
+              if (data?.data) {
+                setUser(currentUser);
+                setToken(data?.data.token);
+                setUserData(data?.data.userData);
+              }
             }
           } else {
             setUser(null);
+            setToken(null);
+            setUserData(null);
           }
         } catch (err) {
           if (err instanceof AxiosError) {
@@ -101,7 +106,7 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
     <AuthContext.Provider
       value={{ user, token, userData, login, register, logOut, loading }}
     >
-      {children}
+      {loading ? <Loading fullPage /> : children}
     </AuthContext.Provider>
   );
 };

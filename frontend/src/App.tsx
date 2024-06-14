@@ -5,11 +5,16 @@ import { routeTree } from "@/routeTree.gen";
 import Toaster from "@/components/ui/toaster";
 import ErrorPage from "@/components/shared/Error";
 import NotFound from "@/components/shared/NotFound";
+import useAuth from "@/hooks/useAuth";
 import Loading from "@/components/Loading";
 
 const router = createRouter({
   routeTree,
-  context: {},
+  context: {
+    token: null,
+    auth: null,
+    user: null,
+  },
   defaultPendingComponent: () => <Loading fullPage />,
   defaultErrorComponent: ErrorPage,
   defaultNotFoundComponent: NotFound,
@@ -23,9 +28,13 @@ declare module "@tanstack/react-router" {
 }
 
 const App: FC = () => {
+  const { token, user, userData } = useAuth();
   return (
     <>
-      <RouterProvider router={router} />
+      <RouterProvider
+        router={router}
+        context={{ token: `Bearer ${token}`, auth: user, user: userData }}
+      />
       <Toaster />
     </>
   );

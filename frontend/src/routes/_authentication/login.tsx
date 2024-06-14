@@ -75,7 +75,7 @@ function Login(): JSX.Element {
         return;
       }
 
-      await naviagate({ to: redirect || "/classroom" });
+      await naviagate({ to: redirect ?? "/classroom" });
 
       toast({
         title: "Successfully logged in",

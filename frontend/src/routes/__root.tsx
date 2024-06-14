@@ -1,8 +1,14 @@
 import Navbar from "@/components/shared/Navbar";
+import { UserLoginResponse } from "@/types/apiResponse";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { User } from "firebase/auth";
 
-interface RouterContext {}
+interface RouterContext {
+  token: string | null;
+  auth: User | null;
+  user: UserLoginResponse["userData"] | null;
+}
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: MainLayout,
