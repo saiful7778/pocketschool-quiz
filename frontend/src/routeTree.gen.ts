@@ -11,12 +11,20 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as PrivateImport } from './routes/_private'
 import { Route as AuthenticationImport } from './routes/_authentication'
 import { Route as IndexImport } from './routes/index'
+import { Route as PrivateProfileImport } from './routes/_private/profile'
+import { Route as PrivateClassroomImport } from './routes/_private/classroom'
 import { Route as AuthenticationRegisterImport } from './routes/_authentication/register'
 import { Route as AuthenticationLoginImport } from './routes/_authentication/login'
 
 // Create/Update Routes
+
+const PrivateRoute = PrivateImport.update({
+  id: '/_private',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthenticationRoute = AuthenticationImport.update({
   id: '/_authentication',
@@ -26,6 +34,16 @@ const AuthenticationRoute = AuthenticationImport.update({
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const PrivateProfileRoute = PrivateProfileImport.update({
+  path: '/profile',
+  getParentRoute: () => PrivateRoute,
+} as any)
+
+const PrivateClassroomRoute = PrivateClassroomImport.update({
+  path: '/classroom',
+  getParentRoute: () => PrivateRoute,
 } as any)
 
 const AuthenticationRegisterRoute = AuthenticationRegisterImport.update({
@@ -56,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticationImport
       parentRoute: typeof rootRoute
     }
+    '/_private': {
+      id: '/_private'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PrivateImport
+      parentRoute: typeof rootRoute
+    }
     '/_authentication/login': {
       id: '/_authentication/login'
       path: '/login'
@@ -70,6 +95,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticationRegisterImport
       parentRoute: typeof AuthenticationImport
     }
+    '/_private/classroom': {
+      id: '/_private/classroom'
+      path: '/classroom'
+      fullPath: '/classroom'
+      preLoaderRoute: typeof PrivateClassroomImport
+      parentRoute: typeof PrivateImport
+    }
+    '/_private/profile': {
+      id: '/_private/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof PrivateProfileImport
+      parentRoute: typeof PrivateImport
+    }
   }
 }
 
@@ -80,6 +119,10 @@ export const routeTree = rootRoute.addChildren({
   AuthenticationRoute: AuthenticationRoute.addChildren({
     AuthenticationLoginRoute,
     AuthenticationRegisterRoute,
+  }),
+  PrivateRoute: PrivateRoute.addChildren({
+    PrivateClassroomRoute,
+    PrivateProfileRoute,
   }),
 })
 
@@ -92,7 +135,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_authentication"
+        "/_authentication",
+        "/_private"
       ]
     },
     "/": {
@@ -105,6 +149,13 @@ export const routeTree = rootRoute.addChildren({
         "/_authentication/register"
       ]
     },
+    "/_private": {
+      "filePath": "_private.tsx",
+      "children": [
+        "/_private/classroom",
+        "/_private/profile"
+      ]
+    },
     "/_authentication/login": {
       "filePath": "_authentication/login.tsx",
       "parent": "/_authentication"
@@ -112,6 +163,14 @@ export const routeTree = rootRoute.addChildren({
     "/_authentication/register": {
       "filePath": "_authentication/register.tsx",
       "parent": "/_authentication"
+    },
+    "/_private/classroom": {
+      "filePath": "_private/classroom.tsx",
+      "parent": "/_private"
+    },
+    "/_private/profile": {
+      "filePath": "_private/profile.tsx",
+      "parent": "/_private"
     }
   }
 }
