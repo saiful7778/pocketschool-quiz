@@ -5,9 +5,14 @@ import inputCheck from "../utils/inputCheck";
 import { userModel } from "../models/user";
 import devDebug from "../utils/devDebug";
 import { classroomModel } from "../models/classroom";
+import verifyToken from "../middlewares/verifyToken";
+import verifyTokenAndKey from "../middlewares/verifyTokenKey";
 
 const route = Router();
 
+/**
+ * create a new user
+ */
 route.post("/", (req: Request, res: Response) => {
   const userData = req.body;
   const { fullName, email, uid, classroomId, role, access } = userData;
@@ -42,5 +47,37 @@ route.post("/", (req: Request, res: Response) => {
     });
   }, res);
 });
+
+/**
+ * get single user data
+ */
+route.get(
+  "/:userId",
+  verifyToken,
+  verifyTokenAndKey,
+  (req: Request, res: Response) => {
+    const userId = req.params.userId;
+
+    serverHelper(async () => {
+      const user = await userModel.findById(userId, {
+        __v: 0,
+        createdAt: 0,
+        updatedAt: 0,
+      });
+      if (!user) {
+        res.status(404).send({
+          success: false,
+          message: "User not found",
+        });
+        return;
+      }
+
+      res.status(200).send({
+        success: true,
+        data: user,
+      });
+    }, res);
+  }
+);
 
 export { route as user };

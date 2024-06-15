@@ -7,6 +7,7 @@ interface ApiResponse<T> {
 export type UserLoginResponse = {
   token: string;
   userData: {
+    id: string;
     email: string;
     role: "user" | "admin" | "superAdmin";
     uid: string;

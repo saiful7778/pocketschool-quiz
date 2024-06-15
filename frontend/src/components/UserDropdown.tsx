@@ -18,12 +18,7 @@ const UserDropdown: FC<UserAuthDropdownProps> = ({ user }) => {
         <Button variant="ghost" size="icon" className="size-8 rounded-full">
           <Avatar className="size-8 cursor-pointer">
             <Avatar.image asChild src={user!.photoURL!} alt="user avatar photo">
-              <img
-                src={user!.photoURL!}
-                alt="user avatar photo"
-                width={32}
-                height={32}
-              />
+              <img src={user!.photoURL!} alt="user avatar photo" />
             </Avatar.image>
             <Avatar.fallback className="font-semibold uppercase">
               {user!.displayName![0] + user!.displayName![1]}

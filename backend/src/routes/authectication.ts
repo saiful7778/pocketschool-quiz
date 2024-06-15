@@ -47,6 +47,7 @@ route.post("/login", (req: Request, res: Response) => {
     }
 
     const userData = {
+      id: user.id,
       email: user.email,
       role: user.role,
       uid: user.uid,
