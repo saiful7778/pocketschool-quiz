@@ -19,6 +19,7 @@ interface AuthContextProps {
   login: (email: string, password: string) => Promise<UserCredential>;
   register: (email: string, password: string) => Promise<UserCredential>;
   logOut: () => Promise<void>;
+  forgetPassword: (email: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -57,6 +58,11 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
     setLoading(true);
     const { signOut } = await import("firebase/auth");
     return signOut(auth);
+  };
+
+  const forgetPassword = async (email: string): Promise<void> => {
+    const { sendPasswordResetEmail } = await import("firebase/auth");
+    return sendPasswordResetEmail(auth, email);
   };
 
   useEffect(() => {
@@ -104,7 +110,16 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, userData, login, register, logOut, loading }}
+      value={{
+        user,
+        token,
+        userData,
+        login,
+        register,
+        forgetPassword,
+        logOut,
+        loading,
+      }}
     >
       {loading ? <Loading fullPage /> : children}
     </AuthContext.Provider>

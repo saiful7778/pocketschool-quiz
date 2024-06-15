@@ -60,9 +60,7 @@ route.get(
 
     serverHelper(async () => {
       const user = await userModel.findById(userId, {
-        __v: 0,
-        createdAt: 0,
-        updatedAt: 0,
+        role: 1,
       });
       if (!user) {
         res.status(404).send({
