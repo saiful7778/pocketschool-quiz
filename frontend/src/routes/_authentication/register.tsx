@@ -70,7 +70,6 @@ function RegisterPage(): JSX.Element {
         email: string;
         uid: string;
         classroomId?: string;
-        adminAccess?: boolean;
         role: "user" | "admin" | "superAdmin";
         access: boolean;
       };
@@ -79,7 +78,6 @@ function RegisterPage(): JSX.Element {
         fullName: e.fullName,
         email: e.email,
         uid: user.uid,
-        adminAccess: e?.adminAccess,
         role: e?.adminAccess ? "admin" : e.role,
         access: e.access,
       };
