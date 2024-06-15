@@ -1,12 +1,7 @@
-import Loading from "@/components/Loading";
-import ErrorPage from "@/components/shared/Error";
 import Avatar from "@/components/ui/avatar";
 import Button from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
-import { useAxiosSecure } from "@/hooks/useAxios";
 import toast from "@/lib/toast/toast";
-import { ApiResponse, UserDataResponse } from "@/types/apiResponse";
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_private/profile")({
@@ -15,24 +10,7 @@ export const Route = createFileRoute("/_private/profile")({
 
 function Profile(): JSX.Element {
   const { forgetPassword } = useAuth();
-  const axiosSecure = useAxiosSecure();
-  const { token, user, auth } = Route.useRouteContext();
-
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["profile", user?.id, auth?.email, token],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get<
-        ApiResponse<{ role: UserDataResponse["role"] }>
-      >(`/user/${user?.id}`, {
-        params: { email: auth?.email },
-        headers: { Authorization: token },
-      });
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-      return data.data;
-    },
-  });
+  const { user, auth } = Route.useRouteContext();
 
   const sendForgetPassword = async () => {
     try {
@@ -50,14 +28,6 @@ function Profile(): JSX.Element {
       }
     }
   };
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    return <ErrorPage error={error} reset={refetch} />;
-  }
 
   return (
     <div className="flex flex-wrap justify-center gap-4">
@@ -88,7 +58,7 @@ function Profile(): JSX.Element {
           <div className="flex gap-4 p-2">
             <span className="w-full max-w-36">Role</span>
             <span>:</span>
-            <span className="flex-1">{data?.role}</span>
+            <span className="flex-1">{user?.role}</span>
           </div>
         </div>
         <Button onClick={sendForgetPassword} className="p-0" variant="link">

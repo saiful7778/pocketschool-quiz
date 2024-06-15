@@ -7,6 +7,5 @@ export const Route = createFileRoute("/_private/classroom")({
 function Classroom(): JSX.Element {
   const routeContextData = Route.useRouteContext();
 
-  console.log(routeContextData);
   return <div>Hello /_private/classroom!</div>;
 }

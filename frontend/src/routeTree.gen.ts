@@ -16,8 +16,10 @@ import { Route as AuthenticationImport } from './routes/_authentication'
 import { Route as IndexImport } from './routes/index'
 import { Route as PrivateProfileImport } from './routes/_private/profile'
 import { Route as PrivateClassroomImport } from './routes/_private/classroom'
+import { Route as PrivateSuperAdminImport } from './routes/_private/_superAdmin'
 import { Route as AuthenticationRegisterImport } from './routes/_authentication/register'
 import { Route as AuthenticationLoginImport } from './routes/_authentication/login'
+import { Route as PrivateSuperAdminUserImport } from './routes/_private/_superAdmin/user'
 
 // Create/Update Routes
 
@@ -46,6 +48,11 @@ const PrivateClassroomRoute = PrivateClassroomImport.update({
   getParentRoute: () => PrivateRoute,
 } as any)
 
+const PrivateSuperAdminRoute = PrivateSuperAdminImport.update({
+  id: '/_superAdmin',
+  getParentRoute: () => PrivateRoute,
+} as any)
+
 const AuthenticationRegisterRoute = AuthenticationRegisterImport.update({
   path: '/register',
   getParentRoute: () => AuthenticationRoute,
@@ -54,6 +61,11 @@ const AuthenticationRegisterRoute = AuthenticationRegisterImport.update({
 const AuthenticationLoginRoute = AuthenticationLoginImport.update({
   path: '/login',
   getParentRoute: () => AuthenticationRoute,
+} as any)
+
+const PrivateSuperAdminUserRoute = PrivateSuperAdminUserImport.update({
+  path: '/user',
+  getParentRoute: () => PrivateSuperAdminRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -95,6 +107,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticationRegisterImport
       parentRoute: typeof AuthenticationImport
     }
+    '/_private/_superAdmin': {
+      id: '/_private/_superAdmin'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PrivateSuperAdminImport
+      parentRoute: typeof PrivateImport
+    }
     '/_private/classroom': {
       id: '/_private/classroom'
       path: '/classroom'
@@ -109,6 +128,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateProfileImport
       parentRoute: typeof PrivateImport
     }
+    '/_private/_superAdmin/user': {
+      id: '/_private/_superAdmin/user'
+      path: '/user'
+      fullPath: '/user'
+      preLoaderRoute: typeof PrivateSuperAdminUserImport
+      parentRoute: typeof PrivateSuperAdminImport
+    }
   }
 }
 
@@ -121,6 +147,9 @@ export const routeTree = rootRoute.addChildren({
     AuthenticationRegisterRoute,
   }),
   PrivateRoute: PrivateRoute.addChildren({
+    PrivateSuperAdminRoute: PrivateSuperAdminRoute.addChildren({
+      PrivateSuperAdminUserRoute,
+    }),
     PrivateClassroomRoute,
     PrivateProfileRoute,
   }),
@@ -152,6 +181,7 @@ export const routeTree = rootRoute.addChildren({
     "/_private": {
       "filePath": "_private.tsx",
       "children": [
+        "/_private/_superAdmin",
         "/_private/classroom",
         "/_private/profile"
       ]
@@ -164,6 +194,13 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_authentication/register.tsx",
       "parent": "/_authentication"
     },
+    "/_private/_superAdmin": {
+      "filePath": "_private/_superAdmin.tsx",
+      "parent": "/_private",
+      "children": [
+        "/_private/_superAdmin/user"
+      ]
+    },
     "/_private/classroom": {
       "filePath": "_private/classroom.tsx",
       "parent": "/_private"
@@ -171,6 +208,10 @@ export const routeTree = rootRoute.addChildren({
     "/_private/profile": {
       "filePath": "_private/profile.tsx",
       "parent": "/_private"
+    },
+    "/_private/_superAdmin/user": {
+      "filePath": "_private/_superAdmin/user.tsx",
+      "parent": "/_private/_superAdmin"
     }
   }
 }

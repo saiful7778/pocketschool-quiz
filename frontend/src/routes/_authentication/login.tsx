@@ -7,6 +7,7 @@ import { ToastAction } from "@/components/ui/toast";
 import useAuth from "@/hooks/useAuth";
 import errorStatus from "@/lib/errorStatus";
 import { loginSchema } from "@/lib/schemas/authentication";
+import { defaultLoginPage } from "@/lib/staticData";
 import toast from "@/lib/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -75,7 +76,7 @@ function Login(): JSX.Element {
         return;
       }
 
-      await naviagate({ to: redirect ?? "/classroom" });
+      await naviagate({ to: redirect || defaultLoginPage });
 
       toast({
         title: "Successfully logged in",

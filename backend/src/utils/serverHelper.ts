@@ -9,6 +9,7 @@ export default async function serverHelper(
     await inputFunction();
   } catch (err) {
     if (err instanceof Error) {
+      console.log(err);
       devDebug(err.message);
       res.status(500).send({
         success: false,

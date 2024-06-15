@@ -4,6 +4,18 @@ export interface ApiResponse<T> {
   data?: T;
 }
 
+export interface UserData {
+  _id: string;
+  fullName: string;
+  email: string;
+  image?: string | null;
+  uid: string;
+  role: "user" | "admin" | "superAdmin";
+  access: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface UserDataResponse {
   id: string;
   role: "user" | "admin" | "superAdmin";

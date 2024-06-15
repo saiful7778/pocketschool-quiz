@@ -1,5 +1,7 @@
 import type { RoutesPath } from "@/types/route";
 
+export const defaultLoginPage = "/classroom";
+
 type dashboardLinkTypes = {
   navName: string;
   path: RoutesPath;

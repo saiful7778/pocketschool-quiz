@@ -1,0 +1,129 @@
+import Spinner from "@/components/Spinner";
+import Button from "@/components/ui/button";
+import Form from "@/components/ui/form";
+import Select from "@/components/ui/select";
+import Switch from "@/components/ui/switch";
+import useAuth from "@/hooks/useAuth";
+import { useAxiosSecure } from "@/hooks/useAxios";
+import { updateUserSchema } from "@/lib/schemas/user";
+import toast from "@/lib/toast/toast";
+import type { UserData } from "@/types/apiResponse";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FC } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+interface UpdateUserProps {
+  id: string;
+  role: UserData["role"];
+  access: UserData["access"];
+}
+
+const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
+  const { token, user, userData } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
+
+  const form = useForm<z.infer<typeof updateUserSchema>>({
+    resolver: zodResolver(updateUserSchema),
+    defaultValues: {
+      access: access,
+      role: role,
+    },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (updatedUserData: {
+      role: UserData["role"];
+      access: UserData["access"];
+    }) => {
+      return axiosSecure.patch(`/user/${id}`, updatedUserData, {
+        params: { email: user?.email, userId: userData?.id },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    },
+    onSuccess: (data) => {
+      if (data?.status === 200) {
+        queryClient.invalidateQueries({
+          queryKey: ["users", userData?.id, user?.email, `Bearer ${token}`],
+        });
+        toast({
+          title: "User is updated",
+        });
+      }
+    },
+    onError: ({ message }) => {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong!",
+        description: message,
+      });
+    },
+  });
+
+  const handleSubmit = async (e: z.infer<typeof updateUserSchema>) => {
+    mutate({ access: e.access, role: e.role });
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <Form.field
+          control={form.control}
+          name="access"
+          render={({ field }) => (
+            <Form.item>
+              <div className="flex items-center gap-2">
+                <Form.label className="w-36">Access</Form.label>
+                <Form.control>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={isPending}
+                  />
+                </Form.control>
+              </div>
+              <Form.message />
+            </Form.item>
+          )}
+        />
+        <Form.field
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <Form.item>
+              <div className="flex items-center gap-2">
+                <Form.label className="w-36">Role</Form.label>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={isPending}
+                >
+                  <Form.control>
+                    <Select.trigger>
+                      <Select.value placeholder="Select user role" />
+                    </Select.trigger>
+                  </Form.control>
+                  <Select.content>
+                    <Select.item value="user">user</Select.item>
+                    <Select.item value="admin">admin</Select.item>
+                    <Select.item value="superAdmin">super admin</Select.item>
+                  </Select.content>
+                </Select>
+              </div>
+              <Form.message />
+            </Form.item>
+          )}
+        />
+        <div className="flex justify-end">
+          <Button type="submit">
+            {isPending ? <Spinner /> : "Update user"}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+};
+
+export default UpdateUser;

@@ -2,7 +2,7 @@ import express from "express";
 import type { Request, Response, Application } from "express";
 import cors from "cors";
 import getEnv from "./utils/env";
-import { user } from "./routes/user";
+import users, { user } from "./routes/user";
 import { connect, connection } from "mongoose";
 import { authentication } from "./routes/authectication";
 
@@ -43,6 +43,7 @@ function mainServer() {
   });
 
   app.use("/user", user);
+  app.use("/users", users);
   app.use("/authentication", authentication);
 
   app.get("*", (_req: Request, res: Response) => {

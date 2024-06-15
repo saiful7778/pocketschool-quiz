@@ -10,10 +10,14 @@ import verifyTokenAndKey from "../middlewares/verifyTokenKey";
 import type {
   ApiResponseData,
   ApiResponseMessage,
+  UserData,
   UserDataResponse,
 } from "../types/apiResponses";
+import verifyUserExist from "../middlewares/verifyUserExist";
+import verifySuperAdmin from "../middlewares/verifySuperAdmin";
 
 const route = Router();
+const routeAll = Router();
 
 /**
  * create a new user
@@ -83,4 +87,52 @@ route.get(
   }
 );
 
+route.patch(
+  "/:userId",
+  verifyToken,
+  verifyTokenAndKey,
+  verifyUserExist,
+  verifySuperAdmin,
+  (req: Request, res: Response) => {
+    const userId = req.params.userId;
+    const { role, access } = req.body;
+
+    const check = inputCheck([role, access], res);
+    if (!check) {
+      return;
+    }
+
+    serverHelper(async () => {
+      const user = await userModel.findByIdAndUpdate(userId, { role, access });
+
+      res
+        .status(200)
+        .send({ success: true, data: user } as ApiResponseData<UserData>);
+    }, res);
+  }
+);
+
+/**
+ * get all users if request user is super admin
+ */
+routeAll.get(
+  "/all",
+  verifyToken,
+  verifyTokenAndKey,
+  verifyUserExist,
+  verifySuperAdmin,
+  (_req: Request, res: Response) => {
+    serverHelper(async () => {
+      const users = await userModel.find({}, { __v: 0 });
+
+      res
+        .status(200)
+        .send({ success: true, data: users } as unknown as ApiResponseData<
+          UserData[]
+        >);
+    }, res);
+  }
+);
+
+export default routeAll;
 export { route as user };
