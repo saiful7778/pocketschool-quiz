@@ -16,6 +16,6 @@
     "noEmit": false,
     "esModuleInterop": true
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*.ts"],
   "exclude": ["node_modules", "tests"]
 }

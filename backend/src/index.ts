@@ -3,7 +3,7 @@ import type { Request, Response, Application } from "express";
 import cors from "cors";
 import getEnv from "./utils/env";
 import { user } from "./routes/user";
-import { connect } from "mongoose";
+import { connect, connection } from "mongoose";
 import { authentication } from "./routes/authectication";
 
 (async () => {

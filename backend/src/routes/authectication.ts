@@ -9,7 +9,7 @@ import devDebug from "../utils/devDebug";
 import type {
   ApiResponseMessage,
   LoginUserDataResponse,
-} from "./../../types/apiResponses";
+} from "../types/apiResponses";
 
 const route = Router();
 

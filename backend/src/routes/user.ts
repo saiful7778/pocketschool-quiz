@@ -7,11 +7,11 @@ import devDebug from "../utils/devDebug";
 import { classroomModel } from "../models/classroom";
 import verifyToken from "../middlewares/verifyToken";
 import verifyTokenAndKey from "../middlewares/verifyTokenKey";
-import {
+import type {
   ApiResponseData,
   ApiResponseMessage,
   UserDataResponse,
-} from "../../types/apiResponses";
+} from "../types/apiResponses";
 
 const route = Router();
 
@@ -49,7 +49,7 @@ route.post("/", (req: Request, res: Response) => {
     res.status(201).send({
       success: true,
       message: "user is created",
-    });
+    } as ApiResponseMessage);
   }, res);
 });
 
