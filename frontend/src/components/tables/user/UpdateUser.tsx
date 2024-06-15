@@ -62,7 +62,7 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
     },
   });
 
-  const handleSubmit = async (e: z.infer<typeof updateUserSchema>) => {
+  const handleSubmit = (e: z.infer<typeof updateUserSchema>) => {
     mutate({ access: e.access, role: e.role });
   };
 
