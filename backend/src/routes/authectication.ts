@@ -6,6 +6,10 @@ import serverHelper from "../utils/serverHelper";
 import { userModel } from "../models/user";
 import getEnv from "../utils/env";
 import devDebug from "../utils/devDebug";
+import type {
+  ApiResponseMessage,
+  LoginUserDataResponse,
+} from "./../../types/apiResponses";
 
 const route = Router();
 
@@ -22,7 +26,6 @@ route.post("/login", (req: Request, res: Response) => {
     const user = await userModel.findOne(
       { email },
       {
-        email: 1,
         role: 1,
         uid: 1,
         access: 1,
@@ -32,7 +35,7 @@ route.post("/login", (req: Request, res: Response) => {
       res.status(400).send({
         success: false,
         message: "User doesn't exist",
-      });
+      } as ApiResponseMessage);
       devDebug("User doesn't exist");
       return;
     }
@@ -41,24 +44,31 @@ route.post("/login", (req: Request, res: Response) => {
       res.status(400).send({
         success: false,
         message: "User can't access this site",
-      });
+      } as ApiResponseMessage);
       devDebug("User can't access this site");
       return;
     }
 
-    const userData = {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      uid: user.uid,
-      access: user.access,
-    };
-
-    const token = jwt.sign(userData, getEnv("accessToken"), {
-      expiresIn: "2h",
-    });
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: email,
+        role: user.role,
+        uid: user.uid,
+      },
+      getEnv("accessToken"),
+      {
+        expiresIn: "2h",
+      }
+    );
     devDebug("new token in generated");
-    res.status(200).send({ success: true, data: { token, userData } });
+    res.status(200).send({
+      success: true,
+      data: {
+        token,
+        userData: { id: user.id, role: user.role, uid: user.uid },
+      },
+    } as unknown as LoginUserDataResponse);
   }, res);
 });
 

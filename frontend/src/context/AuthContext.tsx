@@ -4,7 +4,7 @@ import { auth } from "@/lib/firebase";
 import toast from "@/lib/toast/toast";
 import type { ApiResponse, UserLoginResponse } from "@/types/apiResponse";
 import type { ContextProps } from "@/types/context";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import {
   type User,
   type UserCredential,
@@ -71,12 +71,14 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
         try {
           if (currentUser) {
             if (currentUser.emailVerified) {
-              const { data }: AxiosResponse<ApiResponse<UserLoginResponse>> =
-                await axios.post("/authentication/login", {
+              const { data } = await axios.post<ApiResponse<UserLoginResponse>>(
+                "/authentication/login",
+                {
                   email: currentUser.email,
-                });
+                },
+              );
               if (!data.success) {
-                throw new Error(data.message);
+                throw new Error(data?.message);
               }
               if (data?.data) {
                 setUser(currentUser);

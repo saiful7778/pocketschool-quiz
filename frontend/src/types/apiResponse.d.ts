@@ -1,16 +1,16 @@
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
   success: boolean;
-  data?: T;
   message?: string;
+  data?: T;
+}
+
+export interface UserDataResponse {
+  id: string;
+  role: "user" | "admin" | "superAdmin";
+  uid: string;
 }
 
 export type UserLoginResponse = {
   token: string;
-  userData: {
-    id: string;
-    email: string;
-    role: "user" | "admin" | "superAdmin";
-    uid: string;
-    access: boolean;
-  };
+  userData: UserDataResponse;
 };

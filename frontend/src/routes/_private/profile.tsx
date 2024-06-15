@@ -5,6 +5,7 @@ import Button from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import toast from "@/lib/toast/toast";
+import { ApiResponse, UserDataResponse } from "@/types/apiResponse";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -18,10 +19,12 @@ function Profile(): JSX.Element {
   const { token, user, auth } = Route.useRouteContext();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["profile", user?.id, user?.email, token],
+    queryKey: ["profile", user?.id, auth?.email, token],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(`/user/${user?.id}`, {
-        params: { email: user?.email },
+      const { data } = await axiosSecure.get<
+        ApiResponse<{ role: UserDataResponse["role"] }>
+      >(`/user/${user?.id}`, {
+        params: { email: auth?.email },
         headers: { Authorization: token },
       });
       if (!data.success) {
@@ -85,7 +88,7 @@ function Profile(): JSX.Element {
           <div className="flex gap-4 p-2">
             <span className="w-full max-w-36">Role</span>
             <span>:</span>
-            <span className="flex-1">{data.role}</span>
+            <span className="flex-1">{data?.role}</span>
           </div>
         </div>
         <Button onClick={sendForgetPassword} className="p-0" variant="link">

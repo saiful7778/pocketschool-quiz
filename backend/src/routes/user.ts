@@ -7,6 +7,11 @@ import devDebug from "../utils/devDebug";
 import { classroomModel } from "../models/classroom";
 import verifyToken from "../middlewares/verifyToken";
 import verifyTokenAndKey from "../middlewares/verifyTokenKey";
+import {
+  ApiResponseData,
+  ApiResponseMessage,
+  UserDataResponse,
+} from "../../types/apiResponses";
 
 const route = Router();
 
@@ -66,14 +71,14 @@ route.get(
         res.status(404).send({
           success: false,
           message: "User not found",
-        });
+        } as ApiResponseMessage);
         return;
       }
 
       res.status(200).send({
         success: true,
         data: user,
-      });
+      } as ApiResponseData<{ role: UserDataResponse["role"] }>);
     }, res);
   }
 );
