@@ -31,7 +31,7 @@ export default async function verifyUserExist(
       return;
     }
 
-    req.user = existUser;
+    req.user = { userId: existUser._id, role: existUser.role };
     next();
   } catch (err) {
     res

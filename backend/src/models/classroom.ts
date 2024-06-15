@@ -6,8 +6,20 @@ const classroomSchema = new Schema(
       type: String,
       required: [true, "Classroom title is required"],
     },
-    admins: [{ type: Schema.Types.ObjectId, ref: "user", required: true }],
-    users: [{ type: Schema.Types.ObjectId, ref: "user", required: true }],
+    admins: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+        required: [true, "Admin is required"],
+      },
+    ],
+    users: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+        required: [true, "User is required"],
+      },
+    ],
   },
   { timestamps: true }
 );

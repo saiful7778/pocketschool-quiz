@@ -26,3 +26,7 @@ export type UserLoginResponse = {
   token: string;
   userData: UserDataResponse;
 };
+
+export interface classroom {
+  title: string;
+}

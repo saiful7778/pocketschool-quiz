@@ -1,3 +1,7 @@
+import Button from "@/components/ui/button";
+import { useAxiosSecure } from "@/hooks/useAxios";
+import type { classroom } from "@/types/apiResponse";
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_private/classroom")({
@@ -5,7 +9,31 @@ export const Route = createFileRoute("/_private/classroom")({
 });
 
 function Classroom(): JSX.Element {
-  const routeContextData = Route.useRouteContext();
+  const { user, auth, token } = Route.useRouteContext();
+  const axiosSecure = useAxiosSecure();
 
-  return <div>Hello /_private/classroom!</div>;
+  const { mutate } = useMutation({
+    mutationFn: async (classroomData: classroom) => {
+      return axiosSecure.post(
+        "/classroom",
+        { title: classroomData.title },
+        {
+          params: { email: auth?.email, userId: user?.id },
+          headers: { Authorization: token },
+        },
+      );
+    },
+  });
+
+  const createNewClassroom = () => {
+    mutate({ title: "new classroom" });
+  };
+
+  return (
+    <div>
+      <Button onClick={createNewClassroom} size="sm">
+        Create new classroom
+      </Button>
+    </div>
+  );
 }

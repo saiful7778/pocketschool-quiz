@@ -5,6 +5,7 @@ import getEnv from "./utils/env";
 import users, { user } from "./routes/user";
 import { connect, connection } from "mongoose";
 import { authentication } from "./routes/authectication";
+import classrooms, { classroom } from "./routes/classroom";
 
 (async () => {
   try {
@@ -44,6 +45,8 @@ function mainServer() {
 
   app.use("/user", user);
   app.use("/users", users);
+  app.use("/classroom", classroom);
+  app.use("/classrooms", classrooms);
   app.use("/authentication", authentication);
 
   app.get("*", (_req: Request, res: Response) => {
