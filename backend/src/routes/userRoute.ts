@@ -2,19 +2,18 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import serverHelper from "../utils/serverHelper";
 import inputCheck from "../utils/inputCheck";
-import { userModel } from "../models/user";
+import { userModel } from "../models/userModel";
 import devDebug from "../utils/devDebug";
-import { classroomModel } from "../models/classroom";
+import { classroomModel } from "../models/classroomModel";
 import verifyToken from "../middlewares/verifyToken";
 import verifyTokenAndKey from "../middlewares/verifyTokenKey";
 import type {
   ApiResponseData,
   ApiResponseMessage,
-  UserData,
-  UserDataResponse,
 } from "../types/apiResponses";
 import verifyUserExist from "../middlewares/verifyUserExist";
 import verifySuperAdmin from "../middlewares/verifySuperAdmin";
+import { User } from "../types/user";
 
 const route = Router();
 const routeAll = Router();
@@ -82,7 +81,7 @@ route.get(
       res.status(200).send({
         success: true,
         data: user,
-      } as ApiResponseData<{ role: UserDataResponse["role"] }>);
+      } as ApiResponseData<{ role: User["role"] }>);
     }, res);
   }
 );
@@ -107,7 +106,7 @@ route.patch(
 
       res
         .status(200)
-        .send({ success: true, data: user } as ApiResponseData<UserData>);
+        .send({ success: true, data: user } as ApiResponseData<User>);
     }, res);
   }
 );
@@ -127,9 +126,7 @@ routeAll.get(
 
       res
         .status(200)
-        .send({ success: true, data: users } as unknown as ApiResponseData<
-          UserData[]
-        >);
+        .send({ success: true, data: users } as ApiResponseData<User[]>);
     }, res);
   }
 );

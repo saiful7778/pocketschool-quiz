@@ -3,13 +3,14 @@ import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import inputCheck from "../utils/inputCheck";
 import serverHelper from "../utils/serverHelper";
-import { userModel } from "../models/user";
+import { userModel } from "../models/userModel";
 import getEnv from "../utils/env";
 import devDebug from "../utils/devDebug";
 import type {
+  ApiResponseData,
   ApiResponseMessage,
-  LoginUserDataResponse,
 } from "../types/apiResponses";
+import { User } from "../types/user";
 
 const route = Router();
 
@@ -61,14 +62,15 @@ route.post("/login", (req: Request, res: Response) => {
         expiresIn: "2h",
       }
     );
+
     devDebug("new token in generated");
     res.status(200).send({
       success: true,
       data: {
         token,
-        userData: { id: user.id, role: user.role, uid: user.uid },
+        userData: { _id: user._id, role: user.role, uid: user.uid },
       },
-    } as unknown as LoginUserDataResponse);
+    } as unknown as ApiResponseData<{ token: string; userData: User }>);
   }, res);
 });
 

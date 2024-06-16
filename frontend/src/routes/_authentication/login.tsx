@@ -6,7 +6,7 @@ import Form from "@/components/ui/form";
 import { ToastAction } from "@/components/ui/toast";
 import useAuth from "@/hooks/useAuth";
 import errorStatus from "@/lib/errorStatus";
-import { loginSchema } from "@/lib/schemas/authentication";
+import { loginSchema } from "@/lib/schemas/authenticationSchema";
 import { defaultLoginPage } from "@/lib/staticData";
 import toast from "@/lib/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -76,7 +76,11 @@ function Login(): JSX.Element {
         return;
       }
 
-      await naviagate({ to: redirect || defaultLoginPage });
+      if (redirect) {
+        await naviagate({ to: redirect });
+      } else {
+        await naviagate({ to: defaultLoginPage });
+      }
 
       toast({
         title: "Successfully logged in",

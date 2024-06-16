@@ -1,10 +1,10 @@
 import useAuth from "@/hooks/useAuth";
 import { defaultLoginPage } from "@/lib/staticData";
-import { ContextProps } from "@/types/context";
+import { LayoutProps } from "@/types/layout";
 import { Navigate } from "@tanstack/react-router";
 import { FC } from "react";
 
-const AuthProtector: FC<ContextProps> = ({ children }) => {
+const AuthProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
   const { user } = useAuth();
 
   const isAuth = !!user;

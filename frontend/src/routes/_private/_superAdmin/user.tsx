@@ -2,7 +2,8 @@ import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import UserTable from "@/components/tables/user/UserTable";
 import { useAxiosSecure } from "@/hooks/useAxios";
-import { ApiResponse, UserData } from "@/types/apiResponse";
+import type { ApiResponse } from "@/types/apiResponse";
+import type { User } from "@/types/user";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -21,12 +22,12 @@ function Users(): JSX.Element {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["users", user?.id, auth?.email, token],
+    queryKey: ["users", user?._id, auth?.email, token],
     queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<UserData[]>>(
+      const { data } = await axiosSecure.get<ApiResponse<User[]>>(
         "/users/all",
         {
-          params: { email: auth?.email, userId: user?.id },
+          params: { email: auth?.email, userId: user?._id },
           headers: { Authorization: token },
         },
       );

@@ -25,17 +25,21 @@ export default function verifyToken(
     devDebug("authorization token is unavailable");
     return;
   }
-  // eslint-disable-next-line no-undef
-  jwt.verify(token, getEnv("accessToken"), (err, decode) => {
-    if (err) {
-      res.status(401).send({
-        success: false,
-        message: "Unauthorized",
-      } as ApiResponseMessage);
-      devDebug("token is not valid");
-      return;
+
+  jwt.verify(
+    token,
+    getEnv("accessToken"),
+    (err: jwt.VerifyErrors, decode: jwt.JwtPayload) => {
+      if (err) {
+        res.status(401).send({
+          success: false,
+          message: "Unauthorized",
+        } as ApiResponseMessage);
+        devDebug("token is not valid");
+        return;
+      }
+      req.token = decode;
+      next();
     }
-    req.user = decode;
-    next();
-  });
+  );
 }

@@ -2,10 +2,10 @@ import express from "express";
 import type { Request, Response, Application } from "express";
 import cors from "cors";
 import getEnv from "./utils/env";
-import users, { user } from "./routes/user";
-import { connect, connection } from "mongoose";
-import { authentication } from "./routes/authectication";
-import classrooms, { classroom } from "./routes/classroom";
+import users, { user } from "./routes/userRoute";
+import { connect } from "mongoose";
+import { authentication } from "./routes/authecticationRoute";
+import classrooms, { classroom } from "./routes/classroomRoute";
 
 (async () => {
   try {

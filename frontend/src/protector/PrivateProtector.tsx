@@ -1,9 +1,9 @@
 import useAuth from "@/hooks/useAuth";
-import type { ContextProps } from "@/types/context";
+import type { LayoutProps } from "@/types/layout";
 import { Navigate, useLocation } from "@tanstack/react-router";
 import { FC } from "react";
 
-const PrivateProtector: FC<ContextProps> = ({ children }) => {
+const PrivateProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
 

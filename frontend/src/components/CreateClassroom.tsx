@@ -1,10 +1,9 @@
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { createClassroomSchema } from "@/lib/schemas/classroom";
+import { createClassroomSchema } from "@/lib/schemas/classroomSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { classroom } from "@/types/apiResponse";
 import toast from "@/lib/toast/toast";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import Dialog from "@/components/ui/dialog";
@@ -12,6 +11,7 @@ import Button from "@/components/ui/button";
 import Form from "@/components/ui/form";
 import Spinner from "@/components/Spinner";
 import InputField from "@/components/InputField";
+import type { Classroom } from "@/types/classroom";
 
 interface CreateClassroomProps {
   email: string | undefined | null;
@@ -32,7 +32,7 @@ const CreateClassroom: FC<CreateClassroomProps> = ({ email, id, token }) => {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (classroomData: classroom) => {
+    mutationFn: async (classroomData: { title: Classroom["title"] }) => {
       return axiosSecure.post(
         "/classroom",
         { title: classroomData.title },

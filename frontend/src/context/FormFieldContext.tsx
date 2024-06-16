@@ -1,4 +1,4 @@
-import { type ContextProps } from "@/types/context";
+import type { LayoutProps } from "@/types/layout";
 import { FC, createContext } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
 
@@ -15,11 +15,11 @@ export const FormFieldContext = createContext<FormFieldContextValue>(
 
 interface FormFieldContextProviderProps<
   TName extends FieldPath<FieldValues> = FieldPath<FieldValues>,
-> extends ContextProps {
+> extends LayoutProps {
   name: TName;
 }
 
-const FormFieldContextProvider: FC<FormFieldContextProviderProps> = ({
+const FormFieldContextProvider: FC<Readonly<FormFieldContextProviderProps>> = ({
   children,
   name,
 }) => {

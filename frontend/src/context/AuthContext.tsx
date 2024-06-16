@@ -2,8 +2,8 @@ import Loading from "@/components/Loading";
 import { useAxios } from "@/hooks/useAxios";
 import { auth } from "@/lib/firebase";
 import toast from "@/lib/toast/toast";
-import type { ApiResponse, UserLoginResponse } from "@/types/apiResponse";
-import type { ContextProps } from "@/types/context";
+import type { ApiResponse } from "@/types/apiResponse";
+import type { LayoutProps } from "@/types/layout";
 import { AxiosError } from "axios";
 import {
   type User,
@@ -11,11 +11,16 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { FC, createContext, useEffect, useState } from "react";
+import type { User as UserData } from "@/types/user";
 
 interface AuthContextProps {
   user: User | null;
   token: string | null;
-  userData: UserLoginResponse["userData"] | null;
+  userData: {
+    _id: UserData["_id"];
+    role: UserData["role"];
+    uid: UserData["uid"];
+  } | null;
   login: (email: string, password: string) => Promise<UserCredential>;
   register: (email: string, password: string) => Promise<UserCredential>;
   logOut: () => Promise<void>;
@@ -27,13 +32,11 @@ export const AuthContext = createContext<AuthContextProps>(
   {} as AuthContextProps,
 );
 
-const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
+const AuthContextProvider: FC<Readonly<LayoutProps>> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [token, setToken] = useState<string | null>(null);
-  const [userData, setUserData] = useState<
-    UserLoginResponse["userData"] | null
-  >(null);
+  const [userData, setUserData] = useState<AuthContextProps["userData"]>(null);
   const axios = useAxios();
 
   const register = async (
@@ -71,12 +74,14 @@ const AuthContextProvider: FC<Readonly<ContextProps>> = ({ children }) => {
         try {
           if (currentUser) {
             if (currentUser.emailVerified) {
-              const { data } = await axios.post<ApiResponse<UserLoginResponse>>(
-                "/authentication/login",
-                {
-                  email: currentUser.email,
-                },
-              );
+              const { data } = await axios.post<
+                ApiResponse<{
+                  token: string;
+                  userData: AuthContextProps["userData"];
+                }>
+              >("/authentication/login", {
+                email: currentUser.email,
+              });
               if (!data.success) {
                 throw new Error(data?.message);
               }

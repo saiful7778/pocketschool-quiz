@@ -3,16 +3,17 @@ import JoinClassroom from "@/components/JoinClassroom";
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import { useAxiosSecure } from "@/hooks/useAxios";
-import type { ApiResponse, Classroom } from "@/types/apiResponse";
+import type { ApiResponse } from "@/types/apiResponse";
+import type { ClassroomMainPage } from "@/types/classroom";
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import moment from "moment";
 
 export const Route = createFileRoute("/_private/classroom/")({
-  component: Classroom,
+  component: Classrooms,
 });
 
-function Classroom(): JSX.Element {
+function Classrooms(): JSX.Element {
   const { auth, user, token } = Route.useRouteContext();
   const axiosSecure = useAxiosSecure();
 
@@ -23,12 +24,12 @@ function Classroom(): JSX.Element {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["classroom", auth?.email, user?.id, token],
+    queryKey: ["classrooms", auth?.email, user?._id, token],
     queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<Classroom[]>>(
+      const { data } = await axiosSecure.get<ApiResponse<ClassroomMainPage[]>>(
         "/classrooms/added",
         {
-          params: { email: auth?.email, userId: user?.id },
+          params: { email: auth?.email, userId: user?._id },
           headers: { Authorization: token },
         },
       );
@@ -48,7 +49,7 @@ function Classroom(): JSX.Element {
   }
 
   const renderClassrooms = classrooms?.map((classroom, idx) => {
-    const published = moment(classroom.createdAt).format("DD/MM/YYYY HH:MM A");
+    const published = moment(classroom.createdAt).format("DD/MM/YYYY h:mm A");
     return (
       <div
         className="w-full max-w-xs rounded-md border p-4 shadow"
@@ -81,9 +82,9 @@ function Classroom(): JSX.Element {
       <div className="mb-4 flex items-center gap-2 border-b pb-4">
         <h1 className="flex-1 text-xl font-semibold">Classrooms</h1>
         {user?.role !== "user" && (
-          <CreateClassroom email={auth?.email} id={user?.id} token={token!} />
+          <CreateClassroom email={auth?.email} id={user?._id} token={token!} />
         )}
-        <JoinClassroom email={auth?.email} id={user?.id} token={token!} />
+        <JoinClassroom email={auth?.email} id={user?._id} token={token!} />
       </div>
       <div className="flex flex-wrap gap-4">{renderClassrooms}</div>
     </div>

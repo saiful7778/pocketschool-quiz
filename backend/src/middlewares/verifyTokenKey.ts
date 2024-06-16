@@ -7,7 +7,7 @@ export default function verifyTokenAndKey(
   res: Response,
   next: NextFunction
 ) {
-  const tokenUser = req.user;
+  const token = req.token;
   const keyEmail = req.query?.email;
   if (!keyEmail) {
     res
@@ -16,7 +16,7 @@ export default function verifyTokenAndKey(
     devDebug("query email is unavailable");
     return;
   }
-  if (tokenUser?.email !== keyEmail) {
+  if (token?.email !== keyEmail) {
     res
       .status(401)
       .send({ success: false, message: "Unauthorized" } as ApiResponseMessage);

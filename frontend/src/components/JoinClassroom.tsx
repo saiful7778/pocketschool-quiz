@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import Dialog from "./ui/dialog";
 import { useAxiosSecure } from "@/hooks/useAxios";
-import { joinClassroomSchema } from "@/lib/schemas/classroom";
+import { joinClassroomSchema } from "@/lib/schemas/classroomSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "@/lib/toast/toast";
 import InputField from "./InputField";
 import Spinner from "./Spinner";
+import type { Classroom } from "@/types/classroom";
 
 interface JoinClassroomProps {
   email: string | undefined | null;
@@ -26,14 +27,14 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
   const form = useForm<z.infer<typeof joinClassroomSchema>>({
     resolver: zodResolver(joinClassroomSchema),
     defaultValues: {
-      classroomId: "",
+      _id: "",
     },
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (classroomData: { classroomId: string }) => {
+    mutationFn: async (classroomData: { _id: Classroom["_id"] }) => {
       return axiosSecure.post(
-        `/classroom/${classroomData.classroomId}`,
+        `/classroom/${classroomData._id}`,
         {},
         {
           params: { email: email, userId: id },
@@ -63,7 +64,7 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
   });
 
   const handleSubmit = (e: z.infer<typeof joinClassroomSchema>) => {
-    mutate({ classroomId: e.classroomId });
+    mutate({ _id: e._id });
   };
 
   return (
@@ -85,7 +86,7 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
           >
             <Form.field
               control={form.control}
-              name="classroomId"
+              name="_id"
               render={({ field }) => (
                 <InputField
                   type="text"

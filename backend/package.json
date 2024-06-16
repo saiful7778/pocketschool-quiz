@@ -1,10 +1,10 @@
 {
   "name": "pocketschool-quiz-backend",
   "version": "1.0.0",
-  "main": "build/index.js",
+  "main": "build/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node ./build/index.js",
+    "start": "node ./build/server.js",
     "dev": "nodemon"
   },
   "keywords": [],

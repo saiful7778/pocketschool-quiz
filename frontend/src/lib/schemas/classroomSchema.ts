@@ -7,7 +7,7 @@ export const createClassroomSchema = z.object({
 });
 
 export const joinClassroomSchema = z.object({
-  classroomId: z
+  _id: z
     .string({ required_error: "Classroom Id is required" })
     .min(1, "Classroom id is required"),
 });

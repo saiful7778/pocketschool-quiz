@@ -5,14 +5,11 @@ import verifyTokenAndKey from "../middlewares/verifyTokenKey";
 import verifyUserExist from "../middlewares/verifyUserExist";
 import inputCheck from "../utils/inputCheck";
 import serverHelper from "../utils/serverHelper";
-import { classroomModel } from "../models/classroom";
-import {
-  ApiResponseData,
-  ApiResponseMessage,
-  Classroom,
-} from "../types/apiResponses";
+import { classroomModel } from "../models/classroomModel";
+import { ApiResponseData, ApiResponseMessage } from "../types/apiResponses";
 import devDebug from "../utils/devDebug";
 import verifyAdminAndSuperAdmin from "../middlewares/verifyAdminAndSuperAdmin";
+import { Classroom } from "../types/classroom";
 
 const route = Router();
 const routeAll = Router();
@@ -29,12 +26,15 @@ route.post(
   (req: Request, res: Response) => {
     const { title } = req.body;
     const admin = req.userId;
+
     const check = inputCheck([title], res);
-    if (!check) {
-      return;
-    }
+    if (!check) return;
+
     serverHelper(async () => {
-      await classroomModel.create({ title, admins: [admin] });
+      await classroomModel.create({
+        title,
+        admins: [{ userId: admin, access: true }],
+      });
 
       devDebug("new classroom created");
 
@@ -61,7 +61,7 @@ route.post(
     serverHelper(async () => {
       await classroomModel.updateOne(
         { _id: classroomId },
-        { users: [userId] },
+        { users: [{ userId, access: false }] },
         { upsert: true }
       );
 
@@ -89,7 +89,10 @@ routeAll.get(
       const classroomsData = await classroomModel
         .find(
           {
-            $or: [{ admins: [userId] }, { users: [userId] }],
+            $or: [
+              { "admins.userId": userId, "admins.access": true },
+              { "users.userId": userId, "users.access": true },
+            ],
           },
           { __v: 0 }
         )
@@ -101,12 +104,12 @@ routeAll.get(
           _id: classroom._id,
           title: classroom.title,
           admin: classroom.admins.find(
-            (admin) => admin._id.toString() === userId.toString()
+            (admin) => admin.userId.toString() === userId.toString()
           )
             ? true
             : false,
           user: classroom.users.find(
-            (user) => user._id.toString() === userId.toString()
+            (user) => user.userId.toString() === userId.toString()
           )
             ? true
             : false,
@@ -118,7 +121,7 @@ routeAll.get(
       res.status(200).send({
         success: true,
         data: classrooms,
-      } as unknown as ApiResponseData<Classroom>);
+      });
     }, res);
   }
 );

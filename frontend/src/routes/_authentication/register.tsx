@@ -2,7 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema } from "@/lib/schemas/authentication";
+import { registerSchema } from "@/lib/schemas/authenticationSchema";
 import * as z from "zod";
 import Form from "@/components/ui/form";
 import InputField from "@/components/InputField";

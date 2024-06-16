@@ -1,12 +1,12 @@
 import Avatar from "@/components/ui/avatar";
 import Button from "@/components/ui/button";
 import Dialog from "@/components/ui/dialog";
-import type { UserData } from "@/types/apiResponse";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import UpdateUser from "./UpdateUser";
+import type { User } from "@/types/user";
 
-const columns: ColumnDef<UserData>[] = [
+const columns: ColumnDef<User>[] = [
   {
     id: "count",
     header: () => <div className="text-center">#NO</div>,
@@ -34,12 +34,7 @@ const columns: ColumnDef<UserData>[] = [
           </Avatar>
           <div>
             <div className="font-semibold leading-tight">{user.fullName}</div>
-            <div className="text-xs text-gray-400">
-              {user.email}
-              {/* <span className="ml-1 text-sky-500">
-                {user.isVerified ? "verified" : "not verified"}
-              </span> */}
-            </div>
+            <div className="text-xs text-gray-400">{user.email}</div>
           </div>
         </div>
       );

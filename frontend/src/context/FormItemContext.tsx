@@ -1,4 +1,4 @@
-import { type ContextProps } from "@/types/context";
+import type { LayoutProps } from "@/types/layout";
 import { FC, createContext } from "react";
 
 type FormItemContextValue = {
@@ -9,11 +9,11 @@ export const FormItemContext = createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 );
 
-interface FormItemContextProviderProps extends ContextProps {
+interface FormItemContextProviderProps extends LayoutProps {
   id: string;
 }
 
-const FormItemContextProvider: FC<FormItemContextProviderProps> = ({
+const FormItemContextProvider: FC<Readonly<FormItemContextProviderProps>> = ({
   children,
   id,
 }) => {

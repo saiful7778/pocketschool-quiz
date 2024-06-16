@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import type { ApiResponseMessage } from "../types/apiResponses";
 import devDebug from "../utils/devDebug";
-import { userModel } from "../models/user";
+import { userModel } from "../models/userModel";
 
 export default async function verifyUserExist(
   req: Request,

@@ -29,6 +29,13 @@ function Profile(): JSX.Element {
     }
   };
 
+  const updateImage = async () => {
+    toast({
+      variant: "destructive",
+      title: "This is currently unavailable",
+    });
+  };
+
   return (
     <div className="flex flex-wrap justify-center gap-4">
       <div className="card flex w-full max-w-xs flex-col items-center gap-4 rounded-md border p-4 shadow">
@@ -41,7 +48,7 @@ function Profile(): JSX.Element {
           </Avatar.fallback>
         </Avatar>
         <h3 className="text-2xl font-semibold">{auth?.displayName}</h3>
-        <Button>Update image</Button>
+        <Button onClick={updateImage}>Update image</Button>
       </div>
       <div className="card flex-1 rounded-md border p-4 shadow">
         <div className="divide-y divide-border">

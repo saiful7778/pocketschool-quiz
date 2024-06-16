@@ -4,9 +4,10 @@ import useAuth from "./useAuth";
 
 export function useAxiosSecure() {
   const { logOut } = useAuth();
+  const axios = useCallback(axiosConfig, []);
 
   useEffect(() => {
-    axiosConfig.interceptors.response.use(
+    axios.interceptors.response.use(
       (data) => {
         return data;
       },
@@ -23,9 +24,9 @@ export function useAxiosSecure() {
         }
       },
     );
-  }, [logOut]);
+  }, [axios, logOut]);
 
-  return axiosConfig;
+  return axios;
 }
 
 export function useAxios() {

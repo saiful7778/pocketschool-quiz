@@ -5,9 +5,9 @@ import Select from "@/components/ui/select";
 import Switch from "@/components/ui/switch";
 import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
-import { updateUserSchema } from "@/lib/schemas/user";
+import { updateUserSchema } from "@/lib/schemas/userSchema";
 import toast from "@/lib/toast/toast";
-import type { UserData } from "@/types/apiResponse";
+import type { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC } from "react";
@@ -16,8 +16,8 @@ import * as z from "zod";
 
 interface UpdateUserProps {
   id: string;
-  role: UserData["role"];
-  access: UserData["access"];
+  role: User["role"];
+  access: User["access"];
 }
 
 const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
@@ -35,8 +35,8 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (updatedUserData: {
-      role: UserData["role"];
-      access: UserData["access"];
+      role: User["role"];
+      access: User["access"];
     }) => {
       return axiosSecure.patch(`/user/${id}`, updatedUserData, {
         params: { email: user?.email, userId: userData?.id },

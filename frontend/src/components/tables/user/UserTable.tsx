@@ -6,20 +6,20 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { UserData } from "@/types/apiResponse";
 import columns from "./column";
 import Input from "@/components/ui/input";
 import Table from "@/components/ui/table";
 import Button from "@/components/ui/button";
+import { User } from "@/types/user";
 
 interface UserTableProps {
-  data: UserData[];
+  data: User[];
   reFetch: () => void;
 }
 
 const UserTable: FC<UserTableProps> = ({ data, reFetch }) => {
-  const globalFilterFn: FilterFn<UserData> = (row, _columnId, filterValue) => {
-    const user = row.original as UserData;
+  const globalFilterFn: FilterFn<User> = (row, _columnId, filterValue) => {
+    const user = row.original as User;
     return (
       user.fullName.toLowerCase().includes(filterValue.toLowerCase()) ||
       user.email.toLowerCase().includes(filterValue.toLowerCase())
@@ -31,7 +31,7 @@ const UserTable: FC<UserTableProps> = ({ data, reFetch }) => {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    globalFilterFn: globalFilterFn as FilterFn<UserData>,
+    globalFilterFn: globalFilterFn as FilterFn<User>,
   });
 
   return (

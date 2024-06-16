@@ -4,38 +4,12 @@ export interface ApiResponse<T> {
   data?: T;
 }
 
-export interface UserData {
-  _id: string;
-  fullName: string;
-  email: string;
-  image?: string | null;
-  uid: string;
-  role: "user" | "admin" | "superAdmin";
-  access: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+export interface ApiResponseMessage {
+  success: boolean;
+  message: string;
 }
 
-export interface UserDataResponse {
-  id: string;
-  role: "user" | "admin" | "superAdmin";
-  uid: string;
-}
-
-export type UserLoginResponse = {
-  token: string;
-  userData: UserDataResponse;
-};
-
-export interface classroom {
-  title: string;
-}
-
-export interface Classroom {
-  _id: string | unknown;
-  title: string;
-  admin: boolean;
-  user: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+export interface ApiResponseData<T> {
+  success: boolean;
+  data: T;
 }
