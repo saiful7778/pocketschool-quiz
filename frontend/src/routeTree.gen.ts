@@ -15,10 +15,11 @@ import { Route as PrivateImport } from './routes/_private'
 import { Route as AuthenticationImport } from './routes/_authentication'
 import { Route as IndexImport } from './routes/index'
 import { Route as PrivateProfileImport } from './routes/_private/profile'
-import { Route as PrivateClassroomImport } from './routes/_private/classroom'
 import { Route as PrivateSuperAdminImport } from './routes/_private/_superAdmin'
 import { Route as AuthenticationRegisterImport } from './routes/_authentication/register'
 import { Route as AuthenticationLoginImport } from './routes/_authentication/login'
+import { Route as PrivateClassroomIndexImport } from './routes/_private/classroom/index'
+import { Route as PrivateClassroomClassroomIdImport } from './routes/_private/classroom/$classroomId'
 import { Route as PrivateSuperAdminUserImport } from './routes/_private/_superAdmin/user'
 
 // Create/Update Routes
@@ -43,11 +44,6 @@ const PrivateProfileRoute = PrivateProfileImport.update({
   getParentRoute: () => PrivateRoute,
 } as any)
 
-const PrivateClassroomRoute = PrivateClassroomImport.update({
-  path: '/classroom',
-  getParentRoute: () => PrivateRoute,
-} as any)
-
 const PrivateSuperAdminRoute = PrivateSuperAdminImport.update({
   id: '/_superAdmin',
   getParentRoute: () => PrivateRoute,
@@ -62,6 +58,17 @@ const AuthenticationLoginRoute = AuthenticationLoginImport.update({
   path: '/login',
   getParentRoute: () => AuthenticationRoute,
 } as any)
+
+const PrivateClassroomIndexRoute = PrivateClassroomIndexImport.update({
+  path: '/classroom/',
+  getParentRoute: () => PrivateRoute,
+} as any)
+
+const PrivateClassroomClassroomIdRoute =
+  PrivateClassroomClassroomIdImport.update({
+    path: '/classroom/$classroomId',
+    getParentRoute: () => PrivateRoute,
+  } as any)
 
 const PrivateSuperAdminUserRoute = PrivateSuperAdminUserImport.update({
   path: '/user',
@@ -114,13 +121,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateSuperAdminImport
       parentRoute: typeof PrivateImport
     }
-    '/_private/classroom': {
-      id: '/_private/classroom'
-      path: '/classroom'
-      fullPath: '/classroom'
-      preLoaderRoute: typeof PrivateClassroomImport
-      parentRoute: typeof PrivateImport
-    }
     '/_private/profile': {
       id: '/_private/profile'
       path: '/profile'
@@ -134,6 +134,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/user'
       preLoaderRoute: typeof PrivateSuperAdminUserImport
       parentRoute: typeof PrivateSuperAdminImport
+    }
+    '/_private/classroom/$classroomId': {
+      id: '/_private/classroom/$classroomId'
+      path: '/classroom/$classroomId'
+      fullPath: '/classroom/$classroomId'
+      preLoaderRoute: typeof PrivateClassroomClassroomIdImport
+      parentRoute: typeof PrivateImport
+    }
+    '/_private/classroom/': {
+      id: '/_private/classroom/'
+      path: '/classroom'
+      fullPath: '/classroom'
+      preLoaderRoute: typeof PrivateClassroomIndexImport
+      parentRoute: typeof PrivateImport
     }
   }
 }
@@ -150,8 +164,9 @@ export const routeTree = rootRoute.addChildren({
     PrivateSuperAdminRoute: PrivateSuperAdminRoute.addChildren({
       PrivateSuperAdminUserRoute,
     }),
-    PrivateClassroomRoute,
     PrivateProfileRoute,
+    PrivateClassroomClassroomIdRoute,
+    PrivateClassroomIndexRoute,
   }),
 })
 
@@ -182,8 +197,9 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_private.tsx",
       "children": [
         "/_private/_superAdmin",
-        "/_private/classroom",
-        "/_private/profile"
+        "/_private/profile",
+        "/_private/classroom/$classroomId",
+        "/_private/classroom/"
       ]
     },
     "/_authentication/login": {
@@ -201,10 +217,6 @@ export const routeTree = rootRoute.addChildren({
         "/_private/_superAdmin/user"
       ]
     },
-    "/_private/classroom": {
-      "filePath": "_private/classroom.tsx",
-      "parent": "/_private"
-    },
     "/_private/profile": {
       "filePath": "_private/profile.tsx",
       "parent": "/_private"
@@ -212,6 +224,14 @@ export const routeTree = rootRoute.addChildren({
     "/_private/_superAdmin/user": {
       "filePath": "_private/_superAdmin/user.tsx",
       "parent": "/_private/_superAdmin"
+    },
+    "/_private/classroom/$classroomId": {
+      "filePath": "_private/classroom/$classroomId.tsx",
+      "parent": "/_private"
+    },
+    "/_private/classroom/": {
+      "filePath": "_private/classroom/index.tsx",
+      "parent": "/_private"
     }
   }
 }

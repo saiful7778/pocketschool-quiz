@@ -30,3 +30,12 @@ export type UserLoginResponse = {
 export interface classroom {
   title: string;
 }
+
+export interface Classroom {
+  _id: string | unknown;
+  title: string;
+  admin: boolean;
+  user: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}

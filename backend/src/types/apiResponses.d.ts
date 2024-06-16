@@ -27,3 +27,12 @@ export interface UserDataResponse {
 
 export interface LoginUserDataResponse
   extends ApiResponseData<UserDataResponse> {}
+
+export interface Classroom {
+  _id: string | unknown;
+  title: string;
+  admins: string[] | unknown[];
+  users: string[] | unknown[];
+  createdAt: Date;
+  updatedAt: Date;
+}
