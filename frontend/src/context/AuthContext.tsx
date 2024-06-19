@@ -87,7 +87,7 @@ const AuthContextProvider: FC<Readonly<LayoutProps>> = ({ children }) => {
               }
               if (data?.data) {
                 setUser(currentUser);
-                setToken(data?.data.token);
+                setToken(`Bearer ${data?.data.token}`);
                 setUserData(data?.data.userData);
               }
             }

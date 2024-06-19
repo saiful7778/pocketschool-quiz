@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface ClassroomMainPage {
   _id: string;
   title: string;
@@ -8,16 +10,23 @@ export interface ClassroomMainPage {
   __v?: number;
 }
 
-type user = {
+export interface user {
+  _id: string;
   access: boolean;
-  userId: string;
-};
+  userId: {
+    _id: User["_id"];
+    fullName: User["fullName"];
+    image?: string | null;
+    email: User["email"];
+  };
+}
 
 export interface Classroom {
   _id: string;
   title: string;
-  admins: user[];
-  users: user[];
+  admins?: user[];
+  users?: user[];
+  role: "user" | "admin";
   createdAt: Date;
   updatedAt: Date;
   __v?: number;

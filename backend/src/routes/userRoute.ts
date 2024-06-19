@@ -41,7 +41,7 @@ route.post("/", (req: Request, res: Response) => {
     if (typeof classroomId !== "undefined") {
       await classroomModel.findByIdAndUpdate(
         classroomId,
-        { users: [user.id] },
+        { users: [{ userId: user.id, access: true }] },
         { upsert: true }
       );
       devDebug("new user is connected by classroom");
@@ -86,6 +86,9 @@ route.get(
   }
 );
 
+/**
+ * update user if request user is super admin
+ */
 route.patch(
   "/:userId",
   verifyToken,
@@ -93,8 +96,17 @@ route.patch(
   verifyUserExist,
   verifySuperAdmin,
   (req: Request, res: Response) => {
+    const { userId: superAdminUserId } = req.user;
     const userId = req.params.userId;
     const { role, access } = req.body;
+
+    if (superAdminUserId.toString() === userId) {
+      res.status(400).send({
+        success: false,
+        message: "You can't update your role or access",
+      } as ApiResponseMessage);
+      return;
+    }
 
     const check = inputCheck([role, access], res);
     if (!check) {

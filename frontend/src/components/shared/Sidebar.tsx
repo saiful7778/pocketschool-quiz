@@ -7,7 +7,6 @@ import useAuth from "@/hooks/useAuth";
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils/shadcn";
 import { buttonVariants } from "@/lib/styles";
-import type { RoutesPath } from "@/types/route";
 import Separator from "@/components/ui/separator";
 
 const Sidebar: FC = () => {
@@ -78,7 +77,7 @@ const Sidebar: FC = () => {
 };
 
 interface NavlinkProps {
-  path: RoutesPath;
+  path: string;
   navName: string;
 }
 

@@ -10,6 +10,7 @@ import { ApiResponseData, ApiResponseMessage } from "../types/apiResponses";
 import devDebug from "../utils/devDebug";
 import verifyAdminAndSuperAdmin from "../middlewares/verifyAdminAndSuperAdmin";
 import { Classroom } from "../types/classroom";
+import { Types } from "mongoose";
 
 const route = Router();
 const routeAll = Router();
@@ -50,7 +51,7 @@ route.post(
  * join classroom
  */
 route.post(
-  "/:classroomId",
+  "/join/:classroomId",
   verifyToken,
   verifyTokenAndKey,
   verifyUserExist,
@@ -71,6 +72,154 @@ route.post(
         success: true,
         message: "Joined in a classroom",
       } as ApiResponseMessage);
+    }, res);
+  }
+);
+
+/**
+ * get single classroom details
+ */
+route.get(
+  "/:classroomId",
+  verifyToken,
+  verifyTokenAndKey,
+  verifyUserExist,
+  (req: Request, res: Response) => {
+    const classroomId = req.params.classroomId;
+    const { userId } = req.user;
+
+    serverHelper(async () => {
+      const classroom = await classroomModel.aggregate([
+        {
+          $match: {
+            _id: new Types.ObjectId(classroomId),
+            $or: [
+              { "admins.userId": userId, "admins.access": true },
+              { "users.userId": userId, "users.access": true },
+            ],
+          },
+        },
+        {
+          $addFields: {
+            role: {
+              $cond: {
+                if: { $in: [userId, "$admins.userId"] },
+                then: "admin",
+                else: {
+                  $cond: {
+                    if: { $in: [userId, "$users.userId"] },
+                    then: "user",
+                    else: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            admins: 0,
+            users: 0,
+            __v: 0,
+          },
+        },
+      ]);
+
+      res.status(200).send({
+        success: true,
+        data: classroom[0],
+      } as unknown as ApiResponseData<Classroom>);
+    }, res);
+  }
+);
+
+/**
+ * get single classroom users and admin details
+ */
+route.get(
+  "/:classroomId/admin",
+  verifyToken,
+  verifyTokenAndKey,
+  verifyUserExist,
+  (req: Request, res: Response) => {
+    const classroomId = req.params.classroomId;
+    const { userId } = req.user;
+
+    serverHelper(async () => {
+      const classroom = await classroomModel
+        .findOne({
+          _id: classroomId,
+          "admins.userId": userId,
+          "admins.access": true,
+        })
+        .populate({
+          path: "admins.userId",
+          select: ["fullName", "email", "image"],
+        })
+        .populate({
+          path: "users.userId",
+          select: ["fullName", "email", "image"],
+        });
+
+      res.status(200).send({
+        success: true,
+        data: classroom,
+      } as ApiResponseData<Classroom>);
+    }, res);
+  }
+);
+
+/**
+ * update classroom user
+ */
+route.patch(
+  "/:classroomId/user/:userId",
+  verifyToken,
+  verifyTokenAndKey,
+  verifyUserExist,
+  (req: Request, res: Response) => {
+    const classroomId = req.params.classroomId;
+    const classroomUserId = req.params.userId;
+    const { userId } = req.user;
+    const reqBody = req.body;
+    const { access } = reqBody;
+
+    const check = inputCheck([access], res);
+    if (!check) return;
+
+    if (userId.toString() === classroomUserId) {
+      res.status(400).send({
+        success: false,
+        message: "You can't update your role or access",
+      } as ApiResponseMessage);
+      return;
+    }
+
+    serverHelper(async () => {
+      const classroom = await classroomModel.updateOne(
+        {
+          _id: classroomId,
+          "admins.userId": userId,
+          "admins.access": true,
+        },
+        {
+          $set: {
+            "users.$[user].access": access,
+            "admins.$[admin].access": access,
+          },
+        },
+        {
+          arrayFilters: [
+            { "user._id": classroomUserId },
+            { "admin._id": classroomUserId },
+          ],
+        }
+      );
+
+      res.status(200).send({
+        success: true,
+        data: classroom,
+      } as unknown as ApiResponseData<Classroom>);
     }, res);
   }
 );

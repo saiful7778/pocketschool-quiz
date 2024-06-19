@@ -1,12 +1,9 @@
 import Sidebar from "@/components/shared/Sidebar";
 import PrivateProtector from "@/protector/PrivateProtector";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet } from "@tanstack/react-router";
+import { FC } from "react";
 
-export const Route = createFileRoute("/_private")({
-  component: Private,
-});
-
-function Private(): JSX.Element {
+const PrivateLayout: FC = () => {
   return (
     <PrivateProtector>
       <div className="flex flex-col gap-2 md:flex-row">
@@ -17,4 +14,6 @@ function Private(): JSX.Element {
       </div>
     </PrivateProtector>
   );
-}
+};
+
+export default PrivateLayout;

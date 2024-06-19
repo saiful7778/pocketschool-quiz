@@ -5,7 +5,7 @@ import Select from "@/components/ui/select";
 import Switch from "@/components/ui/switch";
 import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
-import { updateUserSchema } from "@/lib/schemas/userSchema";
+import { updateClassroomUserSchema } from "@/lib/schemas/userSchema";
 import toast from "@/lib/toast/toast";
 import type { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,18 +15,26 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 interface UpdateUserProps {
-  id: string;
-  role: User["role"];
+  userId: string;
+  classroomId: string;
+  currentUserEmail: string;
+  role: "user" | "admin";
   access: User["access"];
 }
 
-const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
+const UpdateClassroomUser: FC<UpdateUserProps> = ({
+  classroomId,
+  userId,
+  currentUserEmail,
+  role,
+  access,
+}) => {
   const { token, user, userData } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
-  const form = useForm<z.infer<typeof updateUserSchema>>({
-    resolver: zodResolver(updateUserSchema),
+  const form = useForm<z.infer<typeof updateClassroomUserSchema>>({
+    resolver: zodResolver(updateClassroomUserSchema),
     defaultValues: {
       access: access,
       role: role,
@@ -35,18 +43,22 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (updatedUserData: {
-      role: User["role"];
+      role: "user" | "admin";
       access: User["access"];
     }) => {
-      return axiosSecure.patch(`/user/${id}`, updatedUserData, {
-        params: { email: user?.email, userId: userData?._id },
-        headers: { Authorization: token },
-      });
+      return axiosSecure.patch(
+        `/classroom/${classroomId}/user/${userId}`,
+        updatedUserData,
+        {
+          params: { email: user?.email, userId: userData?._id },
+          headers: { Authorization: token },
+        },
+      );
     },
     onSuccess: (data) => {
-      if (data?.status === 200) {
+      if (data?.status === 200 && data.data.data.matchedCount === 1) {
         queryClient.invalidateQueries({
-          queryKey: ["users", userData?._id, user?.email, token],
+          queryKey: [classroomId, "admin", user?.email, userData?._id, token],
         });
         toast({
           title: "User is updated",
@@ -62,11 +74,11 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
     },
   });
 
-  const handleSubmit = (e: z.infer<typeof updateUserSchema>) => {
+  const handleSubmit = (e: z.infer<typeof updateClassroomUserSchema>) => {
     mutate({ access: e.access, role: e.role });
   };
 
-  return userData?._id === id ? (
+  return currentUserEmail === user?.email ? (
     <div className="text-center text-xl font-semibold text-destructive">
       You can{`'`}t update your role or access
     </div>
@@ -102,7 +114,7 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  disabled={isPending}
+                  disabled={true}
                 >
                   <Form.control>
                     <Select.trigger>
@@ -112,7 +124,6 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
                   <Select.content>
                     <Select.item value="user">user</Select.item>
                     <Select.item value="admin">admin</Select.item>
-                    <Select.item value="superAdmin">super admin</Select.item>
                   </Select.content>
                 </Select>
               </div>
@@ -130,4 +141,4 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
   );
 };
 
-export default UpdateUser;
+export default UpdateClassroomUser;

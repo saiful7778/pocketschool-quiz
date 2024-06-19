@@ -39,7 +39,7 @@ const UserDropdown: FC<UserAuthDropdownProps> = ({ user }) => {
         </DropdownMenu.label>
         <DropdownMenu.separator />
         <DropdownMenu.item className="cursor-pointer" asChild>
-          <Link to="/classroom">Classroom</Link>
+          <Link to="/classrooms">Classroom</Link>
         </DropdownMenu.item>
         <DropdownMenu.item className="cursor-pointer" asChild>
           <Link to="/profile">Profile</Link>

@@ -1,4 +1,3 @@
-"use client";
 import dispatch, { listeners, memoryState } from "@/lib/toast/dispatch";
 import toast from "@/lib/toast/toast";
 import { State } from "@/types/toastTypes";

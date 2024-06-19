@@ -1,4 +1,3 @@
-"use client";
 import useToast from "@/hooks/useToast";
 import Toast from "@/components/ui/toast";
 import { FC } from "react";

@@ -1,22 +1,20 @@
-import type { RoutesPath } from "@/types/route";
-
-export const defaultLoginPage = "/classroom";
+export const defaultLoginPage = "/classrooms";
 
 type dashboardLinkTypes = {
   navName: string;
-  path: RoutesPath;
+  path: string;
   access: "superAdmin" | "admin" | "user";
 };
 
 export const dashboardLinks: dashboardLinkTypes[] = [
   {
-    navName: "Classroom",
-    path: "/classroom",
+    navName: "Classrooms",
+    path: "/classrooms",
     access: "user",
   },
   {
-    navName: "User",
-    path: "/user",
+    navName: "Users",
+    path: "/users",
     access: "superAdmin",
   },
 ];

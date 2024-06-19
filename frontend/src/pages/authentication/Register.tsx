@@ -1,29 +1,24 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema } from "@/lib/schemas/authenticationSchema";
-import * as z from "zod";
-import Form from "@/components/ui/form";
 import InputField from "@/components/InputField";
 import PasswordField from "@/components/PasswordField";
-import Button from "@/components/ui/button";
 import Spinner from "@/components/Spinner";
-import useAuth from "@/hooks/useAuth";
-import toast from "@/lib/toast/toast";
-import errorStatus from "@/lib/errorStatus";
+import Button from "@/components/ui/button";
+import Form from "@/components/ui/form";
 import Switch from "@/components/ui/switch";
+import useAuth from "@/hooks/useAuth";
 import { useAxios } from "@/hooks/useAxios";
+import errorStatus from "@/lib/errorStatus";
+import { registerSchema } from "@/lib/schemas/authenticationSchema";
+import toast from "@/lib/toast/toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, getRouteApi } from "@tanstack/react-router";
+import { FC, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-export const Route = createFileRoute("/_authentication/register")({
-  validateSearch: z.object({
-    classroomId: z.string().optional(),
-  }),
-  component: RegisterPage,
-});
+const routeData = getRouteApi("/authentication/register");
 
-function RegisterPage(): JSX.Element {
-  const { classroomId } = Route.useSearch();
+const Register: FC = () => {
+  const { classroomId } = routeData.useSearch();
   const [loading, setLoading] = useState<boolean>(false);
   const axios = useAxios();
   const { register } = useAuth();
@@ -190,4 +185,6 @@ function RegisterPage(): JSX.Element {
       </p>
     </>
   );
-}
+};
+
+export default Register;

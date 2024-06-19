@@ -6,6 +6,7 @@ import users, { user } from "./routes/userRoute";
 import { connect } from "mongoose";
 import { authentication } from "./routes/authecticationRoute";
 import classrooms, { classroom } from "./routes/classroomRoute";
+import { quiz } from "./routes/quizRoute";
 
 (async () => {
   try {
@@ -47,6 +48,7 @@ function mainServer() {
   app.use("/users", users);
   app.use("/classroom", classroom);
   app.use("/classrooms", classrooms);
+  app.use("/classroom/quiz", quiz);
   app.use("/authentication", authentication);
 
   app.get("*", (_req: Request, res: Response) => {

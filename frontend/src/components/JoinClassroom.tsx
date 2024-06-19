@@ -34,7 +34,7 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
   const { mutate, isPending } = useMutation({
     mutationFn: async (classroomData: { _id: Classroom["_id"] }) => {
       return axiosSecure.post(
-        `/classroom/${classroomData._id}`,
+        `/classroom/join/${classroomData._id}`,
         {},
         {
           params: { email: email, userId: id },

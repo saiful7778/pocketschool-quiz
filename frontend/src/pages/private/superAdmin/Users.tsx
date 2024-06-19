@@ -1,19 +1,16 @@
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import UserTable from "@/components/tables/user/UserTable";
+import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import type { ApiResponse } from "@/types/apiResponse";
 import type { User } from "@/types/user";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { FC } from "react";
 
-export const Route = createFileRoute("/_private/_superAdmin/user")({
-  component: Users,
-});
-
-function Users(): JSX.Element {
+const Users: FC = () => {
+  const { user, userData, token } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const { token, user, auth } = Route.useRouteContext();
 
   const {
     data: users,
@@ -22,12 +19,12 @@ function Users(): JSX.Element {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["users", user?._id, auth?.email, token],
+    queryKey: ["users", userData?._id, user?.email, token],
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<User[]>>(
         "/users/all",
         {
-          params: { email: auth?.email, userId: user?._id },
+          params: { email: user?.email, userId: userData?._id },
           headers: { Authorization: token },
         },
       );
@@ -54,4 +51,6 @@ function Users(): JSX.Element {
       <UserTable data={users!} reFetch={refetch} />
     </div>
   );
-}
+};
+
+export default Users;

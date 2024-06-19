@@ -9,10 +9,11 @@ const PrivateProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
 
   const isAuth = !!user;
 
-  if (!isAuth) {
-    return <Navigate to="/login" search={{ redirect: location.href }} />;
+  if (isAuth) {
+    return children;
   }
-  return children;
+
+  return <Navigate to="/login" search={{ redirect: location.href }} />;
 };
 
 export default PrivateProtector;

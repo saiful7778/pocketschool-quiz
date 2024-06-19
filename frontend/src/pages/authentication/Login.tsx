@@ -10,23 +10,19 @@ import { loginSchema } from "@/lib/schemas/authenticationSchema";
 import { defaultLoginPage } from "@/lib/staticData";
 import toast from "@/lib/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { getRouteApi } from "@tanstack/react-router";
+import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { z } from "zod";
 
-export const Route = createFileRoute("/_authentication/login")({
-  validateSearch: z.object({
-    redirect: z.string().optional().catch(""),
-  }),
-  component: Login,
-});
+const routeData = getRouteApi("/authentication/login");
 
-function Login(): JSX.Element {
+const Login: FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { login } = useAuth();
-  const { redirect } = Route.useSearch();
-  const naviagate = useNavigate();
+  const { redirect } = routeData.useSearch();
+  const naviagate = routeData.useNavigate();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -76,11 +72,7 @@ function Login(): JSX.Element {
         return;
       }
 
-      if (redirect) {
-        await naviagate({ to: redirect });
-      } else {
-        await naviagate({ to: defaultLoginPage });
-      }
+      naviagate({ to: redirect || defaultLoginPage });
 
       toast({
         title: "Successfully logged in",
@@ -138,4 +130,6 @@ function Login(): JSX.Element {
       </p>
     </>
   );
-}
+};
+
+export default Login;

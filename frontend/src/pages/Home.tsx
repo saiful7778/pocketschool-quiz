@@ -1,12 +1,8 @@
 import Button from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { FC } from "react";
 
-export const Route = createFileRoute("/")({
-  component: HomePage,
-});
-
-function HomePage(): JSX.Element {
+const Home: FC = () => {
   return (
     <div className="flex min-h-[calc(100vh-90px)] w-full flex-col items-center justify-center gap-4 text-center">
       <h1 className="text-5xl font-bold">
@@ -15,8 +11,10 @@ function HomePage(): JSX.Element {
       </h1>
       <p>Test your skills</p>
       <Button asChild>
-        <Link to="/classroom">Classroom</Link>
+        <Link to="/classrooms">Classroom</Link>
       </Button>
     </div>
   );
-}
+};
+
+export default Home;
