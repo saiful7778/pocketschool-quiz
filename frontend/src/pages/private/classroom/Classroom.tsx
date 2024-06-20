@@ -1,6 +1,7 @@
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import Button from "@/components/ui/button";
+import DropdownMenu from "@/components/ui/dropdown-menu";
 import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import useStateData from "@/hooks/useStateData";
@@ -8,7 +9,7 @@ import { ApiResponse } from "@/types/apiResponse";
 import type { Classroom as ClassroomType } from "@/types/classroom";
 import { useQuery } from "@tanstack/react-query";
 import { Link, Outlet, getRouteApi } from "@tanstack/react-router";
-import { Copy } from "lucide-react";
+import { Copy, SquareChevronDown } from "lucide-react";
 import { FC, useEffect } from "react";
 
 const routeData = getRouteApi("/private/classroom/$classroomId");
@@ -16,7 +17,8 @@ const routeData = getRouteApi("/private/classroom/$classroomId");
 const Classroom: FC = () => {
   const { classroomId } = routeData.useParams();
   const { user, userData, token } = useAuth();
-  const { setClassroomRole } = useStateData();
+  const { classroomRole, setClassroomRole, setClassroomDetailsLoading } =
+    useStateData();
   const axiosSecure = useAxiosSecure();
 
   const {
@@ -47,8 +49,9 @@ const Classroom: FC = () => {
   useEffect(() => {
     if (classroom?.role) {
       setClassroomRole(classroom?.role);
+      setClassroomDetailsLoading(false);
     }
-  }, [classroom, setClassroomRole]);
+  }, [classroom, setClassroomRole, setClassroomDetailsLoading]);
 
   if (isLoading) {
     return <Loading />;
@@ -78,25 +81,32 @@ const Classroom: FC = () => {
             <Copy size={15} />
           </Button>
         </div>
-        {classroom?.role === "admin" && (
-          <>
-            <Button variant="secondary" size="sm" asChild>
-              <Link
-                to="/classroom/$classroomId/create"
-                params={{ classroomId: classroomId }}
-              >
-                Create
-              </Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link
-                to="/classroom/$classroomId/users"
-                params={{ classroomId: classroomId }}
-              >
-                Users
-              </Link>
-            </Button>
-          </>
+        {classroomRole === "admin" && (
+          <DropdownMenu>
+            <DropdownMenu.trigger asChild>
+              <Button size="icon" variant="outline">
+                <SquareChevronDown size={15} />
+              </Button>
+            </DropdownMenu.trigger>
+            <DropdownMenu.content align="end" forceMount>
+              <DropdownMenu.item asChild>
+                <Link
+                  to="/classroom/$classroomId/create"
+                  params={{ classroomId: classroomId }}
+                >
+                  Create new
+                </Link>
+              </DropdownMenu.item>
+              <DropdownMenu.item asChild>
+                <Link
+                  to="/classroom/$classroomId/users"
+                  params={{ classroomId: classroomId }}
+                >
+                  Users
+                </Link>
+              </DropdownMenu.item>
+            </DropdownMenu.content>
+          </DropdownMenu>
         )}
       </div>
       <Outlet />

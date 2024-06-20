@@ -39,7 +39,7 @@ const RenderQuestions: FC<InputProps> = ({ control, loading }) => {
       {fields.map((question, index) => (
         <div
           key={`question-${index}`}
-          className="relative space-y-4 rounded-md border-y-2 border-primary p-4 shadow"
+          className="relative space-y-4 rounded-md border-t-2 border-primary p-4 shadow"
         >
           <div className="absolute right-2 top-2">
             <Button
@@ -51,15 +51,9 @@ const RenderQuestions: FC<InputProps> = ({ control, loading }) => {
               <X size={15} />
             </Button>
           </div>
-          <Form.field
-            control={control}
-            name={`questions.${index}.questionType`}
-            render={({ field: { value } }) => (
-              <div className="!mt-0 select-none font-semibold">
-                {index + 1}. {renderQuestionType(value)}
-              </div>
-            )}
-          />
+          <div className="!mt-0 select-none font-semibold">
+            {index + 1}. {renderQuestionType(question.questionType)}
+          </div>
           <Form.field
             control={control}
             name={`questions.${index}.questionText`}

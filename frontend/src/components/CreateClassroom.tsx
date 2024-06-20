@@ -10,7 +10,6 @@ import Button from "@/components/ui/button";
 import Form from "@/components/ui/form";
 import Spinner from "@/components/Spinner";
 import InputField from "@/components/InputField";
-import type { Classroom } from "@/types/classroom";
 import Drawer from "./ui/drawer";
 
 interface CreateClassroomProps {
@@ -32,7 +31,9 @@ const CreateClassroom: FC<CreateClassroomProps> = ({ email, id, token }) => {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (classroomData: { title: Classroom["title"] }) => {
+    mutationFn: async (
+      classroomData: z.infer<typeof createClassroomSchema>,
+    ) => {
       return axiosSecure.post(
         "/classroom",
         { title: classroomData.title },

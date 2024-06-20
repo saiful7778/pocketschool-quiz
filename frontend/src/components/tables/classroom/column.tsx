@@ -27,11 +27,11 @@ export default function getColumns(
             <Avatar className="size-8">
               <Avatar.image
                 asChild
-                src={user.userId?.image || undefined}
+                src={user.userId?.image!}
                 alt={`${user.userId?.fullName} image`}
               >
                 <img
-                  src={user.userId?.image || undefined}
+                  src={user.userId?.image!}
                   alt={`${user.userId?.fullName} image`}
                 />
               </Avatar.image>
@@ -81,8 +81,8 @@ export default function getColumns(
               </Dialog.header>
               <UpdateClassroomUser
                 classroomId={classroomId}
-                userId={user._id}
-                currentUserEmail={user.userId.email}
+                userId={user.userId._id}
+                currentUserEmail={user.userId?.email}
                 access={user.access}
                 role={role}
               />

@@ -7,5 +7,5 @@ export const updateUserSchema = z.object({
 
 export const updateClassroomUserSchema = z.object({
   access: z.boolean(),
-  role: z.enum(["user", "admin"]),
+  role: z.enum(["user", "admin"]).optional(),
 });

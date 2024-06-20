@@ -33,7 +33,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append }) => {
       timeLimit: 30,
       marks: 30,
       options: [{ text: "" }, { text: "" }],
-      correctAnswerIndices: [1, 2],
+      correctAnswerIndices: [1],
     });
   };
 

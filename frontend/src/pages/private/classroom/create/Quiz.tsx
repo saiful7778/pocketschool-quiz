@@ -3,11 +3,11 @@ import Spinner from "@/components/Spinner";
 import RenderQuestions from "@/components/quiz-helpers/RenderQuestions";
 import Button from "@/components/ui/button";
 import Form from "@/components/ui/form";
-import QuizFormContextProvider from "@/context/QuizFormContext";
 import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { quizSchema } from "@/lib/schemas/quizSchema";
 import toast from "@/lib/toast/toast";
+import ClassroomAdminProtector from "@/protector/ClassroomAdminProtector";
 import type { Quiz } from "@/types/quiz";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -83,11 +83,10 @@ const Quiz: FC = () => {
 
   const handleSubmit = async (e: z.infer<typeof quizSchema>) => {
     mutate(e);
-    // navigator.clipboard.writeText(JSON.stringify(e));
   };
 
   return (
-    <QuizFormContextProvider>
+    <ClassroomAdminProtector>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -130,7 +129,7 @@ const Quiz: FC = () => {
           </Button>
         </form>
       </Form>
-    </QuizFormContextProvider>
+    </ClassroomAdminProtector>
   );
 };
 

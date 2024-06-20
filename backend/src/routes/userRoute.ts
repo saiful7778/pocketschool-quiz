@@ -15,7 +15,9 @@ import verifyUserExist from "../middlewares/verifyUserExist";
 import verifySuperAdmin from "../middlewares/verifySuperAdmin";
 import { User } from "../types/user";
 
+// this instance for single user operation
 const route = Router();
+// this instance for all users operation
 const routeAll = Router();
 
 /**
@@ -23,13 +25,15 @@ const routeAll = Router();
  */
 route.post("/", (req: Request, res: Response) => {
   const userData = req.body;
+  // extract all of the user data from request body
   const { fullName, email, uid, classroomId, role, access } = userData;
 
+  // checking all requested data are available or not
   const check = inputCheck([fullName, email, uid, role, access], res);
-
   if (!check) return;
 
   serverHelper(async () => {
+    // create new user using user mongoose model and schema
     const user = await userModel.create({
       fullName,
       email,
@@ -38,9 +42,12 @@ route.post("/", (req: Request, res: Response) => {
       access,
     });
 
+    // if classroomId data available then add relation with classroom document
     if (typeof classroomId !== "undefined") {
-      await classroomModel.findByIdAndUpdate(
-        classroomId,
+      await classroomModel.updateOne(
+        {
+          _id: classroomId,
+        },
         { users: [{ userId: user.id, access: true }] },
         { upsert: true }
       );
@@ -49,6 +56,7 @@ route.post("/", (req: Request, res: Response) => {
 
     devDebug("new user is created");
 
+    // send response to the client
     res.status(201).send({
       success: true,
       message: "user is created",
@@ -64,12 +72,19 @@ route.get(
   verifyToken,
   verifyTokenAndKey,
   (req: Request, res: Response) => {
+    // get userId data from request params /:userId
     const userId = req.params.userId;
 
     serverHelper(async () => {
-      const user = await userModel.findById(userId, {
-        role: 1,
-      });
+      // find the user based on userId data and return only _id and role data
+      const user = await userModel.findOne(
+        { _id: userId },
+        {
+          role: 1,
+        }
+      );
+
+      // check is user found or not
       if (!user) {
         res.status(404).send({
           success: false,
@@ -78,6 +93,7 @@ route.get(
         return;
       }
 
+      // send user data
       res.status(200).send({
         success: true,
         data: user,
@@ -87,7 +103,7 @@ route.get(
 );
 
 /**
- * update user if request user is super admin
+ * update user if requested user is super admin
  */
 route.patch(
   "/:userId",
@@ -96,10 +112,16 @@ route.patch(
   verifyUserExist,
   verifySuperAdmin,
   (req: Request, res: Response) => {
-    const { userId: superAdminUserId } = req.user;
+    // get user id data from request params
     const userId = req.params.userId;
+
+    // get requested user(superAdminUserId) id
+    const { userId: superAdminUserId } = req.user;
+
+    // get only essential data from request body comes
     const { role, access } = req.body;
 
+    // check if requested user don't update her account data
     if (superAdminUserId.toString() === userId) {
       res.status(400).send({
         success: false,
@@ -108,17 +130,21 @@ route.patch(
       return;
     }
 
+    // check is all data available or not
     const check = inputCheck([role, access], res);
     if (!check) {
       return;
     }
 
     serverHelper(async () => {
-      const user = await userModel.findByIdAndUpdate(userId, { role, access });
+      // update user data based on her userId
+      const user = await userModel.updateOne({ _id: userId }, { role, access });
 
-      res
-        .status(200)
-        .send({ success: true, data: user } as ApiResponseData<User>);
+      // send user data as response
+      res.status(200).send({
+        success: true,
+        data: user,
+      } as unknown as ApiResponseData<User>);
     }, res);
   }
 );
@@ -134,8 +160,10 @@ routeAll.get(
   verifySuperAdmin,
   (_req: Request, res: Response) => {
     serverHelper(async () => {
+      // get all user account data without __v
       const users = await userModel.find({}, { __v: 0 });
 
+      // send all user data
       res
         .status(200)
         .send({ success: true, data: users } as ApiResponseData<User[]>);

@@ -12,11 +12,13 @@ import verifyAdminAndSuperAdmin from "../middlewares/verifyAdminAndSuperAdmin";
 import { Classroom } from "../types/classroom";
 import { Types } from "mongoose";
 
+// this instance for single classroom operation
 const route = Router();
+// this instance for all classrooms operation
 const routeAll = Router();
 
 /**
- * create classroom
+ * create a new classroom if requested user in admin or superAdmin
  */
 route.post(
   "/",
@@ -25,13 +27,17 @@ route.post(
   verifyUserExist,
   verifyAdminAndSuperAdmin,
   (req: Request, res: Response) => {
+    // get data from request body
     const { title } = req.body;
+    // get user id from verifyAdminAndSuperAdmin middleware
     const admin = req.userId;
 
+    // check is all data available or not
     const check = inputCheck([title], res);
     if (!check) return;
 
     serverHelper(async () => {
+      // create a new classroom using classroom mongoose model
       await classroomModel.create({
         title,
         admins: [{ userId: admin, access: true }],
@@ -39,6 +45,7 @@ route.post(
 
       devDebug("new classroom created");
 
+      // send response data
       res.status(201).send({
         success: true,
         message: "classroom is created",
@@ -48,7 +55,7 @@ route.post(
 );
 
 /**
- * join classroom
+ * join a new classroom
  */
 route.post(
   "/join/:classroomId",
@@ -56,10 +63,13 @@ route.post(
   verifyTokenAndKey,
   verifyUserExist,
   (req: Request, res: Response) => {
+    // get classroomId from request params
     const classroomId = req.params.classroomId;
+    // get userId from verifyUserExist middleware
     const { userId } = req.user;
 
     serverHelper(async () => {
+      // add user to a classroom
       await classroomModel.updateOne(
         { _id: classroomId },
         { users: [{ userId, access: false }] },
@@ -68,6 +78,7 @@ route.post(
 
       devDebug("joined classroom");
 
+      // send response
       res.status(201).send({
         success: true,
         message: "Joined in a classroom",
@@ -85,14 +96,18 @@ route.get(
   verifyTokenAndKey,
   verifyUserExist,
   (req: Request, res: Response) => {
+    // get classroomId from request params
     const classroomId = req.params.classroomId;
+    // get userId data from verifyUserExist middleware
     const { userId } = req.user;
 
     serverHelper(async () => {
+      // get classroom data by mongodb aggregation pipeline
       const classroom = await classroomModel.aggregate([
         {
           $match: {
             _id: new Types.ObjectId(classroomId),
+            // check if userId exist in this classroom admin or user array also her access should be true
             $or: [
               { "admins.userId": userId, "admins.access": true },
               { "users.userId": userId, "users.access": true },
@@ -100,6 +115,7 @@ route.get(
           },
         },
         {
+          // add a new role field of user in admin or user
           $addFields: {
             role: {
               $cond: {
@@ -117,6 +133,7 @@ route.get(
           },
         },
         {
+          // exclude admins, users and __v field
           $project: {
             admins: 0,
             users: 0,
@@ -125,6 +142,7 @@ route.get(
         },
       ]);
 
+      // send classroom data
       res.status(200).send({
         success: true,
         data: classroom[0],
@@ -142,25 +160,32 @@ route.get(
   verifyTokenAndKey,
   verifyUserExist,
   (req: Request, res: Response) => {
+    // get classroomId data from request params
     const classroomId = req.params.classroomId;
+    // get userId from verifyUserExist middleware
     const { userId } = req.user;
 
     serverHelper(async () => {
+      // find classroom data from classroom mongoose model and schema
       const classroom = await classroomModel
         .findOne({
           _id: classroomId,
+          // userId should be classroom admin and her access should be true to proceed the next steps
           "admins.userId": userId,
           "admins.access": true,
         })
+        // get all classrooms admins details like fullName, email and image
         .populate({
           path: "admins.userId",
           select: ["fullName", "email", "image"],
         })
+        // get all classrooms users details like fullName, email and image
         .populate({
           path: "users.userId",
           select: ["fullName", "email", "image"],
         });
 
+      // send classroom data as response
       res.status(200).send({
         success: true,
         data: classroom,
@@ -170,23 +195,30 @@ route.get(
 );
 
 /**
- * update classroom user
+ * update classroom user or admin access and role
  */
 route.patch(
-  "/:classroomId/user/:userId",
+  "/:classroomId/user/:classroomUserId",
   verifyToken,
   verifyTokenAndKey,
   verifyUserExist,
   (req: Request, res: Response) => {
+    // get classroomId from request params
     const classroomId = req.params.classroomId;
-    const classroomUserId = req.params.userId;
-    const { userId } = req.user;
-    const reqBody = req.body;
-    const { access } = reqBody;
+    // get classroomUserId from request params
+    const classroomUserId = req.params.classroomUserId;
 
+    // get userId data from verifyUserExist middleware
+    const { userId } = req.user;
+
+    // get all date from request body
+    const { access, role } = req.body;
+
+    // check all data are available or not
     const check = inputCheck([access], res);
     if (!check) return;
 
+    // protect request user to update her account details
     if (userId.toString() === classroomUserId) {
       res.status(400).send({
         success: false,
@@ -196,9 +228,11 @@ route.patch(
     }
 
     serverHelper(async () => {
+      // update classroom user data using classroom mongoose model and schema
       const classroom = await classroomModel.updateOne(
         {
           _id: classroomId,
+          // check if requested user admin and her access true in this classroom
           "admins.userId": userId,
           "admins.access": true,
         },
@@ -210,12 +244,51 @@ route.patch(
         },
         {
           arrayFilters: [
-            { "user._id": classroomUserId },
-            { "admin._id": classroomUserId },
+            { "user.userId": classroomUserId },
+            { "admin.userId": classroomUserId },
           ],
         }
       );
 
+      if (typeof role !== "undefined") {
+        if (role === "user") {
+          await classroomModel.updateOne(
+            {
+              _id: classroomId,
+              // check if requested user admin and her access true in this classroom
+              "admins.userId": userId,
+              "admins.access": true,
+            },
+            {
+              $pull: {
+                admins: { userId: classroomUserId },
+              },
+              $push: {
+                users: { userId: classroomUserId, access },
+              },
+            }
+          );
+        } else if (role === "admin") {
+          await classroomModel.updateOne(
+            {
+              _id: classroomId,
+              // check if requested user admin and her access true in this classroom
+              "admins.userId": userId,
+              "admins.access": true,
+            },
+            {
+              $pull: {
+                users: { userId: classroomUserId },
+              },
+              $push: {
+                admins: { userId: classroomUserId, access },
+              },
+            }
+          );
+        }
+      }
+
+      // send classroom data as response
       res.status(200).send({
         success: true,
         data: classroom,
@@ -225,10 +298,10 @@ route.patch(
 );
 
 /**
- * get all added classrooms
+ * get all joind classrooms
  */
 routeAll.get(
-  "/added",
+  "/joined",
   verifyToken,
   verifyTokenAndKey,
   verifyUserExist,

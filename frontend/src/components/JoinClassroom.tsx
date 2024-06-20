@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import Dialog from "./ui/dialog";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { joinClassroomSchema } from "@/lib/schemas/classroomSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "@/lib/toast/toast";
 import InputField from "./InputField";
 import Spinner from "./Spinner";
-import type { Classroom } from "@/types/classroom";
+import Drawer from "./ui/drawer";
 
 interface JoinClassroomProps {
   email: string | undefined | null;
@@ -20,7 +19,7 @@ interface JoinClassroomProps {
 }
 
 const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
@@ -32,7 +31,7 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (classroomData: { _id: Classroom["_id"] }) => {
+    mutationFn: async (classroomData: z.infer<typeof joinClassroomSchema>) => {
       return axiosSecure.post(
         `/classroom/join/${classroomData._id}`,
         {},
@@ -48,7 +47,7 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
           queryKey: ["classroom", email, id, token],
         });
         form.reset();
-        setOpenDialog(false);
+        setOpenDrawer(false);
         toast({
           title: "You are joined",
         });
@@ -68,42 +67,51 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
   };
 
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-      <Dialog.trigger asChild>
+    <Drawer open={openDrawer} onOpenChange={setOpenDrawer}>
+      <Drawer.trigger asChild>
         <Button size="sm">
           Join
-          <span className="sr-only">join classroom</span>
+          <span className="sr-only">join new classroom</span>
         </Button>
-      </Dialog.trigger>
-      <Dialog.content className="w-full sm:max-w-md">
-        <Dialog.header>
-          <Dialog.title>Join classroom</Dialog.title>
-        </Dialog.header>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-4"
-          >
-            <Form.field
-              control={form.control}
-              name="_id"
-              render={({ field }) => (
-                <InputField
-                  type="text"
-                  label="Classroom id"
-                  placeholder="Classroom id"
-                  disabled={isPending}
-                  {...field}
-                />
-              )}
-            />
-            <Button className="w-full" type="submit" disabled={isPending}>
-              {isPending ? <Spinner size={20} /> : "Join"}
-            </Button>
-          </form>
-        </Form>
-      </Dialog.content>
-    </Dialog>
+      </Drawer.trigger>
+      <Drawer.content>
+        <div className="mx-auto w-full max-w-sm">
+          <Drawer.header>
+            <Drawer.title>Join new classroom</Drawer.title>
+          </Drawer.header>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
+              <Form.field
+                control={form.control}
+                name="_id"
+                render={({ field }) => (
+                  <InputField
+                    type="text"
+                    label="Classroom id"
+                    placeholder="Classroom id"
+                    disabled={isPending}
+                    {...field}
+                  />
+                )}
+              />
+              <Drawer.footer>
+                <Button className="w-full" type="submit" disabled={isPending}>
+                  {isPending ? <Spinner size={20} /> : "Join"}
+                </Button>
+                <Drawer.close>
+                  <Button type="button" className="w-full" variant="outline">
+                    Cancel
+                  </Button>
+                </Drawer.close>
+              </Drawer.footer>
+            </form>
+          </Form>
+        </div>
+      </Drawer.content>
+    </Drawer>
   );
 };
 

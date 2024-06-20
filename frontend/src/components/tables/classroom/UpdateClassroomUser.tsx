@@ -42,13 +42,14 @@ const UpdateClassroomUser: FC<UpdateUserProps> = ({
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (updatedUserData: {
-      role: "user" | "admin";
-      access: User["access"];
-    }) => {
+    mutationFn: async (data: z.infer<typeof updateClassroomUserSchema>) => {
+      const userUpdatedData: typeof data = { access: data.access };
+      if (role !== data.role) {
+        userUpdatedData.role = data.role;
+      }
       return axiosSecure.patch(
         `/classroom/${classroomId}/user/${userId}`,
-        updatedUserData,
+        userUpdatedData,
         {
           params: { email: user?.email, userId: userData?._id },
           headers: { Authorization: token },
@@ -75,7 +76,7 @@ const UpdateClassroomUser: FC<UpdateUserProps> = ({
   });
 
   const handleSubmit = (e: z.infer<typeof updateClassroomUserSchema>) => {
-    mutate({ access: e.access, role: e.role });
+    mutate(e);
   };
 
   return currentUserEmail === user?.email ? (
@@ -114,7 +115,7 @@ const UpdateClassroomUser: FC<UpdateUserProps> = ({
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  disabled={true}
+                  disabled={isPending}
                 >
                   <Form.control>
                     <Select.trigger>

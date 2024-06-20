@@ -1,4 +1,5 @@
 import Button from "@/components/ui/button";
+import ClassroomAdminProtector from "@/protector/ClassroomAdminProtector";
 import { Link, getRouteApi } from "@tanstack/react-router";
 import { FC } from "react";
 
@@ -8,7 +9,7 @@ const Create: FC = () => {
   const { classroomId } = routeData.useParams();
 
   return (
-    <>
+    <ClassroomAdminProtector>
       <h2 className="mb-4 border-b pb-2 font-semibold">Create new</h2>
       <div className="grid grid-cols-2 gap-4">
         <Button variant="outline" size="lg" asChild>
@@ -20,7 +21,7 @@ const Create: FC = () => {
           </Link>
         </Button>
       </div>
-    </>
+    </ClassroomAdminProtector>
   );
 };
 

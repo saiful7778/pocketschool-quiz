@@ -26,7 +26,7 @@ const Classrooms: FC = () => {
     queryKey: ["classrooms", user?.email, userData?._id, token],
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<ClassroomMainPage[]>>(
-        "/classrooms/added",
+        "/classrooms/joined",
         {
           params: { email: user?.email, userId: userData?._id },
           headers: { Authorization: token },
