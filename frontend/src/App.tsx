@@ -7,6 +7,7 @@ import NotFound from "@/components/shared/NotFound";
 import Loading from "@/components/Loading";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import routeTree from "@/Routes";
+import StateContextProvider from "@/context/StateContext";
 
 const queryClient = new QueryClient();
 
@@ -32,10 +33,12 @@ declare module "@tanstack/react-router" {
 
 const App: FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <Toaster />
-    </QueryClientProvider>
+    <StateContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <Toaster />
+      </QueryClientProvider>
+    </StateContextProvider>
   );
 };
 

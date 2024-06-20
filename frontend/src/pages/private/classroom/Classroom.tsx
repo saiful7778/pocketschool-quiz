@@ -3,18 +3,20 @@ import ErrorPage from "@/components/shared/Error";
 import Button from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
+import useStateData from "@/hooks/useStateData";
 import { ApiResponse } from "@/types/apiResponse";
-import type { Classroom } from "@/types/classroom";
+import type { Classroom as ClassroomType } from "@/types/classroom";
 import { useQuery } from "@tanstack/react-query";
 import { Link, Outlet, getRouteApi } from "@tanstack/react-router";
 import { Copy } from "lucide-react";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 const routeData = getRouteApi("/private/classroom/$classroomId");
 
 const Classroom: FC = () => {
   const { classroomId } = routeData.useParams();
   const { user, userData, token } = useAuth();
+  const { setClassroomRole } = useStateData();
   const axiosSecure = useAxiosSecure();
 
   const {
@@ -26,7 +28,7 @@ const Classroom: FC = () => {
   } = useQuery({
     queryKey: [classroomId, user?.email, userData?._id, token],
     queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<Classroom>>(
+      const { data } = await axiosSecure.get<ApiResponse<ClassroomType>>(
         `/classroom/${classroomId}`,
         {
           params: { email: user?.email, userId: userData?._id },
@@ -41,6 +43,12 @@ const Classroom: FC = () => {
       return data.data;
     },
   });
+
+  useEffect(() => {
+    if (classroom?.role) {
+      setClassroomRole(classroom?.role);
+    }
+  }, [classroom, setClassroomRole]);
 
   if (isLoading) {
     return <Loading />;

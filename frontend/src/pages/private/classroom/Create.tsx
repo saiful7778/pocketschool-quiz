@@ -9,7 +9,7 @@ const Create: FC = () => {
 
   return (
     <>
-      <h2 className="mb-4 text-xl font-semibold">Create new</h2>
+      <h2 className="mb-4 border-b pb-2 font-semibold">Create new</h2>
       <div className="grid grid-cols-2 gap-4">
         <Button variant="outline" size="lg" asChild>
           <Link

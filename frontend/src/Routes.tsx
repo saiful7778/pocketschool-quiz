@@ -11,6 +11,8 @@ import {
   PrivateLayout,
   Classrooms,
   SuperAdminLayout,
+  Classroom,
+  Quizzes,
 } from "@/pages";
 import { z } from "zod";
 
@@ -69,16 +71,20 @@ const classroomsRoute = createRoute({
 const singleClassroomRoute = createRoute({
   getParentRoute: () => privateRoute,
   path: "/classroom/$classroomId",
-  component: lazyRouteComponent(
-    () => import("@/pages/private/classroom/Classroom"),
-  ),
+  component: Classroom,
 });
 
 const singleClassroomQuizzesRoute = createRoute({
   getParentRoute: () => singleClassroomRoute,
   path: "/",
+  component: Quizzes,
+});
+
+const singleClassroomQuizRoute = createRoute({
+  getParentRoute: () => singleClassroomRoute,
+  path: "/quiz/$quizId",
   component: lazyRouteComponent(
-    () => import("@/pages/private/classroom/Quizzes"),
+    () => import("@/pages/private/classroom/SingleQuiz"),
   ),
 });
 
@@ -132,6 +138,7 @@ const routeTree = rootRoute.addChildren([
     classroomsRoute,
     singleClassroomRoute.addChildren([
       singleClassroomQuizzesRoute,
+      singleClassroomQuizRoute,
       classroomCreateRoute,
       classroomCreateQuizRoute,
       classroomUsersRoute,

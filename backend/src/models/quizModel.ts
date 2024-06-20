@@ -11,19 +11,27 @@ const questionSchema = new Schema(
       type: Number,
       required: [true, "Question time limit is required"],
     },
+    marks: { type: Number, required: [true, "Question mark is required"] },
   },
   { discriminatorKey: "questionType", _id: false }
 );
 
+const optionSchema = new Schema({
+  text: {
+    type: String,
+    required: [true, "Option text is required"],
+  },
+});
+
 // multiple options with single answer (4 or 2 options)
 const multipleOptionsQuestionSchema = new Schema({
-  options: [{ type: String, required: true }],
+  options: [optionSchema],
   correctAnswerIndex: { type: Number, required: true },
 });
 
 // multiple Choice Question with multiple answers
 const multipleAnswersQuestionSchema = new Schema({
-  options: [{ type: String, required: true }],
+  options: [optionSchema],
   correctAnswerIndices: [{ type: Number, required: true }],
 });
 
@@ -64,7 +72,7 @@ const quizModel = model("quiz", quizSchema);
 const questionModel = model("question", questionSchema);
 
 const multipleOptionsQuestion = questionModel.discriminator(
-  "multipleOptions",
+  "multipleOption",
   multipleOptionsQuestionSchema
 );
 

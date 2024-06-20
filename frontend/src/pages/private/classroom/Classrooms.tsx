@@ -7,11 +7,12 @@ import { useAxiosSecure } from "@/hooks/useAxios";
 import type { ApiResponse } from "@/types/apiResponse";
 import type { ClassroomMainPage } from "@/types/classroom";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import moment from "moment";
 import { FC } from "react";
 
-const Classroom: FC = () => {
+const Classrooms: FC = () => {
+  const navigate = useNavigate();
   const { user, userData, token } = useAuth();
   const axiosSecure = useAxiosSecure();
 
@@ -50,16 +51,19 @@ const Classroom: FC = () => {
     const published = moment(classroom.createdAt).format("DD/MM/YYYY h:mm A");
     return (
       <div
-        className="w-full max-w-xs rounded-md border p-4 shadow"
+        onClick={() => {
+          navigate({
+            to: "/classroom/$classroomId",
+            params: { classroomId: classroom?._id },
+          });
+        }}
+        className="group w-full max-w-64 rounded-md border p-4 shadow duration-200 hover:scale-105"
         key={`classroom-${idx}`}
+        role="button"
       >
-        <Link
-          to="/classroom/$classroomId"
-          params={{ classroomId: classroom?._id }}
-          className="text-xl font-semibold hover:underline"
-        >
+        <h6 className="text-xl font-semibold group-hover:underline">
           {classroom.title}
-        </Link>
+        </h6>
         <div className="mt-4 text-xs text-muted-foreground">
           <div>
             <span className="mr-1 font-medium">Published:</span>
@@ -94,4 +98,4 @@ const Classroom: FC = () => {
   );
 };
 
-export default Classroom;
+export default Classrooms;
