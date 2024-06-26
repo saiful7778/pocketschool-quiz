@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { joinClassroomSchema } from "@/lib/schemas/classroomSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,15 +11,15 @@ import toast from "@/lib/toast/toast";
 import InputField from "./InputField";
 import Spinner from "./Spinner";
 import Drawer from "./ui/drawer";
+import useAuth from "@/hooks/useAuth";
 
 interface JoinClassroomProps {
-  email: string | undefined | null;
-  id: string | undefined;
-  token: string;
+  trigger: ReactNode;
 }
 
-const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
+const JoinClassroom: FC<JoinClassroomProps> = ({ trigger }) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const { userData } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
@@ -32,19 +32,12 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (classroomData: z.infer<typeof joinClassroomSchema>) => {
-      return axiosSecure.post(
-        `/classroom/join/${classroomData._id}`,
-        {},
-        {
-          params: { email: email, userId: id },
-          headers: { Authorization: token },
-        },
-      );
+      return axiosSecure.post(`/classroom/join/${classroomData._id}`);
     },
     onSuccess: (data) => {
       if (data?.status === 201) {
         queryClient.invalidateQueries({
-          queryKey: ["classroom", email, id, token],
+          queryKey: ["joined", "classrooms", { userId: userData?._id }],
         });
         form.reset();
         setOpenDrawer(false);
@@ -68,12 +61,7 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ email, id, token }) => {
 
   return (
     <Drawer open={openDrawer} onOpenChange={setOpenDrawer}>
-      <Drawer.trigger asChild>
-        <Button size="sm">
-          Join
-          <span className="sr-only">join new classroom</span>
-        </Button>
-      </Drawer.trigger>
+      <Drawer.trigger asChild>{trigger}</Drawer.trigger>
       <Drawer.content>
         <div className="mx-auto w-full max-w-sm">
           <Drawer.header>

@@ -8,7 +8,7 @@ const PrivateLayout: FC = () => {
     <PrivateProtector>
       <div className="flex flex-col gap-2 md:flex-row">
         <Sidebar />
-        <div className="flex-1 p-2">
+        <div className="flex-1 space-y-2">
           <Outlet />
         </div>
       </div>

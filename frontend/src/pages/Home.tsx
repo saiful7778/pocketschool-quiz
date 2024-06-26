@@ -11,7 +11,7 @@ const Home: FC = () => {
       </h1>
       <p>Test your skills</p>
       <Button asChild>
-        <Link to="/classrooms">Classroom</Link>
+        <Link to="/classroom">Classroom</Link>
       </Button>
     </div>
   );

@@ -44,13 +44,13 @@ const ClassroomUserTable: FC<ClassroomUserTableProps> = ({
   });
 
   return (
-    <div>
+    <>
       <div className="flex items-center justify-between gap-2">
         <Input
           placeholder="Find user"
           value={(table.getState().globalFilter as string) ?? ""}
           onChange={(e) => table.setGlobalFilter(e.target.value)}
-          className="my-4 h-8 w-full max-w-xs"
+          className="h-8 w-full max-w-xs"
         />
         <Button onClick={reFetch} variant="default" size="sm">
           Refrash
@@ -98,7 +98,7 @@ const ClassroomUserTable: FC<ClassroomUserTableProps> = ({
           )}
         </Table.body>
       </Table>
-    </div>
+    </>
   );
 };
 

@@ -15,7 +15,7 @@ const ClassroomAdminProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
     return children;
   }
 
-  return <Navigate to="/classrooms" />;
+  return <Navigate to="/classroom" />;
 };
 
 export default ClassroomAdminProtector;

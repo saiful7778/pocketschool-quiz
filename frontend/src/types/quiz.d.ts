@@ -1,39 +1,38 @@
-import { quizSchema } from "@/lib/schemas/quizSchema";
-import { User } from "./user";
+import type { questionSchema, quizSchema } from "@/lib/schemas/quizSchema";
+import type { Control } from "react-hook-form";
 import { z } from "zod";
-import { Control } from "react-hook-form";
-
-export interface Quiz {
-  title: string;
-  startTime: Date;
-}
 
 export interface Quizzes {
   _id: string;
   title: string;
   author: {
-    _id: User["_id"];
-    fullName: User["fullName"];
-    email: User["email"];
+    _id: string;
+    fullName: string;
+    email: string;
   };
+  questionsCount: number;
   startTime: Date;
   createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface InputProps {
+export interface Quiz {
+  _id: string;
+  title: string;
+  question: z.infer<typeof questionSchema>;
+  startTime: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface QuizInput {
   control: Control<z.infer<typeof quizSchema>>;
   loading: boolean;
 }
 
-export interface AllQuestions {
-  id: string;
-  question: string;
-  options?: string[] | undefined;
-  type:
-    | "multipleOptions"
-    | "multipleAnswers"
-    | "textAnswer"
-    | "pinPointerAnswer";
-  timeLimit: number;
-  mark: number;
+export interface AdminQuiz extends z.infer<typeof quizSchema> {
+  _id: string;
+  author: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

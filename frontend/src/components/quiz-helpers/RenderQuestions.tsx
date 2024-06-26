@@ -1,4 +1,3 @@
-import type { InputProps } from "@/types/quiz";
 import { FC } from "react";
 import InputQuestions from "./InputQuestions";
 import { useFieldArray } from "react-hook-form";
@@ -8,8 +7,9 @@ import Button from "../ui/button";
 import { X } from "lucide-react";
 import QuestionOptions from "./QuestionOptions";
 import AnswerIndices from "./AnswerIndices";
+import type { QuizInput } from "@/types/quiz";
 
-const RenderQuestions: FC<InputProps> = ({ control, loading }) => {
+const RenderQuestions: FC<QuizInput> = ({ control, loading }) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "questions",
@@ -45,6 +45,7 @@ const RenderQuestions: FC<InputProps> = ({ control, loading }) => {
             <Button
               onClick={() => remove(index)}
               size="icon"
+              disabled={loading}
               variant="ghost"
               type="button"
             >
@@ -155,7 +156,7 @@ const RenderQuestions: FC<InputProps> = ({ control, loading }) => {
           )}
         </div>
       ))}
-      <InputQuestions append={append} />
+      <InputQuestions append={append} loading={loading} />
     </>
   );
 };

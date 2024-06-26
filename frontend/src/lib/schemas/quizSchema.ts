@@ -7,6 +7,7 @@ const optionSchema = z.object({
 });
 
 const baseQuestionSchema = z.object({
+  _id: z.string().optional(),
   questionText: z
     .string({ required_error: "Question is required" })
     .min(1, "Question is required"),
@@ -54,16 +55,16 @@ const textAnswerQuestionSchema = baseQuestionSchema.extend({
     .max(100, "Correct answer must be at most 100 characters long"),
 });
 
-const numberAnswerQuestionSchema = baseQuestionSchema.extend({
+const pinPointerAnswerQuestionSchema = baseQuestionSchema.extend({
   questionType: z.literal("pinPointerAnswer"),
   correctAnswer: z.number(),
 });
 
-const questionSchema = z.union([
+export const questionSchema = z.union([
   multipleOptionQuestionSchema,
   multipleAnswersQuestionSchema,
   textAnswerQuestionSchema,
-  numberAnswerQuestionSchema,
+  pinPointerAnswerQuestionSchema,
 ]);
 
 export const quizSchema = z.object({

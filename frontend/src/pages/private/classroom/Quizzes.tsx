@@ -2,20 +2,22 @@ import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
+import useStateData from "@/hooks/useStateData";
 import type { ApiResponse } from "@/types/apiResponse";
 import type { Quizzes as QuizzesType } from "@/types/quiz";
 import { useQuery } from "@tanstack/react-query";
-import { getRouteApi } from "@tanstack/react-router";
+import { Link, getRouteApi } from "@tanstack/react-router";
 import moment from "moment";
 import { FC } from "react";
+import QuizDropdown from "@/components/quiz-helpers/QuizDropdown";
 
 const routeData = getRouteApi("/private/classroom/$classroomId");
 
 const Quizzes: FC = () => {
   const { classroomId } = routeData.useParams();
-  const navigate = routeData.useNavigate();
   const axiosSecure = useAxiosSecure();
   const { user, userData, token } = useAuth();
+  const { classroomRole } = useStateData();
 
   const {
     data: quizzes,
@@ -27,7 +29,7 @@ const Quizzes: FC = () => {
     queryKey: ["quizzes", classroomId, user?.email, userData?._id, token],
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<QuizzesType[]>>(
-        `/classroom/quiz/${classroomId}`,
+        `/quizzes/${classroomId}`,
         {
           params: { email: user?.email, userId: userData?._id },
           headers: { Authorization: token },
@@ -54,21 +56,26 @@ const Quizzes: FC = () => {
     const published = moment(quiz.createdAt).format("DD/MM/YYYY h:mm A");
     return (
       <div
-        onClick={() =>
-          navigate({
-            to: `/classroom/$classroomId/quiz/$quizId`,
-            params: { classroomId, quizId: quiz?._id },
-          })
-        }
-        className="group w-full max-w-64 rounded-md border p-4 shadow duration-200 hover:scale-105"
+        className="relative w-full max-w-52 rounded-md border p-4 shadow"
         key={`quiz-${idx}`}
-        role="button"
       >
-        <h6 className="font-semibold group-hover:underline">{quiz.title}</h6>
-        <div className="mt-2 text-xs text-muted-foreground">
+        {classroomRole === "admin" && (
+          <div className="absolute right-2 top-2">
+            <QuizDropdown classroomId={classroomId} quizId={quiz._id} />
+          </div>
+        )}
+        <Link
+          to="/classroom/$classroomId/quiz/$quizId"
+          params={{ classroomId, quizId: quiz?._id }}
+          className="font-semibold hover:underline"
+        >
+          {quiz.title}
+        </Link>
+        <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+          <div>{published}</div>
           <div>
-            <span className="mr-1 font-medium">Created at:</span>
-            <span>{published}</span>
+            <span className="mr-1 font-medium">Questions:</span>
+            <span>{quiz.questionsCount}</span>
           </div>
           <div>
             <span className="mr-1 font-medium">Created by:</span>

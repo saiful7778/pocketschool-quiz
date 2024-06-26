@@ -11,7 +11,7 @@
     "module": "CommonJS",
     "pretty": true,
     "sourceMap": false,
-    "outDir": "./build",
+    "outDir": "./dist",
     "allowJs": true,
     "noEmit": false,
     "esModuleInterop": true

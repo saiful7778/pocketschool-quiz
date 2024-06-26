@@ -1,4 +1,4 @@
-export const defaultLoginPage = "/classrooms";
+export const defaultLoginPage = "/classroom";
 
 type dashboardLinkTypes = {
   navName: string;
@@ -8,8 +8,8 @@ type dashboardLinkTypes = {
 
 export const dashboardLinks: dashboardLinkTypes[] = [
   {
-    navName: "Classrooms",
-    path: "/classrooms",
+    navName: "Classroom",
+    path: "/classroom",
     access: "user",
   },
   {

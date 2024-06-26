@@ -1,12 +1,13 @@
 import RootLayout from "./RootLayout";
-import Home from "./Home";
 import AuthenticationLayout from "./authentication/AuthenticationLayout";
-import Login from "./authentication/Login";
 import PrivateLayout from "./private/PrivateLayout";
-import Classrooms from "./private/classroom/Classrooms";
-import Classroom from "./private/classroom/Classroom";
-import Quizzes from "./private/classroom/Quizzes";
 import SuperAdminLayout from "./private/superAdmin/SuperAdminLayout";
+
+import Home from "./Home";
+import Login from "./authentication/Login";
+import Classroom from "./private/classroom/Classroom";
+import SingleClassroom from "./private/classroom/SingleClassroom";
+import ClassroomAdminLayout from "./private/classroom/admin/ClassroomAdminLayout";
 
 export {
   RootLayout,
@@ -14,8 +15,8 @@ export {
   AuthenticationLayout,
   Login,
   PrivateLayout,
-  Classrooms,
   Classroom,
-  Quizzes,
+  SingleClassroom,
+  ClassroomAdminLayout,
   SuperAdminLayout,
 };

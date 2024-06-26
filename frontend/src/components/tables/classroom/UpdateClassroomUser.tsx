@@ -29,7 +29,7 @@ const UpdateClassroomUser: FC<UpdateUserProps> = ({
   role,
   access,
 }) => {
-  const { token, user, userData } = useAuth();
+  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
@@ -50,16 +50,12 @@ const UpdateClassroomUser: FC<UpdateUserProps> = ({
       return axiosSecure.patch(
         `/classroom/${classroomId}/user/${userId}`,
         userUpdatedData,
-        {
-          params: { email: user?.email, userId: userData?._id },
-          headers: { Authorization: token },
-        },
       );
     },
     onSuccess: (data) => {
       if (data?.status === 200 && data.data.data.matchedCount === 1) {
         queryClient.invalidateQueries({
-          queryKey: [classroomId, "admin", user?.email, userData?._id, token],
+          queryKey: ["classroom", "admin", "users", { classroomId }],
         });
         toast({
           title: "User is updated",

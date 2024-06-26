@@ -12,9 +12,10 @@ import { quizSchema } from "@/lib/schemas/quizSchema";
 
 interface InputQuestionsProps {
   append: UseFieldArrayAppend<z.infer<typeof quizSchema>, "questions">;
+  loading: boolean;
 }
 
-const InputQuestions: FC<InputQuestionsProps> = ({ append }) => {
+const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
   const handleMultipuleOptions = () => {
     append({
       questionType: "multipleOption",
@@ -55,6 +56,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append }) => {
           className="rounded-full"
           variant="outline"
           onClick={handleMultipuleOptions}
+          disabled={loading}
           type="button"
           title="Multipule option questions"
         >
@@ -65,6 +67,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append }) => {
           className="rounded-full"
           variant="outline"
           onClick={handleAnswerOptions}
+          disabled={loading}
           type="button"
           title="Multipule answer questions"
         >
@@ -75,6 +78,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append }) => {
           className="rounded-full"
           variant="outline"
           onClick={handleTextAnswer}
+          disabled={loading}
           type="button"
           title="Text input questions"
         >

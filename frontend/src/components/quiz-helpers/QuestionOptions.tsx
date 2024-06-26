@@ -1,4 +1,4 @@
-import type { InputProps } from "@/types/quiz";
+import type { QuizInput } from "@/types/quiz";
 import { FC } from "react";
 import { useFieldArray } from "react-hook-form";
 import Form from "../ui/form";
@@ -6,7 +6,7 @@ import Button from "../ui/button";
 import Input from "../ui/input";
 import { X } from "lucide-react";
 
-interface QuestionOptionsProps extends InputProps {
+interface QuestionOptionsProps extends QuizInput {
   index: number;
 }
 

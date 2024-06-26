@@ -5,26 +5,18 @@
     }
   ],
   "settings": {
-    "restoreTerminals.runOnStartup": true,
-    "restoreTerminals.terminals": [
-      {
-        "splitTerminals": [
-          {
-            "name": "frontend",
-            "icon": "globe",
-            "commands": ["cd frontend", "export PROMPT_DIRTRIM=1", "cls"]
-          }
-        ]
-      },
-      {
-        "splitTerminals": [
-          {
-            "name": "backend",
-            "icon": "server",
-            "commands": ["cd backend", "export PROMPT_DIRTRIM=1", "cls"]
-          }
-        ]
-      }
-    ]
+    "workbench.colorTheme": "Learn with Sumit - Professional",
+    "tailwindCSS.classAttributes": ["class", "className", "ngClass", "style"],
+    "editor.formatOnSave": true,
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.minimap.enabled": false,
+    "editor.fontFamily": "'Fira Code', 'monospace', monospace",
+    "editor.fontLigatures": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "code-runner.runInTerminal": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "explorer.compactFolders": false,
+    "git.openRepositoryInParentFolders": "never",
+    "git.autofetch": true
   }
 }

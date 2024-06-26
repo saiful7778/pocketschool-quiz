@@ -3,8 +3,21 @@ import { useCallback, useEffect } from "react";
 import useAuth from "./useAuth";
 
 export function useAxiosSecure() {
-  const { logOut } = useAuth();
+  const { user, userData, token, logOut } = useAuth();
   const axios = useCallback(axiosConfig, []);
+
+  useEffect(() => {
+    axios.interceptors.request.use((config) => {
+      config.params = {
+        ...config.params,
+        email: user?.email,
+        userId: userData?._id,
+      };
+
+      config.headers["Authorization"] = token;
+      return config;
+    });
+  }, [axios, token, user?.email, userData?._id]);
 
   useEffect(() => {
     axios.interceptors.response.use(

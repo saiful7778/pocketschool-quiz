@@ -1,7 +1,16 @@
 import { model, Schema } from "mongoose";
+import type {
+  MultipleAnswersQuestion,
+  MultipleOptionsQuestion,
+  Option,
+  PinPointerAnswerQuestion,
+  Question,
+  Quiz,
+  TextAnswerQuestion,
+} from "../types/quizType";
 
 // Base Question Schema
-const questionSchema = new Schema(
+const questionSchema = new Schema<Question>(
   {
     questionText: {
       type: String,
@@ -13,10 +22,10 @@ const questionSchema = new Schema(
     },
     marks: { type: Number, required: [true, "Question mark is required"] },
   },
-  { discriminatorKey: "questionType", _id: false }
+  { discriminatorKey: "questionType", _id: false, strict: false }
 );
 
-const optionSchema = new Schema({
+const optionSchema = new Schema<Option>({
   text: {
     type: String,
     required: [true, "Option text is required"],
@@ -24,24 +33,35 @@ const optionSchema = new Schema({
 });
 
 // multiple options with single answer (4 or 2 options)
-const multipleOptionsQuestionSchema = new Schema({
-  options: [optionSchema],
-  correctAnswerIndex: { type: Number, required: true },
+const multipleOptionsQuestionSchema = new Schema<MultipleOptionsQuestion>({
+  options: {
+    type: [optionSchema],
+    required: [true, "options is required"],
+  },
+  correctAnswerIndex: {
+    type: Number,
+    required: [true, "correct answer index is required"],
+  },
 });
 
 // multiple Choice Question with multiple answers
-const multipleAnswersQuestionSchema = new Schema({
-  options: [optionSchema],
-  correctAnswerIndices: [{ type: Number, required: true }],
+const multipleAnswersQuestionSchema = new Schema<MultipleAnswersQuestion>({
+  options: {
+    type: [optionSchema],
+    required: [true, "options is required"],
+  },
+  correctAnswerIndices: [
+    { type: Number, required: [true, "correct answer indices is required"] },
+  ],
 });
 
 // Plain Text Answer Question
-const textAnswerQuestionSchema = new Schema({
+const textAnswerQuestionSchema = new Schema<TextAnswerQuestion>({
   correctAnswer: { type: String, required: true },
 });
 
 // Pin pointer Answer Question
-const pinPointerAnswerQuestionSchema = new Schema({
+const pinPointerAnswerQuestionSchema = new Schema<PinPointerAnswerQuestion>({
   correctAnswer: {
     x: { type: Number, required: true },
     y: { type: Number, required: true },
@@ -49,7 +69,7 @@ const pinPointerAnswerQuestionSchema = new Schema({
 });
 
 // Quiz Schema
-const quizSchema = new Schema(
+const quizSchema = new Schema<Quiz>(
   {
     title: { type: String, required: [true, "Title is required"] },
     author: {
@@ -62,34 +82,56 @@ const quizSchema = new Schema(
       ref: "classroom",
       required: [true, "Classroom is required"],
     },
-    questions: [questionSchema],
+    questions: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "question",
+        },
+      ],
+      required: [true, "Question is required"],
+    },
     startTime: { type: Date, required: [true, "Start time is required"] },
   },
   { timestamps: true }
 );
 
-const quizModel = model("quiz", quizSchema);
-const questionModel = model("question", questionSchema);
+const questionModel = model<Question>("question", questionSchema);
 
-const multipleOptionsQuestion = questionModel.discriminator(
-  "multipleOption",
-  multipleOptionsQuestionSchema
-);
+quizSchema.pre("findOneAndDelete", async function (next) {
+  const quiz = await this.model.findOne(this.getFilter());
 
-const multipleAnswersQuestion = questionModel.discriminator(
-  "multipleAnswers",
-  multipleAnswersQuestionSchema
-);
+  if (quiz) {
+    await questionModel.deleteMany({ _id: { $in: quiz.questions } });
+  }
 
-const textAnswerQuestion = questionModel.discriminator(
+  next();
+});
+
+const quizModel = model<Quiz>("quiz", quizSchema);
+
+const multipleOptionsQuestion =
+  questionModel.discriminator<MultipleOptionsQuestion>(
+    "multipleOption",
+    multipleOptionsQuestionSchema
+  );
+
+const multipleAnswersQuestion =
+  questionModel.discriminator<MultipleAnswersQuestion>(
+    "multipleAnswers",
+    multipleAnswersQuestionSchema
+  );
+
+const textAnswerQuestion = questionModel.discriminator<TextAnswerQuestion>(
   "textAnswer",
   textAnswerQuestionSchema
 );
 
-const pinPointerAnswerQuestion = questionModel.discriminator(
-  "pinPointerAnswer",
-  pinPointerAnswerQuestionSchema
-);
+const pinPointerAnswerQuestion =
+  questionModel.discriminator<PinPointerAnswerQuestion>(
+    "pinPointerAnswer",
+    pinPointerAnswerQuestionSchema
+  );
 
 export {
   quizModel,

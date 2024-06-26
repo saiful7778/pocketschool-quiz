@@ -64,13 +64,10 @@ const Classrooms: FC = () => {
         <h6 className="text-xl font-semibold group-hover:underline">
           {classroom.title}
         </h6>
-        <div className="mt-4 text-xs text-muted-foreground">
+        <div className="mt-2 text-xs text-muted-foreground">
+          <div>{published}</div>
           <div>
-            <span className="mr-1 font-medium">Published:</span>
-            <span>{published}</span>
-          </div>
-          <div>
-            <span className="mr-1 font-medium">You are:</span>
+            <span className="font-semibold">You are: </span>
             <span>
               {classroom.admin && "Admin"} {classroom.user && "User"}
             </span>

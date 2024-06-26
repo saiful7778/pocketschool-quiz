@@ -1,6 +1,6 @@
-import { JwtPayload } from "jsonwebtoken";
+import type { JwtPayload } from "jsonwebtoken";
 import type { Types } from "mongoose";
-import type { User } from "./user";
+import type { User } from "./userType";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -10,5 +10,6 @@ declare module "express-serve-static-core" {
       userId: Types.ObjectId | string;
       role: User["role"];
     };
+    classroomUserRole: "user" | "admin" | null;
   }
 }

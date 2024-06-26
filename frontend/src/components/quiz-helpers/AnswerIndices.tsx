@@ -1,4 +1,4 @@
-import { InputProps } from "@/types/quiz";
+import type { QuizInput } from "@/types/quiz";
 import { FC } from "react";
 import { useFieldArray } from "react-hook-form";
 import Button from "../ui/button";
@@ -7,7 +7,7 @@ import Input from "../ui/input";
 import { X } from "lucide-react";
 import Checkbox from "../ui/checkbox";
 
-interface QuestionOptionsProps extends InputProps {
+interface QuestionOptionsProps extends QuizInput {
   index: number;
 }
 
@@ -47,6 +47,7 @@ const AnswerIndices: FC<QuestionOptionsProps> = ({
                 <Form.item>
                   <Form.control>
                     <Checkbox
+                      disabled={loading}
                       checked={field.value.includes(idx + 1)}
                       onCheckedChange={(checked) => {
                         const updatedIndices = checked
