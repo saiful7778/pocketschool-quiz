@@ -1,10 +1,6 @@
 import { config } from "dotenv";
 
-const envFound = config();
-
-if (envFound.error) {
-  throw new Error("no .env file found");
-}
+config();
 
 // all `.env` keys
 const envVars = {

@@ -8,10 +8,10 @@
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-    "module": "ES2020",
+    "module": "CommonJS",
     "pretty": true,
     "sourceMap": false,
-    "outDir": "./dist",
+    "outDir": "./build",
     "allowJs": true,
     "noEmit": false,
     "esModuleInterop": true
