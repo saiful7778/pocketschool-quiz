@@ -1,11 +1,6 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const devDebug_1 = __importDefault(require("../../utils/devDebug"));
-const classroomModel_1 = require("../../models/classroomModel");
-const mongoose_1 = require("mongoose");
+import devDebug from "../../utils/devDebug";
+import { classroomModel } from "../../models/classroomModel";
+import { Types } from "mongoose";
 /**
  * This middleware take userId from request query parameters and classroomId from request parameters and check is user available and have access in this classroom
  * @param req Express request
@@ -13,31 +8,31 @@ const mongoose_1 = require("mongoose");
  * @param next Express next middleware function
  * @returns classroomUserRole by `req.classroomUserRole`
  */
-async function verifyClassroomUserAvailable(req, res, next) {
+export default async function verifyClassroomUserAvailable(req, res, next) {
     const { userId, classroomId } = req.query;
     if (!userId) {
         res.status(401).json({ success: false, message: "Unauthorized" });
-        (0, devDebug_1.default)("userId is unavailable");
+        devDebug("userId is unavailable");
         return;
     }
     if (!classroomId) {
         res.status(401).json({ success: false, message: "Unauthorized" });
-        (0, devDebug_1.default)("classroomId is unavailable");
+        devDebug("classroomId is unavailable");
         return;
     }
     try {
-        const isUserAvailable = await classroomModel_1.classroomModel.aggregate([
+        const isUserAvailable = await classroomModel.aggregate([
             {
                 $match: {
-                    _id: new mongoose_1.Types.ObjectId(classroomId),
+                    _id: new Types.ObjectId(classroomId),
                     // check if userId exist in this classroom admin or user array also her access should be true
                     $or: [
                         {
-                            "admins.userId": new mongoose_1.Types.ObjectId(userId),
+                            "admins.userId": new Types.ObjectId(userId),
                             "admins.access": true,
                         },
                         {
-                            "users.userId": new mongoose_1.Types.ObjectId(userId),
+                            "users.userId": new Types.ObjectId(userId),
                             "users.access": true,
                         },
                     ],
@@ -48,11 +43,11 @@ async function verifyClassroomUserAvailable(req, res, next) {
                 $addFields: {
                     role: {
                         $cond: {
-                            if: { $in: [new mongoose_1.Types.ObjectId(userId), "$admins.userId"] },
+                            if: { $in: [new Types.ObjectId(userId), "$admins.userId"] },
                             then: "admin",
                             else: {
                                 $cond: {
-                                    if: { $in: [new mongoose_1.Types.ObjectId(userId), "$users.userId"] },
+                                    if: { $in: [new Types.ObjectId(userId), "$users.userId"] },
                                     then: "user",
                                     else: null,
                                 },
@@ -72,7 +67,7 @@ async function verifyClassroomUserAvailable(req, res, next) {
                 success: false,
                 message: "Unauthorized",
             });
-            (0, devDebug_1.default)("user not available or haven't access in this classroom");
+            devDebug("user not available or haven't access in this classroom");
             return;
         }
         req.classroomUserRole = isUserAvailable[0].role;
@@ -80,8 +75,7 @@ async function verifyClassroomUserAvailable(req, res, next) {
     }
     catch {
         res.status(401).json({ success: false, message: "Unauthorized" });
-        (0, devDebug_1.default)("DB fetch error in verfiyClassroomUserAvailable middleware");
+        devDebug("DB fetch error in verfiyClassroomUserAvailable middleware");
         return;
     }
 }
-exports.default = verifyClassroomUserAvailable;

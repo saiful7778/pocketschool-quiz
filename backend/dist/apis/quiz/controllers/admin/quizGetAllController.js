@@ -1,19 +1,14 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const serverHelper_1 = __importDefault(require("../../../../utils/serverHelper"));
-const quizModel_1 = require("../../../../models/quizModel");
-const mongoose_1 = require("mongoose");
-function quizGetAllController(req, res) {
+import serverHelper from "../../../../utils/serverHelper";
+import { quizModel } from "../../../../models/quizModel";
+import { Types } from "mongoose";
+export default function quizGetAllController(req, res) {
     // get data
     const classroomId = req.params.classroomId;
-    (0, serverHelper_1.default)(async () => {
-        const quizzes = await quizModel_1.quizModel.aggregate([
+    serverHelper(async () => {
+        const quizzes = await quizModel.aggregate([
             {
                 $match: {
-                    classroom: new mongoose_1.Types.ObjectId(classroomId),
+                    classroom: new Types.ObjectId(classroomId),
                 },
             },
             {
@@ -54,4 +49,3 @@ function quizGetAllController(req, res) {
         });
     }, res);
 }
-exports.default = quizGetAllController;

@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.classroomModel = void 0;
-const mongoose_1 = require("mongoose");
-const classromUserSchema = new mongoose_1.Schema({
+import { Schema, model } from "mongoose";
+const classromUserSchema = new Schema({
     userId: {
-        type: mongoose_1.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "user",
         required: [true, "user id is required"],
     },
@@ -14,7 +11,7 @@ const classromUserSchema = new mongoose_1.Schema({
         required: [true, "user access is required"],
     },
 });
-const classroomSchema = new mongoose_1.Schema({
+const classroomSchema = new Schema({
     title: {
         type: String,
         required: [true, "Classroom title is required"],
@@ -28,4 +25,4 @@ const classroomSchema = new mongoose_1.Schema({
         default: [],
     },
 }, { timestamps: true });
-exports.classroomModel = (0, mongoose_1.model)("classroom", classroomSchema);
+export const classroomModel = model("classroom", classroomSchema);

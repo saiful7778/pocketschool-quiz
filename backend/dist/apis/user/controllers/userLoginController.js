@@ -1,24 +1,19 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const inputCheck_1 = __importDefault(require("../../../utils/inputCheck"));
-const serverHelper_1 = __importDefault(require("../../../utils/serverHelper"));
-const userModel_1 = require("../../../models/userModel");
-const devDebug_1 = __importDefault(require("../../../utils/devDebug"));
-const env_1 = __importDefault(require("../../../utils/env"));
-const jsonwebtoken_1 = require("jsonwebtoken");
-function userLoginController(req, res) {
+import inputCheck from "../../../utils/inputCheck";
+import serverHelper from "../../../utils/serverHelper";
+import { userModel } from "../../../models/userModel";
+import devDebug from "../../../utils/devDebug";
+import getEnv from "../../../utils/env";
+import { sign } from "jsonwebtoken";
+export default function userLoginController(req, res) {
     // extract data
     const { email } = req.body;
     // validate data
-    const check = (0, inputCheck_1.default)([email], res);
+    const check = inputCheck([email], res);
     if (!check)
         return;
-    (0, serverHelper_1.default)(async () => {
+    serverHelper(async () => {
         // get user data using user mongoose model and schema also get only _id, role, uid, access data
-        const user = await userModel_1.userModel.findOne({ email }, {
+        const user = await userModel.findOne({ email }, {
             role: 1,
             uid: 1,
             access: 1,
@@ -29,7 +24,7 @@ function userLoginController(req, res) {
                 success: false,
                 message: "User doesn't exist",
             });
-            (0, devDebug_1.default)("User doesn't exist");
+            devDebug("User doesn't exist");
             return;
         }
         // check if user have access right of this web app
@@ -38,19 +33,19 @@ function userLoginController(req, res) {
                 success: false,
                 message: "User can't access this site",
             });
-            (0, devDebug_1.default)("User can't access this site");
+            devDebug("User can't access this site");
             return;
         }
         // create a new token with this payload
-        const token = (0, jsonwebtoken_1.sign)({
+        const token = sign({
             id: user.id,
             email: email,
             role: user.role,
             uid: user.uid,
-        }, (0, env_1.default)("accessToken"), {
+        }, getEnv("accessToken"), {
             expiresIn: "5h",
         });
-        (0, devDebug_1.default)("new token in generated");
+        devDebug("new token in generated");
         // send response
         res.status(200).json({
             success: true,
@@ -61,4 +56,3 @@ function userLoginController(req, res) {
         });
     }, res);
 }
-exports.default = userLoginController;

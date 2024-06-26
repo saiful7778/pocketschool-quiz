@@ -1,20 +1,15 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const inputCheck_1 = __importDefault(require("../../../utils/inputCheck"));
-const serverHelper_1 = __importDefault(require("../../../utils/serverHelper"));
-const classroomModel_1 = require("../../../models/classroomModel");
-const mongoose_1 = require("mongoose");
-function classroomUserUpdateController(req, res) {
+import inputCheck from "../../../utils/inputCheck";
+import serverHelper from "../../../utils/serverHelper";
+import { classroomModel } from "../../../models/classroomModel";
+import { Types } from "mongoose";
+export default function classroomUserUpdateController(req, res) {
     // get data
     const classroomId = req.params.classroomId;
     const classroomUserId = req.params.classroomUserId;
     const userId = req.query.userId;
     const { access, role } = req.body;
     // validate
-    const check = (0, inputCheck_1.default)([access], res);
+    const check = inputCheck([access], res);
     if (!check)
         return;
     // validate
@@ -25,10 +20,10 @@ function classroomUserUpdateController(req, res) {
         });
         return;
     }
-    (0, serverHelper_1.default)(async () => {
+    serverHelper(async () => {
         // update classroom user data using classroom mongoose model and schema
-        const classroom = await classroomModel_1.classroomModel.updateOne({
-            _id: new mongoose_1.Types.ObjectId(classroomId),
+        const classroom = await classroomModel.updateOne({
+            _id: new Types.ObjectId(classroomId),
             "admins.userId": userId,
             "admins.access": true,
         }, {
@@ -51,8 +46,8 @@ function classroomUserUpdateController(req, res) {
         }
         if (typeof role !== "undefined") {
             if (role === "user") {
-                await classroomModel_1.classroomModel.updateOne({
-                    _id: new mongoose_1.Types.ObjectId(classroomId),
+                await classroomModel.updateOne({
+                    _id: new Types.ObjectId(classroomId),
                     "admins.userId": userId,
                     "admins.access": true,
                 }, {
@@ -65,7 +60,7 @@ function classroomUserUpdateController(req, res) {
                 });
             }
             else if (role === "admin") {
-                await classroomModel_1.classroomModel.updateOne({
+                await classroomModel.updateOne({
                     _id: classroomId,
                     // check if requested user admin and her access true in this classroom
                     "admins.userId": userId,
@@ -87,4 +82,3 @@ function classroomUserUpdateController(req, res) {
         });
     }, res);
 }
-exports.default = classroomUserUpdateController;

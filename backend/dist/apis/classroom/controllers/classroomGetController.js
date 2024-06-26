@@ -1,29 +1,24 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const serverHelper_1 = __importDefault(require("../../../utils/serverHelper"));
-const classroomModel_1 = require("../../../models/classroomModel");
-const mongoose_1 = require("mongoose");
-function classroomGetController(req, res) {
+import serverHelper from "../../../utils/serverHelper";
+import { classroomModel } from "../../../models/classroomModel";
+import { Types } from "mongoose";
+export default function classroomGetController(req, res) {
     // get data
     const classroomId = req.params.classroomId;
     const userId = req.query.userId;
-    (0, serverHelper_1.default)(async () => {
+    serverHelper(async () => {
         // get classroom data by mongodb aggregation pipeline
-        const classroom = await classroomModel_1.classroomModel.aggregate([
+        const classroom = await classroomModel.aggregate([
             {
                 $match: {
-                    _id: new mongoose_1.Types.ObjectId(classroomId),
+                    _id: new Types.ObjectId(classroomId),
                     // check if userId exist in this classroom admin or user array also her access should be true
                     $or: [
                         {
-                            "admins.userId": new mongoose_1.Types.ObjectId(userId),
+                            "admins.userId": new Types.ObjectId(userId),
                             "admins.access": true,
                         },
                         {
-                            "users.userId": new mongoose_1.Types.ObjectId(userId),
+                            "users.userId": new Types.ObjectId(userId),
                             "users.access": true,
                         },
                     ],
@@ -34,11 +29,11 @@ function classroomGetController(req, res) {
                 $addFields: {
                     role: {
                         $cond: {
-                            if: { $in: [new mongoose_1.Types.ObjectId(userId), "$admins.userId"] },
+                            if: { $in: [new Types.ObjectId(userId), "$admins.userId"] },
                             then: "admin",
                             else: {
                                 $cond: {
-                                    if: { $in: [new mongoose_1.Types.ObjectId(userId), "$users.userId"] },
+                                    if: { $in: [new Types.ObjectId(userId), "$users.userId"] },
                                     then: "user",
                                     else: null,
                                 },
@@ -69,4 +64,3 @@ function classroomGetController(req, res) {
         });
     }, res);
 }
-exports.default = classroomGetController;

@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv_1 = require("dotenv");
-const envFound = (0, dotenv_1.config)();
+import { config } from "dotenv";
+const envFound = config();
 if (envFound.error) {
     throw new Error("no .env file found");
 }
@@ -18,7 +16,7 @@ const envVars = {
  * @param varName
  * @returns `.env` key value as string
  */
-function getEnv(varName) {
+export default function getEnv(varName) {
     if (typeof envVars[varName] === "undefined") {
         console.error(`'${varName}' is not available`);
         process.exit(1);
@@ -27,4 +25,3 @@ function getEnv(varName) {
         return envVars[varName];
     }
 }
-exports.default = getEnv;

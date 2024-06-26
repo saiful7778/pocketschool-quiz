@@ -1,13 +1,8 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const serverHelper_1 = __importDefault(require("../../../../utils/serverHelper"));
-const quizModel_1 = require("../../../../models/quizModel");
-const devDebug_1 = __importDefault(require("../../../../utils/devDebug"));
-const mongoose_1 = require("mongoose");
-function quizUpdateController(req, res) {
+import serverHelper from "../../../../utils/serverHelper";
+import { questionModel, quizModel } from "../../../../models/quizModel";
+import devDebug from "../../../../utils/devDebug";
+import { Types } from "mongoose";
+export default function quizUpdateController(req, res) {
     const quizId = req.params.quizId;
     const { title, startTime, questions } = req.body;
     if (!Array.isArray(questions)) {
@@ -15,7 +10,7 @@ function quizUpdateController(req, res) {
             success: false,
             message: "Questions must be an array",
         });
-        (0, devDebug_1.default)("invalid questions");
+        devDebug("invalid questions");
         return;
     }
     if (questions.length === 0) {
@@ -23,7 +18,7 @@ function quizUpdateController(req, res) {
             success: false,
             message: "Questions array is empty",
         });
-        (0, devDebug_1.default)("question array in empty");
+        devDebug("question array in empty");
         return;
     }
     const isQuestionsAvailable = questions.map((question) => {
@@ -40,13 +35,13 @@ function quizUpdateController(req, res) {
             success: false,
             message: "Question data not available",
         });
-        (0, devDebug_1.default)("invalid question data");
+        devDebug("invalid question data");
         return;
     }
-    (0, serverHelper_1.default)(async () => {
-        const quizData = (await quizModel_1.quizModel.findOne({ _id: quizId }, { questions: 1 }));
+    serverHelper(async () => {
+        const quizData = (await quizModel.findOne({ _id: quizId }, { questions: 1 }));
         const questionIds = await questionPromises(questions, quizData.questions);
-        const quiz = await quizModel_1.quizModel.updateOne({
+        const quiz = await quizModel.updateOne({
             _id: quizId,
         }, {
             title,
@@ -56,7 +51,6 @@ function quizUpdateController(req, res) {
         res.status(200).send({ success: true, data: quiz });
     }, res);
 }
-exports.default = quizUpdateController;
 async function questionPromises(questions, quizQuestions) {
     const allPromises = [];
     const ids = [];
@@ -64,7 +58,7 @@ async function questionPromises(questions, quizQuestions) {
         ? true
         : false);
     if (deleteAbleQuestions.length > 0) {
-        allPromises.push(...deleteAbleQuestions.map((deleteQuestion) => quizModel_1.questionModel.deleteOne({ _id: deleteQuestion })));
+        allPromises.push(...deleteAbleQuestions.map((deleteQuestion) => questionModel.deleteOne({ _id: deleteQuestion })));
     }
     // const updateAbleQuestions = quizQuestions
     //   .map((quizQuestion) => String(quizQuestion))
@@ -76,12 +70,12 @@ async function questionPromises(questions, quizQuestions) {
         if (question?._id) {
             const { _id, ...questionData } = question;
             ids.push(_id);
-            return quizModel_1.questionModel.updateOne({ _id: new mongoose_1.Types.ObjectId(_id) }, { ...questionData });
+            return questionModel.updateOne({ _id: new Types.ObjectId(_id) }, { ...questionData });
         }
         else {
-            const newQuestionId = new mongoose_1.Types.ObjectId();
+            const newQuestionId = new Types.ObjectId();
             ids.push(String(newQuestionId));
-            return quizModel_1.questionModel.create({ _id: newQuestionId, ...question });
+            return questionModel.create({ _id: newQuestionId, ...question });
         }
     }));
     await Promise.all(allPromises);
