@@ -32,7 +32,9 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ trigger }) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (classroomData: z.infer<typeof joinClassroomSchema>) => {
-      return axiosSecure.post(`/classroom/join/${classroomData._id}`);
+      return axiosSecure.post(
+        `/api/classrooms/join_classroom/${classroomData._id}`,
+      );
     },
     onSuccess: (data) => {
       if (data?.status === 201) {

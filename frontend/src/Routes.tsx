@@ -91,6 +91,13 @@ const singleClassroomUsersRoute = createRoute({
     () => import("@/pages/private/classroom/admin/ClassroomUsers"),
   ),
 });
+const singleClassroomDetailsRoute = createRoute({
+  getParentRoute: () => singleClassroomAdminRoute,
+  path: "/details",
+  component: lazyRouteComponent(
+    () => import("@/pages/private/classroom/admin/ClassroomDetails"),
+  ),
+});
 
 const singleClassroomAdminQuizzesRoute = createRoute({
   getParentRoute: () => singleClassroomAdminRoute,
@@ -146,6 +153,7 @@ const routeTree = rootRoute.addChildren([
           singleClassroomAdminQuizzesRoute,
           singleClassroomAdminCreateQuizRoute,
           singleClassroomAdminQuizUpdateRoute,
+          singleClassroomDetailsRoute,
           singleClassroomUsersRoute,
         ]),
       ]),

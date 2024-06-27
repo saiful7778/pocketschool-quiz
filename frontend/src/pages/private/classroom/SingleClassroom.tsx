@@ -26,10 +26,10 @@ const SingleClassroom: FC = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["classroom", {classroomId}],
+    queryKey: ["classroom", { classroomId }],
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<Classroom>>(
-        `/classroom/${classroomId}`,
+        `/api/classrooms/${classroomId}`,
       );
       if (!data.success) {
         throw new Error(data.message);
@@ -95,6 +95,14 @@ const SingleClassroom: FC = () => {
                   params={{ classroomId: classroomId }}
                 >
                   Users
+                </Link>
+              </DropdownMenu.item>
+              <DropdownMenu.item asChild>
+                <Link
+                  to="/classroom/$classroomId/details"
+                  params={{ classroomId: classroomId }}
+                >
+                  Details
                 </Link>
               </DropdownMenu.item>
             </DropdownMenu.content>

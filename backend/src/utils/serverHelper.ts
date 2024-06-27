@@ -1,5 +1,5 @@
-import type { Response } from "express";
-import devDebug from "./devDebug";
+import type { NextFunction } from "express";
+import createHttpError from "http-errors";
 
 /**
  * This function resolve all promises in this server app
@@ -8,17 +8,11 @@ import devDebug from "./devDebug";
  */
 export default async function serverHelper(
   inputFunction: () => Promise<void>,
-  res: Response
+  next: NextFunction
 ) {
   try {
     await inputFunction();
-  } catch (err) {
-    if (err instanceof Error) {
-      devDebug(err.message);
-      res.status(500).json({
-        success: false,
-        message: "server error",
-      });
-    }
+  } catch {
+    return next(createHttpError(500, "server error from serverHelper"));
   }
 }

@@ -1,10 +1,14 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
 import { userModel } from "../../../models/userModel";
-import devDebug from "../../../utils/devDebug";
+import createHttpError from "http-errors";
 
-export default function userUpdateController(req: Request, res: Response) {
+export default function userUpdateController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const userId = req.params.userId;
 
   const superAdminUserId = req.userId;
@@ -13,16 +17,11 @@ export default function userUpdateController(req: Request, res: Response) {
 
   // check if requested user don't update her account data
   if (superAdminUserId.toString() === userId) {
-    res.status(400).json({
-      success: false,
-      message: "You can't update your role or access",
-    });
-    devDebug("You can't update your role or access");
-    return;
+    return next(createHttpError("You can't update your role or access"));
   }
 
   // check is all data available or not
-  const check = inputCheck([role, access], res);
+  const check = inputCheck([role, access], next);
   if (!check) return;
 
   serverHelper(async () => {
@@ -34,5 +33,5 @@ export default function userUpdateController(req: Request, res: Response) {
       success: true,
       data: user,
     });
-  }, res);
+  }, next);
 }

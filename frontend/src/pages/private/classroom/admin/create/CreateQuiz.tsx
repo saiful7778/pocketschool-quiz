@@ -19,7 +19,9 @@ const CreateQuiz: FC = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (quizData: z.infer<typeof quizSchema>) => {
-      return axiosSecure.post(`/quiz/${classroomId}`, quizData);
+      return axiosSecure.post("/api/classrooms/quizzes/admin", quizData, {
+        params: { classroomId },
+      });
     },
     onSuccess: (data) => {
       if (data?.status === 201) {

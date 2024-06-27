@@ -1,7 +1,7 @@
-import RootLayout from "./RootLayout";
-import AuthenticationLayout from "./authentication/AuthenticationLayout";
-import PrivateLayout from "./private/PrivateLayout";
-import SuperAdminLayout from "./private/superAdmin/SuperAdminLayout";
+import RootLayout from "@/layouts/RootLayout";
+import AuthenticationLayout from "@/layouts/AuthenticationLayout";
+import PrivateLayout from "@/layouts/PrivateLayout";
+import SuperAdminLayout from "@/layouts/SuperAdminLayout";
 
 import Home from "./Home";
 import Login from "./authentication/Login";

@@ -1,9 +1,13 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
 import { classroomModel } from "../../../models/classroomModel";
 
 // TODO: update this
-export default function classroomUserController(req: Request, res: Response) {
+export default function classroomUserController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const classroomId = req.params.classroomId;
   const classroomUserId = req.params.classroomUserId;
 
@@ -24,5 +28,5 @@ export default function classroomUserController(req: Request, res: Response) {
       success: true,
       data: classroomUser,
     });
-  }, res);
+  }, next);
 }

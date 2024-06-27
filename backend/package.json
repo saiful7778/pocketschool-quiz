@@ -3,15 +3,13 @@
   "version": "1.0.0",
   "main": "build/index.js",
   "scripts": {
-    "build": "rimraf build && tsc",
-    "ts.check": "tsc --project tsconfig.json",
     "start": "node ./build/index.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "prebuild": "rimraf build",
+    "build": "tsc",
+    "predeploy": "bun run build",
+    "deploy": "vercel --prod"
   },
-  "pre-commit": [
-    "ts.check",
-    "build"
-  ],
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -23,7 +23,9 @@ const DeleteQuiz: FC<UpdateQuizProps> = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      return axiosSecure.delete(`/quiz/${quizId}`, { params: { classroomId } });
+      return axiosSecure.delete(`/api/classrooms/quizzes/admin/${quizId}`, {
+        params: { classroomId },
+      });
     },
     onSuccess: (data) => {
       if (data?.status === 200) {

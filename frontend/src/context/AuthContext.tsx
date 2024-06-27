@@ -79,7 +79,7 @@ const AuthContextProvider: FC<Readonly<LayoutProps>> = ({ children }) => {
                   token: string;
                   userData: AuthContextProps["userData"];
                 }>
-              >("/authentication/login", {
+              >("/api/users/login", {
                 email: currentUser.email,
               });
               if (!data.success) {

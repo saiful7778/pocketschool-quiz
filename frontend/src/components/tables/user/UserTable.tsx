@@ -6,7 +6,7 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import columns from "./column";
+import columns from "./userColumn";
 import Input from "@/components/ui/input";
 import Table from "@/components/ui/table";
 import Button from "@/components/ui/button";

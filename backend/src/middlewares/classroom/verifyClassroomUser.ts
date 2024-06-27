@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import devDebug from "../../utils/devDebug";
+import createHttpError from "http-errors";
 
 /**
  * This middleware take classroomUserRole from verifyClassroomUserAvailable middleware and check is user classroom role is admin or not
@@ -10,18 +10,13 @@ import devDebug from "../../utils/devDebug";
  */
 export default async function verifyClassroomAdmin(
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ) {
   const classroomUserRole = req.classroomUserRole;
 
   if (classroomUserRole !== "admin") {
-    res.status(401).json({
-      success: false,
-      message: "Unauthorized",
-    });
-    devDebug("user not admin in this classroom");
-    return;
+    return next(createHttpError(401, "user not admin in this classroom"));
   }
   next();
 }

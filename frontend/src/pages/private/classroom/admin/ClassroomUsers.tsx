@@ -1,6 +1,6 @@
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
-import ClassroomUserTable from "@/components/tables/classroom/ClassroomUserTable";
+import ClassroomUserTable from "@/components/tables/classroom/user/ClassroomUserTable";
 import Tabs from "@/components/ui/tabs";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { ApiResponse } from "@/types/apiResponse";
@@ -27,7 +27,7 @@ const ClassroomUsers: FC = () => {
     queryKey: ["classroom", "admin", "users", { classroomId }],
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<Classroom>>(
-        `/classroom/${classroomId}/admin`,
+        `/api/classrooms/${classroomId}/users`,
       );
 
       if (!data.success) {

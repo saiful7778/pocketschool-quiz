@@ -1,10 +1,11 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
 import { classroomModel } from "../../../models/classroomModel";
 
 export default function userJoinedClassroomsController(
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) {
   const { userId } = req.user;
 
@@ -20,5 +21,5 @@ export default function userJoinedClassroomsController(
     );
 
     res.status(200).json({ success: true, data: classrooms });
-  }, res);
+  }, next);
 }

@@ -1,16 +1,19 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
 import { userModel } from "../../../models/userModel";
 import { classroomModel } from "../../../models/classroomModel";
-import devDebug from "../../../utils/devDebug";
 
-export default function userCreateController(req: Request, res: Response) {
+export default function userCreateController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // get the data
   const { fullName, email, uid, classroomId, role, access } = req.body;
 
   // validate the data
-  const check = inputCheck([fullName, email, uid, role, access], res);
+  const check = inputCheck([fullName, email, uid, role, access], next);
   if (!check) return;
 
   serverHelper(async () => {
@@ -32,15 +35,12 @@ export default function userCreateController(req: Request, res: Response) {
         { users: [{ userId: user.id, access: true }] },
         { upsert: true }
       );
-      devDebug("new user is connected by classroom");
     }
-
-    devDebug("new user is created");
 
     // send response
     res.status(201).json({
       success: true,
       message: "user is created",
     });
-  }, res);
+  }, next);
 }

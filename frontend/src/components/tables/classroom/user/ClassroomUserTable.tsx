@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-table";
 import { FC } from "react";
 import type { user } from "@/types/classroom";
-import getColumns from "./column";
+import getColumns from "./classroomUserTableColumn";
 
 interface ClassroomUserTableProps {
   data: user[];

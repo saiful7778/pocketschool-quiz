@@ -5,7 +5,7 @@ import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 // types
 import type { HttpError } from "http-errors";
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 // utils
 import getEnv from "./utils/env";
 import devDebug from "./utils/devDebug";
@@ -23,19 +23,19 @@ export default function expressApp() {
 
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 50, // limit each IP to 100 requests per windowMs
+    max: 100, // limit each IP to 100 requests per windowMs
     message:
       "Too many requests from this IP, please try again after 15 minutes",
     headers: true,
   });
 
   // add all universal middlewares
+  app.use(helmet());
   app.use(express.json());
   if (getEnv("nodeEnv") === "development") {
     app.use(morgan("dev"));
   }
   app.use(limiter);
-  app.use(helmet());
   // cors config
   app.use(
     cors({
@@ -63,20 +63,30 @@ export default function expressApp() {
   app.use("/api/classrooms", classroomRoute);
   app.use("/api/classrooms/quizzes", quizRoute);
 
-  app.get("*", (_req: Request, res: Response) => {
+  app.use((_req: Request, res: Response) => {
     res.status(404).json({
       success: false,
       message: "not found",
     });
   });
 
-  app.use((err: HttpError, _req: Request, res: Response) => {
-    devDebug(err.message);
-    res.status(err.status || 500).json({
-      success: false,
-      message: err.message,
-    });
-  });
+  app.use(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (err: HttpError, _req: Request, res: Response, next: NextFunction) => {
+      const errData = {
+        status: err.status || err.statusCode || 500,
+        name: err.name,
+        message: err.message || "server error",
+      };
+
+      devDebug(errData.message);
+
+      res.status(errData.status).json({
+        success: false,
+        message: errData.name,
+      });
+    }
+  );
 
   return app;
 }

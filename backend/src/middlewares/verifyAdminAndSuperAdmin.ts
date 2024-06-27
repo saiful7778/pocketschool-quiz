@@ -1,5 +1,5 @@
-import devDebug from "../utils/devDebug";
 import type { Request, Response, NextFunction } from "express";
+import createHttpError from "http-errors";
 
 /**
  * This middleware take userId and role from verifyUserExist middleware then verify is role is admin or superAdmin
@@ -10,17 +10,12 @@ import type { Request, Response, NextFunction } from "express";
  */
 export default async function verifyAdminAndSuperAdmin(
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ) {
   const { role, userId } = req.user;
   if (role === "user") {
-    res.status(401).json({
-      success: false,
-      message: "Unauthorized",
-    });
-    devDebug("User is not admin");
-    return;
+    return next(createHttpError(401, "user is not admin"));
   }
   req.userId = userId;
   next();

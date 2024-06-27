@@ -30,7 +30,7 @@ const UpdateQuiz: FC = () => {
     queryKey: ["quiz", "admin", { classroomId, quizId }],
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<AdminQuiz>>(
-        `/quiz/admin/${quizId}`,
+        `/api/classrooms/quizzes/admin/${quizId}`,
         { params: { classroomId } },
       );
       if (!data.success) {
@@ -72,10 +72,14 @@ const UpdateQuizForm = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (quizData: z.infer<typeof quizSchema>) => {
-      return axiosSecure.patch(`/quiz/${quizId}`, quizData);
+      return axiosSecure.patch(
+        `/api/classrooms/quizzes/admin/${quizId}`,
+        quizData,
+        { params: { classroomId } },
+      );
     },
     onSuccess: (data) => {
-      if (data?.status === 201) {
+      if (data?.status === 200) {
         queryClient.invalidateQueries({
           queryKey: ["classroom", "admin", "quizzes", { classroomId }],
         });
@@ -96,8 +100,6 @@ const UpdateQuizForm = ({
       });
     },
   });
-
-  console.log(defaultValues);
 
   const created = moment(defaultValues.createdAt).format("DD/MM/YYYY hh:mm a");
   const updated = moment(defaultValues.updatedAt).format("DD/MM/YYYY hh:mm a");

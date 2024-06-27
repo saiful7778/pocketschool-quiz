@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
-import devDebug from "../../utils/devDebug";
 import { classroomModel } from "../../models/classroomModel";
 import { Types } from "mongoose";
+import createHttpError from "http-errors";
 
 /**
  * This middleware take userId from request query parameters and classroomId from request parameters and check is user available and have access in this classroom
@@ -12,7 +12,7 @@ import { Types } from "mongoose";
  */
 export default async function verifyClassroomUserAvailable(
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ) {
   const { userId, classroomId } = req.query as {
@@ -21,14 +21,10 @@ export default async function verifyClassroomUserAvailable(
   };
 
   if (!userId) {
-    res.status(401).json({ success: false, message: "Unauthorized" });
-    devDebug("userId is unavailable");
-    return;
+    return next(createHttpError(401, "userId is unavailable"));
   }
   if (!classroomId) {
-    res.status(401).json({ success: false, message: "Unauthorized" });
-    devDebug("classroomId is unavailable");
-    return;
+    return next(createHttpError(401, "classroomId is unavailable"));
   }
 
   try {
@@ -75,19 +71,22 @@ export default async function verifyClassroomUserAvailable(
     ]);
 
     if (!isUserAvailable || isUserAvailable.length === 0) {
-      res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
-      devDebug("user not available or haven't access in this classroom");
-      return;
+      return next(
+        createHttpError(
+          401,
+          "user not available or haven't access in this classroom"
+        )
+      );
     }
 
     req.classroomUserRole = isUserAvailable[0].role;
     next();
   } catch {
-    res.status(401).json({ success: false, message: "Unauthorized" });
-    devDebug("DB fetch error in verfiyClassroomUserAvailable middleware");
-    return;
+    return next(
+      createHttpError(
+        401,
+        "classroom user find error in verfiyClassroomUserAvailable"
+      )
+    );
   }
 }

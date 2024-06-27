@@ -1,9 +1,14 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
 import { classroomModel } from "../../../models/classroomModel";
 import { Types } from "mongoose";
+import createHttpError from "http-errors";
 
-export default function classroomGetController(req: Request, res: Response) {
+export default function classroomGetController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // get data
   const classroomId = req.params.classroomId;
   const userId = req.query.userId as string;
@@ -55,11 +60,7 @@ export default function classroomGetController(req: Request, res: Response) {
     ]);
 
     if (!classroom || classroom.length === 0) {
-      res.status(404).json({
-        success: false,
-        message: "Classroom not found",
-      });
-      return;
+      return next(createHttpError(404, "classroom not found"));
     }
 
     // send response
@@ -67,5 +68,5 @@ export default function classroomGetController(req: Request, res: Response) {
       success: true,
       data: classroom[0],
     });
-  }, res);
+  }, next);
 }

@@ -1,17 +1,21 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
 import { classroomModel } from "../../../models/classroomModel";
 import { Types } from "mongoose";
 
-export default function classroomUpdateController(req: Request, res: Response) {
+export default function classroomUpdateController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // get data
   const classroomId = req.params.classroomId;
   const userId = req.query.userId as string;
 
   const { title } = req.body;
 
-  const check = inputCheck([title], res);
+  const check = inputCheck([title], next);
   if (!check) return;
 
   serverHelper(async () => {
@@ -28,5 +32,5 @@ export default function classroomUpdateController(req: Request, res: Response) {
       success: true,
       data: classroom,
     });
-  }, res);
+  }, next);
 }

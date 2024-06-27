@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import devDebug from "../utils/devDebug";
 import { userModel } from "../models/userModel";
+import createHttpError from "http-errors";
 
 /**
  * This middleware take userId from request query key and verify is user exist or not
@@ -16,9 +16,7 @@ export default async function verifyUserExist(
 ) {
   const { userId } = req.query;
   if (!userId) {
-    res.status(401).json({ success: false, message: "Unauthorized" });
-    devDebug("userId is unavailable");
-    return;
+    return next(createHttpError(401, "userId is unavailable"));
   }
 
   try {
@@ -27,19 +25,12 @@ export default async function verifyUserExist(
       { _id: 1, role: 1 }
     );
     if (!existUser) {
-      res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
-      devDebug("User doesn't exist");
-      return;
+      return next(createHttpError(401, "user doesn't exist"));
     }
 
     req.user = { userId: existUser._id, role: existUser.role };
     next();
   } catch {
-    res.status(401).json({ success: false, message: "Unauthorized" });
-    devDebug("User query catch error in verifyUserID middleware");
-    return;
+    return next(createHttpError(401, "user findOne error in verifyUserExist"));
   }
 }

@@ -26,7 +26,8 @@ const AdminQuizzes: FC = () => {
     queryKey: ["classroom", "admin", "quizzes", { classroomId }],
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<Quizzes[]>>(
-        `/quizzes/admin/${classroomId}`,
+        "/api/classrooms/quizzes/admin",
+        { params: { classroomId } },
       );
       if (!data.success) {
         throw new Error(data.message);

@@ -1,6 +1,5 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../../utils/inputCheck";
-import devDebug from "../../../../utils/devDebug";
 import serverHelper from "../../../../utils/serverHelper";
 // models
 import {
@@ -11,8 +10,13 @@ import {
   textAnswerQuestion,
 } from "../../../../models/quizModel";
 import type { Question } from "../../../../types/quizType";
+import createHttpError from "http-errors";
 
-export default function quizCreateController(req: Request, res: Response) {
+export default function quizCreateController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // get data
   const { userId, classroomId } = req.query as {
     userId: string;
@@ -25,25 +29,15 @@ export default function quizCreateController(req: Request, res: Response) {
   };
 
   // validate
-  const check = inputCheck([title, questions, startTime], res);
+  const check = inputCheck([title, questions, startTime], next);
   if (!check) return;
 
   if (!Array.isArray(questions)) {
-    res.status(400).send({
-      success: false,
-      message: "Questions must be an array",
-    });
-    devDebug("invalid questions");
-    return;
+    return next(createHttpError(400, "questions must be an array"));
   }
 
   if (questions.length === 0) {
-    res.status(400).send({
-      success: false,
-      message: "Questions array is empty",
-    });
-    devDebug("question array in empty");
-    return;
+    return next(createHttpError(400, "question array is empty"));
   }
 
   const isQuestionsAvailable = questions.map((question) => {
@@ -59,12 +53,7 @@ export default function quizCreateController(req: Request, res: Response) {
   });
 
   if (isQuestionsAvailable.includes(undefined)) {
-    res.status(400).send({
-      success: false,
-      message: "Question data not available",
-    });
-    devDebug("invalid question data");
-    return;
+    return next(createHttpError(400, "invalid questions data"));
   }
 
   serverHelper(async () => {
@@ -97,5 +86,5 @@ export default function quizCreateController(req: Request, res: Response) {
       success: true,
       message: "Quiz is created",
     });
-  }, res);
+  }, next);
 }

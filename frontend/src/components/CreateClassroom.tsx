@@ -35,7 +35,7 @@ const CreateClassroom: FC<CreateClassroomProps> = ({ email, id, token }) => {
       classroomData: z.infer<typeof createClassroomSchema>,
     ) => {
       return axiosSecure.post(
-        "/classroom",
+        "/api/classrooms",
         { title: classroomData.title },
         {
           params: { email: email, userId: id },

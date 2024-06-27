@@ -1,8 +1,12 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
 import { classroomModel } from "../../../models/classroomModel";
 
-export default function classroomUsersController(req: Request, res: Response) {
+export default function classroomUsersController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // get data
   const classroomId = req.params.classroomId;
   const userId = req.query.userId as string;
@@ -29,5 +33,5 @@ export default function classroomUsersController(req: Request, res: Response) {
       success: true,
       data: classroom,
     });
-  }, res);
+  }, next);
 }

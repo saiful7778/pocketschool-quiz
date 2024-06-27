@@ -11,3 +11,9 @@ export const joinClassroomSchema = z.object({
     .string({ required_error: "Classroom Id is required" })
     .min(1, "Classroom id is required"),
 });
+
+export const classroomUpdateSchema = z.object({
+  title: z
+    .string({ required_error: "Title is required" })
+    .min(1, "Title is required"),
+});

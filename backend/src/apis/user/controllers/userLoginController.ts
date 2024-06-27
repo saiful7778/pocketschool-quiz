@@ -1,17 +1,22 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
 import { userModel } from "../../../models/userModel";
 import devDebug from "../../../utils/devDebug";
 import getEnv from "../../../utils/env";
 import { sign } from "jsonwebtoken";
+import createHttpError from "http-errors";
 
-export default function userLoginController(req: Request, res: Response) {
+export default function userLoginController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // extract data
   const { email } = req.body;
 
   // validate data
-  const check = inputCheck([email], res);
+  const check = inputCheck([email], next);
   if (!check) return;
 
   serverHelper(async () => {
@@ -27,22 +32,12 @@ export default function userLoginController(req: Request, res: Response) {
 
     // check is user exist ro not
     if (!user) {
-      res.status(400).json({
-        success: false,
-        message: "User doesn't exist",
-      });
-      devDebug("User doesn't exist");
-      return;
+      return next(createHttpError(400, "user doesn't exist"));
     }
 
     // check if user have access right of this web app
     if (!user.access) {
-      res.status(400).json({
-        success: false,
-        message: "User can't access this site",
-      });
-      devDebug("User can't access this site");
-      return;
+      return next(createHttpError(400, "User can't access this site"));
     }
 
     // create a new token with this payload
@@ -69,5 +64,5 @@ export default function userLoginController(req: Request, res: Response) {
         userData: { _id: user._id, role: user.role, uid: user.uid },
       },
     });
-  }, res);
+  }, next);
 }

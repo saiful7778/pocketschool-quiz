@@ -1,12 +1,13 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
 import { classroomModel } from "../../../models/classroomModel";
-import devDebug from "../../../utils/devDebug";
 import { Types } from "mongoose";
+import createHttpError from "http-errors";
 
 export default function userJoinClassroomController(
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) {
   // get data
   const classroomId = req.params.classroomId;
@@ -19,11 +20,7 @@ export default function userJoinClassroomController(
     });
 
     if (isUserExist) {
-      res.status(400).json({
-        success: false,
-        message: "User already joined",
-      });
-      return;
+      return next(createHttpError(400, "user is already joined"));
     }
 
     // add user to a classroom
@@ -33,18 +30,13 @@ export default function userJoinClassroomController(
     );
 
     if (classroom.modifiedCount === 0) {
-      res
-        .status(400)
-        .json({ success: false, message: "user can't join in this classroom" });
-      return;
+      return next(createHttpError(400, "user can't join in this classroom"));
     }
-
-    devDebug("joined classroom");
 
     // send response
     res.status(201).json({
       success: true,
       message: "Joined in a classroom",
     });
-  }, res);
+  }, next);
 }

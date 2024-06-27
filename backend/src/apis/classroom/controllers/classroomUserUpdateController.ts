@@ -1,12 +1,14 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
 import { classroomModel } from "../../../models/classroomModel";
 import { Types } from "mongoose";
+import createHttpError from "http-errors";
 
 export default function classroomUserUpdateController(
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) {
   // get data
   const classroomId = req.params.classroomId;
@@ -15,16 +17,12 @@ export default function classroomUserUpdateController(
   const { access, role } = req.body;
 
   // validate
-  const check = inputCheck([access], res);
+  const check = inputCheck([access], next);
   if (!check) return;
 
   // validate
   if (userId === classroomUserId) {
-    res.status(400).json({
-      success: false,
-      message: "You can't update your role or access",
-    });
-    return;
+    return next(createHttpError("You can't update your role or access"));
   }
 
   serverHelper(async () => {
@@ -50,11 +48,7 @@ export default function classroomUserUpdateController(
     );
 
     if (!classroom) {
-      res.status(404).json({
-        success: false,
-        message: "Classroom not found",
-      });
-      return;
+      return next(createHttpError(404, "classroom not found"));
     }
 
     if (typeof role !== "undefined") {
@@ -99,5 +93,5 @@ export default function classroomUserUpdateController(
       success: true,
       data: classroom,
     });
-  }, res);
+  }, next);
 }

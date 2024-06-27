@@ -24,7 +24,7 @@ const Classroom: FC = () => {
     queryFn: async () => {
       const { data } = await axiosSecure.get<
         ApiResponse<{ _id: string; title: string }[]>
-      >(`/user/classrooms/${userData?._id}`);
+      >(`/api/users/classrooms`);
       if (!data.success) {
         throw new Error(data.message);
       }

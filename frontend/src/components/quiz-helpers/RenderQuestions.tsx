@@ -26,7 +26,7 @@ const RenderQuestions: FC<QuizInput> = ({ control, loading }) => {
       case "multipleOption":
         return "Multiple options (Single Answer)";
       case "multipleAnswers":
-        return "Multiple options (Multpule Answer)";
+        return "Multiple options (Multiple Answer)";
       case "textAnswer":
         return "Text input answer";
       case "pinPointerAnswer":
@@ -79,6 +79,7 @@ const RenderQuestions: FC<QuizInput> = ({ control, loading }) => {
                   placeholder="Time limit"
                   disabled={loading}
                   {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
                 />
               )}
             />
@@ -92,6 +93,7 @@ const RenderQuestions: FC<QuizInput> = ({ control, loading }) => {
                   placeholder="Question marks"
                   disabled={loading}
                   {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
                 />
               )}
             />

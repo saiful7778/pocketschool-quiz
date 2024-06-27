@@ -38,7 +38,7 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
       role: User["role"];
       access: User["access"];
     }) => {
-      return axiosSecure.patch(`/user/${id}`, updatedUserData, {
+      return axiosSecure.patch(`/api/users/${id}`, updatedUserData, {
         params: { email: user?.email, userId: userData?._id },
         headers: { Authorization: token },
       });

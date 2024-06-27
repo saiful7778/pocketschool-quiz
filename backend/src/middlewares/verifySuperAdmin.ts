@@ -1,4 +1,4 @@
-import devDebug from "../utils/devDebug";
+import createHttpError from "http-errors";
 import type { Request, Response, NextFunction } from "express";
 
 /**
@@ -15,12 +15,7 @@ export default async function verifySuperAdmin(
 ) {
   const { role, userId } = req.user;
   if (role !== "superAdmin") {
-    res.status(401).json({
-      success: false,
-      message: "Unauthorized",
-    });
-    devDebug("User is not super admin");
-    return;
+    return next(createHttpError(401, "user is not super admin"));
   }
   req.userId = userId;
   next();

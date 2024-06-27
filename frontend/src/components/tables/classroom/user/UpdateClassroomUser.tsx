@@ -48,7 +48,7 @@ const UpdateClassroomUser: FC<UpdateUserProps> = ({
         userUpdatedData.role = data.role;
       }
       return axiosSecure.patch(
-        `/classroom/${classroomId}/user/${userId}`,
+        `/api/classrooms/${classroomId}/users/${userId}`,
         userUpdatedData,
       );
     },

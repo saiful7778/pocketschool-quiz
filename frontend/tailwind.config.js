@@ -4,6 +4,7 @@ module.exports = {
   content: [
     "./src/components/**/*.{ts,tsx}",
     "./src/pages/**/*.{ts,tsx}",
+    "./src/layouts/**/*.{ts,tsx}",
     "./src/lib/styles/**/*.ts",
   ],
   prefix: "",

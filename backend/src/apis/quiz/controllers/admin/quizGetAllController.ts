@@ -1,11 +1,15 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../../utils/serverHelper";
 import { quizModel } from "../../../../models/quizModel";
 import { Types } from "mongoose";
 
-export default function quizGetAllController(req: Request, res: Response) {
+export default function quizGetAllController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // get data
-  const classroomId = req.params.classroomId;
+  const { classroomId } = req.query as { classroomId: string };
 
   serverHelper(async () => {
     const quizzes = await quizModel.aggregate([
@@ -51,5 +55,5 @@ export default function quizGetAllController(req: Request, res: Response) {
       success: true,
       data: quizzes,
     });
-  }, res);
+  }, next);
 }

@@ -1,9 +1,13 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
 import { userModel } from "../../../models/userModel";
-import devDebug from "../../../utils/devDebug";
+import createHttpError from "http-errors";
 
-export default function userGetController(req: Request, res: Response) {
+export default function userGetController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const userId = req.params.userId;
 
   serverHelper(async () => {
@@ -17,12 +21,7 @@ export default function userGetController(req: Request, res: Response) {
 
     // check is user found or not
     if (!user) {
-      res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-      devDebug("User not found");
-      return;
+      return next(createHttpError(404, "user not found"));
     }
 
     // send response
@@ -30,5 +29,5 @@ export default function userGetController(req: Request, res: Response) {
       success: true,
       data: user,
     });
-  }, res);
+  }, next);
 }

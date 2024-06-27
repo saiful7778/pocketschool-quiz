@@ -1,8 +1,12 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../../utils/serverHelper";
 import { quizModel } from "../../../../models/quizModel";
 
-export default function quizGetController(req: Request, res: Response) {
+export default function quizGetController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   // get data
   const quizId = req.params.quizId;
 
@@ -13,5 +17,5 @@ export default function quizGetController(req: Request, res: Response) {
       .populate({ path: "author", select: ["_id", "fullName", "email"] });
 
     res.status(200).send({ success: true, data: quiz });
-  }, res);
+  }, next);
 }

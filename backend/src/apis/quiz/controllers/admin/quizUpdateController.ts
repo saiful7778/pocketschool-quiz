@@ -1,11 +1,15 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../../utils/serverHelper";
 import { questionModel, quizModel } from "../../../../models/quizModel";
-import devDebug from "../../../../utils/devDebug";
 import type { Question } from "../../../../types/quizType";
 import { Types } from "mongoose";
+import createHttpError from "http-errors";
 
-export default function quizUpdateController(req: Request, res: Response) {
+export default function quizUpdateController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const quizId = req.params.quizId;
   const { title, startTime, questions } = req.body as {
     title: string;
@@ -14,21 +18,11 @@ export default function quizUpdateController(req: Request, res: Response) {
   };
 
   if (!Array.isArray(questions)) {
-    res.status(400).send({
-      success: false,
-      message: "Questions must be an array",
-    });
-    devDebug("invalid questions");
-    return;
+    return next(createHttpError(400, "questions must be an array"));
   }
 
   if (questions.length === 0) {
-    res.status(400).send({
-      success: false,
-      message: "Questions array is empty",
-    });
-    devDebug("question array in empty");
-    return;
+    return next(createHttpError(400, "question array is empty"));
   }
 
   const isQuestionsAvailable = questions.map((question) => {
@@ -44,12 +38,7 @@ export default function quizUpdateController(req: Request, res: Response) {
   });
 
   if (isQuestionsAvailable.includes(undefined)) {
-    res.status(400).send({
-      success: false,
-      message: "Question data not available",
-    });
-    devDebug("invalid question data");
-    return;
+    return next(createHttpError(400, "invalid questions data"));
   }
 
   serverHelper(async () => {
@@ -72,7 +61,7 @@ export default function quizUpdateController(req: Request, res: Response) {
     );
 
     res.status(200).send({ success: true, data: quiz });
-  }, res);
+  }, next);
 }
 
 async function questionPromises(
@@ -83,9 +72,9 @@ async function questionPromises(
   const ids: string[] = [];
 
   const deleteAbleQuestions = quizQuestions.filter((questionId) =>
-    questions.find((question) => String(questionId) !== question?._id)
-      ? true
-      : false
+    questions.find((question) => String(questionId) === question?._id)
+      ? false
+      : true
   );
 
   if (deleteAbleQuestions.length > 0) {
@@ -96,24 +85,24 @@ async function questionPromises(
     );
   }
 
-  // const updateAbleQuestions = quizQuestions
-  //   .map((quizQuestion) => String(quizQuestion))
-  //   .filter((questionId) =>
-  //     questions.find((question) => String(questionId) === question?._id) ? true : false
-  //   );
+  const updateAbleQuestions = quizQuestions
+    .map((quizQuestion) => String(quizQuestion))
+    .filter((questionId) =>
+      questions.find((question) => questionId === question?._id) ? true : false
+    );
 
   allPromises.push(
     ...questions.map((question) => {
-      // if (updateAbleQuestions.includes(question?._id as string)) {
       if (question?._id) {
         const { _id, ...questionData } = question;
 
-        ids.push(_id as string);
-
-        return questionModel.updateOne(
-          { _id: new Types.ObjectId(_id) },
-          { ...questionData }
-        );
+        if (updateAbleQuestions.includes(_id as string)) {
+          ids.push(_id as string);
+          return questionModel.updateOne(
+            { _id: new Types.ObjectId(_id) },
+            { ...questionData }
+          );
+        }
       } else {
         const newQuestionId = new Types.ObjectId();
         ids.push(String(newQuestionId));

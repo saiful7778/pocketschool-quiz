@@ -1,5 +1,5 @@
-import type { Response } from "express";
-import devDebug from "./devDebug";
+import type { NextFunction } from "express";
+import createHttpError from "http-errors";
 
 /**
  * This is function check is all inputs element are available
@@ -9,7 +9,7 @@ import devDebug from "./devDebug";
  */
 export default function inputCheck(
   inputs: string[] | number[] | undefined[] | null[] | unknown[],
-  res: Response
+  next: NextFunction
 ) {
   const inputDataType = [];
   for (let i = 0; i < inputs.length; i++) {
@@ -18,11 +18,7 @@ export default function inputCheck(
     }
   }
   if (inputDataType.includes(undefined)) {
-    devDebug("invalid input data");
-    res.status(400).json({
-      success: false,
-      message: "Invalid input data",
-    });
+    next(createHttpError(400, "Invalid input data"));
     return false;
   }
   return true;

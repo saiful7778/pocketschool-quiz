@@ -21,13 +21,7 @@ const Users: FC = () => {
   } = useQuery({
     queryKey: ["users", userData?._id, user?.email, token],
     queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<User[]>>(
-        "/users/all",
-        {
-          params: { email: user?.email, userId: userData?._id },
-          headers: { Authorization: token },
-        },
-      );
+      const { data } = await axiosSecure.get<ApiResponse<User[]>>("/api/users");
       if (!data.success) {
         throw new Error(data.message);
       }
