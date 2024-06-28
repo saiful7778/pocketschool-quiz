@@ -75,6 +75,8 @@ const Question: FC<QuestionProps> = ({
               type="number"
               label="Answer time (s)"
               placeholder="Time limit"
+              min={10}
+              max={120}
               disabled={loading}
               {...field}
               onChange={(e) => field.onChange(Number(e.target.value))}
@@ -88,6 +90,8 @@ const Question: FC<QuestionProps> = ({
             <InputField
               type="number"
               label="Marks"
+              min={10}
+              max={100}
               placeholder="Question marks"
               disabled={loading}
               {...field}

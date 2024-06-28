@@ -12,12 +12,12 @@ const baseQuestionSchema = z.object({
     .string({ required_error: "Question is required" })
     .min(1, "Question is required"),
   timeLimit: z
-    .number({ required_error: "Time limit must be at least 1 second" })
-    .min(1, "Time limit must be at least 1 second")
+    .number({ required_error: "Time limit must be at least 10 second" })
+    .min(10, "Time limit must be at least 10 second")
     .max(120, "Time limit must be at most 120 seconds (2 minutes)"),
   marks: z
-    .number({ required_error: "Marks must be at least 1" })
-    .min(1, "Marks must be at least 1")
+    .number({ required_error: "Marks must be at least 10" })
+    .min(10, "Marks must be at least 10")
     .max(100, "Marks must be at most 100"),
 });
 
@@ -29,8 +29,8 @@ const multipleOptionQuestionSchema = baseQuestionSchema.extend({
     .max(5, "At most five options are allowed"),
   correctAnswerIndex: z
     .number({ required_error: "Correct answer is required" })
-    .min(1, "Correct answer index must be at least 1")
-    .max(5, "Correct answer index must be at most 5"),
+    .min(0, "Correct answer index must be at least 0")
+    .max(4, "Correct answer index must be at most 4"),
 });
 
 const multipleAnswerQuestionSchema = baseQuestionSchema.extend({
@@ -42,8 +42,8 @@ const multipleAnswerQuestionSchema = baseQuestionSchema.extend({
   correctAnswerIndices: z.array(
     z
       .number({ required_error: "Correct answer Indices is required" })
-      .min(1, "Correct answer Indices must be at least 1")
-      .max(5, "Correct answer Indices must be at most 5"),
+      .min(0, "Correct answer Indices must be at least 1")
+      .max(4, "Correct answer Indices must be at most 4"),
   ),
 });
 

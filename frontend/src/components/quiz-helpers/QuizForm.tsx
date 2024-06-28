@@ -62,6 +62,7 @@ const QuizForm: FC<QuizFormProps> = ({
                 type="datetime-local"
                 label="Start time"
                 disabled={isPending}
+                min={field.value}
                 {...field}
               />
             )}

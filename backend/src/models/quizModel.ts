@@ -36,10 +36,14 @@ const optionSchema = new Schema<Option>({
 const multipleOptionSchema = new Schema<MultipleOption>({
   options: {
     type: [optionSchema],
+    min: [1, "options minimum 1"],
+    max: [5, "options maximum 5"],
     required: [true, "options is required"],
   },
   correctAnswerIndex: {
     type: Number,
+    min: [0, "correct answer index is minimum 0"],
+    max: [4, "correct answer index is maximum 4"],
     required: [true, "correct answer index is required"],
   },
 });
@@ -48,11 +52,23 @@ const multipleOptionSchema = new Schema<MultipleOption>({
 const multipleAnswerSchema = new Schema<MultipleAnswer>({
   options: {
     type: [optionSchema],
+    min: [1, "options minimum 1"],
+    max: [5, "options maximum 5"],
     required: [true, "options is required"],
   },
-  correctAnswerIndices: [
-    { type: Number, required: [true, "correct answer indices is required"] },
-  ],
+  correctAnswerIndices: {
+    type: [
+      {
+        type: Number,
+        min: [0, "correct answer indices is minimum 0"],
+        max: [4, "correct answer indices is maximum 4"],
+        required: [true, "correct answer indices is required"],
+      },
+    ],
+    min: [1, "correct answer indices is minimum 1"],
+    max: [5, "correct answer indices is maximum 5"],
+    required: [true, "correct answer indices is required"],
+  },
 });
 
 // Plain Text Answer Question

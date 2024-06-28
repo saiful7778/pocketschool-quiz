@@ -104,6 +104,15 @@ const UpdateQuizForm = ({
   const created = moment(defaultValues.createdAt).format("DD/MM/YYYY hh:mm a");
   const updated = moment(defaultValues.updatedAt).format("DD/MM/YYYY hh:mm a");
 
+  const dateTimeLocalNow = () => {
+    return new Date(
+      new Date(defaultValues.startTime).getTime() -
+        new Date().getTimezoneOffset() * 60_000,
+    )
+      .toISOString()
+      .slice(0, 16);
+  };
+
   return (
     <QuizForm
       title={`Update '${defaultValues.title}' quiz`}
@@ -120,7 +129,7 @@ const UpdateQuizForm = ({
       submitButtonText="Update quiz"
       isPending={isPending}
       handleSubmit={(e) => mutate(e)}
-      defaultValues={defaultValues}
+      defaultValues={{ ...defaultValues, startTime: dateTimeLocalNow() }}
     />
   );
 };

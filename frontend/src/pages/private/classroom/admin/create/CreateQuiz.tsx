@@ -46,6 +46,14 @@ const CreateQuiz: FC = () => {
     },
   });
 
+  const dateTimeLocalNow = () => {
+    return new Date(
+      new Date().getTime() - new Date().getTimezoneOffset() * 60_000,
+    )
+      .toISOString()
+      .slice(0, 16);
+  };
+
   return (
     <QuizForm
       title="Create new quiz"
@@ -54,27 +62,31 @@ const CreateQuiz: FC = () => {
       handleSubmit={(e: z.infer<typeof quizSchema>) => mutate(e)}
       defaultValues={{
         title: "Quiz title",
-        startTime: "",
+        startTime: dateTimeLocalNow(),
         questions: [
           {
             questionType: "multipleOption",
             questionText: "Simple question title",
-            timeLimit: 30,
-            marks: 30,
-            options: [{ text: "option-1" }, { text: "option-2" }],
+            timeLimit: 15,
+            marks: 10,
+            options: [
+              { text: "option-NO-1" },
+              { text: "option-NO-2" },
+              { text: "option-NO-3" },
+            ],
             correctAnswerIndex: 1,
           },
           {
             questionType: "multipleAnswer",
             questionText: "Simple question",
-            timeLimit: 30,
-            marks: 30,
+            timeLimit: 15,
+            marks: 20,
             options: [
-              { text: "option-1" },
-              { text: "option-2" },
-              { text: "option-3" },
+              { text: "option-No-1" },
+              { text: "option-No-2" },
+              { text: "option-No-3" },
             ],
-            correctAnswerIndices: [1, 2],
+            correctAnswerIndices: [0, 2],
           },
         ],
       }}
