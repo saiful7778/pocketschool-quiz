@@ -91,7 +91,7 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ trigger }) => {
                 <Button className="w-full" type="submit" disabled={isPending}>
                   {isPending ? <Spinner size={20} /> : "Join"}
                 </Button>
-                <Drawer.close>
+                <Drawer.close asChild>
                   <Button type="button" className="w-full" variant="outline">
                     Cancel
                   </Button>

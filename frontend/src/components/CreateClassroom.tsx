@@ -92,7 +92,7 @@ const CreateClassroom: FC<CreateClassroomProps> = ({ id, trigger }) => {
                 <Button className="w-full" type="submit" disabled={isPending}>
                   {isPending ? <Spinner size={20} /> : "Create new classroom"}
                 </Button>
-                <Drawer.close>
+                <Drawer.close asChild>
                   <Button type="button" className="w-full" variant="outline">
                     Cancel
                   </Button>

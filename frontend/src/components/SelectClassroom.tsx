@@ -31,13 +31,36 @@ const SelectClassroom: FC<SelectClassroomProps> = ({
 
   useEffect(() => {
     if (classrooms.length > 0) {
-      setValue(classrooms[0]._id);
-      navigate({
-        to: "/classroom/$classroomId",
-        params: { classroomId: classrooms[0]._id },
-      });
+      setData("classrooms", classrooms);
+      const seletedClassroomString = getData("seletedClassroom");
+
+      if (seletedClassroomString) {
+        const seletedClassroom = JSON.parse(seletedClassroomString) as {
+          _id?: string | null;
+          title?: string | null;
+        };
+        if (seletedClassroom?._id) {
+          setValue(seletedClassroom?._id);
+          navigate({
+            to: "/classroom/$classroomId",
+            params: { classroomId: seletedClassroom?._id },
+          });
+        }
+      } else {
+        setData("seletedClassroom", classrooms[0]);
+      }
     }
   }, [classrooms, navigate]);
+
+  const handleSelect = (currentValue: string, classroom: classroom) => {
+    setValue(currentValue === value ? "" : currentValue);
+    setData("seletedClassroom", classroom);
+    navigate({
+      to: "/classroom/$classroomId",
+      params: { classroomId: classroom._id },
+    });
+    setOpenPopover(false);
+  };
 
   return (
     <Popover open={openPopover} onOpenChange={setOpenPopover}>
@@ -64,14 +87,9 @@ const SelectClassroom: FC<SelectClassroomProps> = ({
                 <Command.item
                   key={`${classroom._id} ${idx}`}
                   value={classroom._id}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    navigate({
-                      to: "/classroom/$classroomId",
-                      params: { classroomId: classroom._id },
-                    });
-                    setOpenPopover(false);
-                  }}
+                  onSelect={(currentValue) =>
+                    handleSelect(currentValue, classroom)
+                  }
                 >
                   <Check
                     className={cn(
@@ -108,5 +126,13 @@ const SelectClassroom: FC<SelectClassroomProps> = ({
     </Popover>
   );
 };
+
+function setData(key: string, value: unknown) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getData(key: string) {
+  return localStorage.getItem(key);
+}
 
 export default SelectClassroom;
