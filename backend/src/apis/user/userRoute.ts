@@ -17,18 +17,12 @@ const userRoute = Router();
 userRoute.post("/login", userLoginController);
 
 // /api/users/classrooms
-userRoute.get(
-  "/classrooms",
-  verifyToken,
-  verifyUser,
-  userJoinedClassroomsController
-);
+userRoute.get("/classrooms", verifyToken, userJoinedClassroomsController);
 
 // /api/users/join_classroom/:classroomId
 userRoute.post(
   "/join_classroom/:classroomId",
   verifyToken,
-  verifyUser,
   userJoinClassroomController
 );
 

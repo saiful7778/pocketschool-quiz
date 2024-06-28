@@ -6,9 +6,9 @@ import { FC } from "react";
 const PrivateLayout: FC = () => {
   return (
     <PrivateProtector>
-      <div className="flex flex-col gap-2 md:flex-row">
+      <div className="mb-4 flex flex-col gap-4 lg:flex-row">
         <Sidebar />
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 space-y-2 border-l pl-4">
           <Outlet />
         </div>
       </div>

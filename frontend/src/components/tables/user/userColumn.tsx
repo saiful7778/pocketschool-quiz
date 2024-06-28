@@ -1,10 +1,7 @@
 import Avatar from "@/components/ui/avatar";
-import Button from "@/components/ui/button";
-import Dialog from "@/components/ui/dialog";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import UpdateUser from "./UpdateUser";
 import type { User } from "@/types/user";
+import UserTableRowAction from "./UserTableRowAction";
 
 const columns: ColumnDef<User>[] = [
   {
@@ -68,20 +65,11 @@ const columns: ColumnDef<User>[] = [
       const user = row.original;
 
       return (
-        <Dialog>
-          <Dialog.trigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreHorizontal size={18} />
-              <span className="sr-only">Open user manage menu</span>
-            </Button>
-          </Dialog.trigger>
-          <Dialog.content className="w-full sm:max-w-md">
-            <Dialog.header>
-              <Dialog.title>Edit user profile</Dialog.title>
-            </Dialog.header>
-            <UpdateUser id={user._id} role={user.role} access={user.access} />
-          </Dialog.content>
-        </Dialog>
+        <UserTableRowAction
+          id={user._id}
+          role={user.role}
+          access={user.access}
+        />
       );
     },
   },

@@ -1,10 +1,7 @@
 import Avatar from "@/components/ui/avatar";
-import Button from "@/components/ui/button";
-import Dialog from "@/components/ui/dialog";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
 import type { user } from "@/types/classroom";
-import UpdateClassroomUser from "./UpdateClassroomUser";
+import ClassroomUserRowAction from "./ClassroomUserRowAction";
 
 export default function getColumns(
   classroomId: string,
@@ -68,26 +65,13 @@ export default function getColumns(
         const user = row.original;
 
         return (
-          <Dialog>
-            <Dialog.trigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreHorizontal size={18} />
-                <span className="sr-only">Open user manage menu</span>
-              </Button>
-            </Dialog.trigger>
-            <Dialog.content className="w-full sm:max-w-md">
-              <Dialog.header>
-                <Dialog.title>Edit user</Dialog.title>
-              </Dialog.header>
-              <UpdateClassroomUser
-                classroomId={classroomId}
-                userId={user.userId._id}
-                currentUserEmail={user.userId?.email}
-                access={user.access}
-                role={role}
-              />
-            </Dialog.content>
-          </Dialog>
+          <ClassroomUserRowAction
+            classroomId={classroomId}
+            id={user.userId._id}
+            role={role}
+            email={user.userId.email}
+            access={user.access}
+          />
         );
       },
     },

@@ -13,7 +13,7 @@ export default function getQuizColumns(classroomId: string) {
     {
       id: "quizTitle",
       accessorKey: "title",
-      header: "Title",
+      header: () => <div className="min-w-40">Title</div>,
     },
     {
       id: "questions",
@@ -32,7 +32,7 @@ export default function getQuizColumns(classroomId: string) {
     {
       id: "startTime",
       accessorKey: "startTime",
-      header: "Quiz will start",
+      header: () => <div className="min-w-36">Quiz will start</div>,
       cell: ({ row }) => {
         const startTime = row.getValue<Quizzes["startTime"]>("startTime");
         const quizStartTime = moment(startTime).format("DD/MM/YYYY hh:mm a");

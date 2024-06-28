@@ -4,7 +4,7 @@ import { FC } from "react";
 
 const Home: FC = () => {
   return (
-    <div className="flex min-h-[calc(100vh-90px)] w-full flex-col items-center justify-center gap-4 text-center">
+    <div className="flex min-h-[calc(100vh-190px)] w-full flex-col items-center justify-center gap-4 py-10 text-center">
       <h1 className="text-5xl font-bold">
         Welcome to <span className="text-primary">Pocket school</span> <br />{" "}
         quiz competition.

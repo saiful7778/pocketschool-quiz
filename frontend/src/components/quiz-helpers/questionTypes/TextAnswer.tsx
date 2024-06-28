@@ -1,7 +1,13 @@
-import { FormField } from "@/components/ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { FC } from "react";
 import type { QuizInput } from "@/types/quiz";
-import InputField from "@/components/InputField";
+import Textarea from "@/components/ui/textarea";
 
 interface TextAnswerProps extends QuizInput {
   index: number;
@@ -13,13 +19,18 @@ const TextAnswer: FC<TextAnswerProps> = ({ control, index, loading }) => {
       control={control}
       name={`questions.${index}.correctAnswer`}
       render={({ field }) => (
-        <InputField
-          type="text"
-          label="Answer"
-          placeholder="Correct Answer"
-          disabled={loading}
-          {...field}
-        />
+        <FormItem>
+          <FormLabel>Correct answer</FormLabel>
+          <FormControl>
+            <Textarea
+              placeholder="Correct Answer"
+              // className="resize-none"
+              disabled={loading}
+              {...field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
       )}
     />
   );

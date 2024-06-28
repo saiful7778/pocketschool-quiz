@@ -91,6 +91,14 @@ const SingleClassroom: FC = () => {
               </DropdownMenu.item>
               <DropdownMenu.item asChild>
                 <Link
+                  to="/classroom/$classroomId/create_quiz"
+                  params={{ classroomId: classroomId }}
+                >
+                  New quiz
+                </Link>
+              </DropdownMenu.item>
+              <DropdownMenu.item asChild>
+                <Link
                   to="/classroom/$classroomId/users"
                   params={{ classroomId: classroomId }}
                 >

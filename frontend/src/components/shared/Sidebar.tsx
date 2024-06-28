@@ -14,7 +14,7 @@ const Sidebar: FC = () => {
 
   return (
     <aside className="w-full max-w-40">
-      <div className="flex-1 md:hidden">
+      <div className="flex-1 lg:hidden">
         <DropdownMenu>
           <DropdownMenu.trigger asChild>
             <Button variant="outline" size="icon">
@@ -36,7 +36,7 @@ const Sidebar: FC = () => {
         </DropdownMenu>
       </div>
       <nav
-        className="flex flex-col gap-2 text-sm text-muted-foreground max-md:hidden"
+        className="flex flex-col gap-2 text-sm text-muted-foreground max-lg:hidden"
         x-chunk="dashboard-04-chunk-0"
       >
         {dashboardLinks.map((ele, idx) => {

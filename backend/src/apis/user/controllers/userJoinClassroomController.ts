@@ -11,7 +11,7 @@ export default function userJoinClassroomController(
 ) {
   // get data
   const classroomId = req.params.classroomId;
-  const userId = req.userId;
+  const { userId } = req.query;
 
   serverHelper(async () => {
     const isUserExist = await classroomModel.findOne({

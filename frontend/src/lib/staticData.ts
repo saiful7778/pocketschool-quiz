@@ -1,5 +1,7 @@
 export const defaultLoginPage = "/classroom";
 
+export const tableRowPerPage = [5, 10, 15, 20];
+
 type dashboardLinkTypes = {
   navName: string;
   path: string;
