@@ -1,9 +1,7 @@
 import { Router } from "express";
 // middlewares
 import verifyToken from "../../middlewares/verifyToken";
-import verifyTokenAndKey from "../../middlewares/verifyTokenKey";
-import verifyUserExist from "../../middlewares/verifyUserExist";
-import verifySuperAdmin from "../../middlewares/verifySuperAdmin";
+import verifyUser from "../../middlewares/verifyUser";
 // controllers
 import userCreateController from "./controllers/userCreateController";
 import userGetAllController from "./controllers/userGetAllController";
@@ -22,8 +20,7 @@ userRoute.post("/login", userLoginController);
 userRoute.get(
   "/classrooms",
   verifyToken,
-  verifyTokenAndKey,
-  verifyUserExist,
+  verifyUser,
   userJoinedClassroomsController
 );
 
@@ -31,8 +28,7 @@ userRoute.get(
 userRoute.post(
   "/join_classroom/:classroomId",
   verifyToken,
-  verifyTokenAndKey,
-  verifyUserExist,
+  verifyUser,
   userJoinClassroomController
 );
 
@@ -40,19 +36,13 @@ userRoute.post(
 userRoute
   .route("/")
   .post(userCreateController)
-  .get(
-    verifyToken,
-    verifyTokenAndKey,
-    verifyUserExist,
-    verifySuperAdmin,
-    userGetAllController
-  );
+  .get(verifyToken, verifyUser(["superAdmin"]), userGetAllController);
 
 // /api/users/:userId
 userRoute
   .route("/:userId")
-  .all(verifyToken, verifyTokenAndKey)
+  .all(verifyToken)
   .get(userGetController)
-  .patch(verifyUserExist, verifySuperAdmin, userUpdateController);
+  .patch(verifyUser(["superAdmin"]), userUpdateController);
 
 export default userRoute;

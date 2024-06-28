@@ -1,9 +1,7 @@
 import { Router } from "express";
 // middlewares
 import verifyToken from "../../middlewares/verifyToken";
-import verifyTokenAndKey from "../../middlewares/verifyTokenKey";
-import verifyUserExist from "../../middlewares/verifyUserExist";
-import verifyAdminAndSuperAdmin from "../../middlewares/verifyAdminAndSuperAdmin";
+import verifyUser from "../../middlewares/verifyUser";
 // controllers
 import classroomCreateController from "./controllers/classroomCreateController";
 import classroomGetController from "./controllers/classroomGetController";
@@ -18,16 +16,14 @@ const classroomRoute = Router();
 classroomRoute.post(
   "/",
   verifyToken,
-  verifyTokenAndKey,
-  verifyUserExist,
-  verifyAdminAndSuperAdmin,
+  verifyUser(["admin", "superAdmin"]),
   classroomCreateController
 );
 
 // /api/classrooms/:classroomId
 classroomRoute
   .route("/:classroomId")
-  .all(verifyToken, verifyTokenAndKey)
+  .all(verifyToken)
   .get(classroomGetController)
   .patch(classroomUpdateController);
 
@@ -35,14 +31,13 @@ classroomRoute
 classroomRoute.get(
   "/:classroomId/users",
   verifyToken,
-  verifyTokenAndKey,
   classroomUsersController
 );
 
 // /api/classrooms/:classroomId/users/:classroomUserId
 classroomRoute
   .route("/:classroomId/users/:classroomUserId")
-  .all(verifyToken, verifyTokenAndKey)
+  .all(verifyToken)
   .get(classroomUserController)
   .patch(classroomUserUpdateController);
 

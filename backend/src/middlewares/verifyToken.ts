@@ -16,6 +16,8 @@ export default function verifyToken(
   next: NextFunction
 ) {
   const { authorization } = req.headers;
+  const { email } = req.query;
+
   if (!authorization) {
     return next(createHttpError(401, "authorization headers is unavailable"));
   }
@@ -23,6 +25,10 @@ export default function verifyToken(
   const token = authorization.split(" ")[1];
   if (!token) {
     return next(createHttpError(401, "authorization token is unavailable"));
+  }
+
+  if (!email) {
+    return next(createHttpError(401, "query email is unavailable"));
   }
 
   // verify the jwt token
@@ -34,7 +40,11 @@ export default function verifyToken(
         return next(createHttpError(401, "token is not valid"));
       }
       // send this jwt token
-      req.token = decode;
+      if (decode?.email !== email) {
+        return next(
+          createHttpError(401, "token user email and query email is not match")
+        );
+      }
       next();
     }
   );

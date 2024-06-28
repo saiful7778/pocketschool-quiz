@@ -1,9 +1,7 @@
 import { Router } from "express";
 // middlewares
 import verifyToken from "../../middlewares/verifyToken";
-import verifyTokenAndKey from "../../middlewares/verifyTokenKey";
-import verifyClassroomUserAvailable from "../../middlewares/classroom/verifyClassroomUserAvailable";
-import verifyClassroomAdmin from "../../middlewares/classroom/verifyClassroomUser";
+import verifyClassroomUser from "../../middlewares/verifyClassroomUser";
 // controllers
 import quizCreateController from "./controllers/admin/quizCreateController";
 import quizGetAllController from "./controllers/admin/quizGetAllController";
@@ -16,24 +14,14 @@ const quizRoute = Router();
 // /api/classrooms/quizzes/admin
 quizRoute
   .route("/admin")
-  .all(
-    verifyToken,
-    verifyTokenAndKey,
-    verifyClassroomUserAvailable,
-    verifyClassroomAdmin
-  )
+  .all(verifyToken, verifyClassroomUser("admin"))
   .post(quizCreateController)
   .get(quizGetAllController);
 
 // /api/classrooms/quizzes/admin/:quizId
 quizRoute
   .route("/admin/:quizId")
-  .all(
-    verifyToken,
-    verifyTokenAndKey,
-    verifyClassroomUserAvailable,
-    verifyClassroomAdmin
-  )
+  .all(verifyToken, verifyClassroomUser("admin"))
   .get(quizGetController)
   .patch(quizUpdateController)
   .delete(quizDeleteController);

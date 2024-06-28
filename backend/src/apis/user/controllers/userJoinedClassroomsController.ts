@@ -7,7 +7,7 @@ export default function userJoinedClassroomsController(
   res: Response,
   next: NextFunction
 ) {
-  const { userId } = req.user;
+  const userId = req.userId;
 
   serverHelper(async () => {
     const classrooms = await classroomModel.find(
