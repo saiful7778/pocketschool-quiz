@@ -10,11 +10,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { classroomUpdateSchema } from "@/lib/schemas/classroomSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Form from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import InputField from "@/components/InputField";
 import Button from "@/components/ui/button";
 import Spinner from "@/components/Spinner";
 import toast from "@/lib/toast/toast";
+import useAuth from "@/hooks/useAuth";
 
 const routeData = getRouteApi(
   "/private/classroom/$classroomId/classroomAdmin/details",
@@ -52,7 +53,7 @@ const ClassroomDetails: FC = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-xs">
+    <div className="mx-auto w-full max-w-md">
       <ClassroomUpdateForm
         title={classroom?.title!}
         classroomId={classroomId}
@@ -70,6 +71,7 @@ const ClassroomUpdateForm = ({
 }) => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  const { userData } = useAuth();
 
   const form = useForm<z.infer<typeof classroomUpdateSchema>>({
     resolver: zodResolver(classroomUpdateSchema),
@@ -85,9 +87,12 @@ const ClassroomUpdateForm = ({
       return axiosSecure.patch(`/api/classrooms/${classroomId}`, classroomData);
     },
     onSuccess: (data) => {
-      if (data?.status === 201) {
+      if (data?.status === 200) {
         queryClient.invalidateQueries({
           queryKey: ["classroom", { classroomId }],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["joined", "classrooms", { userId: userData?._id }],
         });
         toast({
           title: "Classroom is updated",
@@ -110,7 +115,7 @@ const ClassroomUpdateForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <Form.field
+        <FormField
           control={form.control}
           name="title"
           render={({ field }) => (

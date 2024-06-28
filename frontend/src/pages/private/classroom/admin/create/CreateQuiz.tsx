@@ -65,7 +65,7 @@ const CreateQuiz: FC = () => {
             correctAnswerIndex: 1,
           },
           {
-            questionType: "multipleAnswers",
+            questionType: "multipleAnswer",
             questionText: "Simple question",
             timeLimit: 30,
             marks: 30,

@@ -6,22 +6,8 @@ export interface Quiz {
   author: Types.ObjectId | string;
   classroom: Types.ObjectId | string;
   questions: Types.ObjectId[] | string[];
+  participants: Types.ObjectId[] | string[];
   startTime: Date;
-  createdAt: Date;
-  updatedAt: Date;
-  __v?: number;
-}
-
-export interface Question {
-  _id: Types.ObjectId | string;
-  questionType?:
-    | "multipleOption"
-    | "multipleAnswers"
-    | "textAnswer"
-    | "pinPointerAnswer";
-  questionText: string;
-  timeLimit: number;
-  marks: number;
   createdAt: Date;
   updatedAt: Date;
   __v?: number;
@@ -31,23 +17,38 @@ export interface Option {
   text: string;
 }
 
-export interface MultipleOptionsQuestion {
+export interface MultipleOption {
   options: Option[];
   correctAnswerIndex: number;
 }
 
-export interface MultipleAnswersQuestion {
+export interface MultipleAnswer {
   options: Option[];
   correctAnswerIndices: number[];
 }
 
-export interface TextAnswerQuestion {
+export interface TextAnswer {
   correctAnswer: string;
 }
 
-export interface PinPointerAnswerQuestion {
-  correctAnswer: {
+export interface PinPointAnswer {
+  correctPinPointAnswer: {
     x: string;
     y: string;
   };
+}
+
+export interface Question {
+  _id: Types.ObjectId | string;
+  questionType?:
+    | "multipleOption"
+    | "multipleAnswer"
+    | "textAnswer"
+    | "pinPointAnswer";
+  questionText: string;
+  timeLimit: number;
+  marks: number;
+  createdAt: Date;
+  updatedAt: Date;
+  __v?: number;
 }

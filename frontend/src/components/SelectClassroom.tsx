@@ -6,6 +6,8 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils/shadcn";
 import { useNavigate } from "@tanstack/react-router";
 import JoinClassroom from "./JoinClassroom";
+import useAuth from "@/hooks/useAuth";
+import CreateClassroom from "./CreateClassroom";
 
 type classroom = {
   _id: string;
@@ -23,6 +25,7 @@ const SelectClassroom: FC<SelectClassroomProps> = ({
 }) => {
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const [value, setValue] = useState<string>(defaultValue);
+  const { userData } = useAuth();
 
   const navigate = useNavigate();
 
@@ -43,7 +46,7 @@ const SelectClassroom: FC<SelectClassroomProps> = ({
           variant="outline"
           role="combobox"
           aria-expanded={openPopover}
-          className="w-56 justify-between"
+          className="w-56 justify-between overflow-hidden"
         >
           {value
             ? classrooms.find((classroom) => classroom._id === value)?.title
@@ -79,6 +82,17 @@ const SelectClassroom: FC<SelectClassroomProps> = ({
                   {classroom.title}
                 </Command.item>
               ))}
+              {userData?.role !== "user" && (
+                <CreateClassroom
+                  id={userData?._id!}
+                  trigger={
+                    <Button variant="outline" size="sm" className="mt-1 w-full">
+                      Create classroom
+                      <span className="sr-only">Create new classroom</span>
+                    </Button>
+                  }
+                />
+              )}
               <JoinClassroom
                 trigger={
                   <Button size="sm" className="mt-1 w-full">

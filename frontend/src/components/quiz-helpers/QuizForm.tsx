@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 import RenderQuestions from "./RenderQuestions";
 import Button from "../ui/button";
 import Spinner from "../Spinner";
-import Form from "../ui/form";
+import { Form, FormField } from "../ui/form";
 import InputField from "../InputField";
 import { useForm } from "react-hook-form";
 import { quizSchema } from "@/lib/schemas/quizSchema";
@@ -40,7 +40,7 @@ const QuizForm: FC<QuizFormProps> = ({
         <h2 className="border-b pb-4 text-xl font-semibold">{title}</h2>
         {status && <div>{status}</div>}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Form.field
+          <FormField
             control={form.control}
             name="title"
             render={({ field }) => (
@@ -53,7 +53,7 @@ const QuizForm: FC<QuizFormProps> = ({
               />
             )}
           />
-          <Form.field
+          <FormField
             control={form.control}
             name="startTime"
             render={({ field }) => (

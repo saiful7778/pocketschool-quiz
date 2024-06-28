@@ -1,6 +1,11 @@
 import { type InputProps } from "@/types/inputProps";
 import { forwardRef, useState } from "react";
-import Form from "@/components/ui/form";
+import {
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
@@ -14,13 +19,13 @@ const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(
     const [showPass, setShowPass] = useState<boolean>(false);
 
     return (
-      <Form.item>
+      <FormItem>
         {label && (
-          <Form.label>
+          <FormLabel>
             {label} <span className="text-destructive">*</span>
-          </Form.label>
+          </FormLabel>
         )}
-        <Form.control>
+        <FormControl>
           <div className="relative">
             <Input
               ref={ref}
@@ -41,9 +46,9 @@ const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(
               </Button>
             </div>
           </div>
-        </Form.control>
-        <Form.message />
-      </Form.item>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     );
   },
 );

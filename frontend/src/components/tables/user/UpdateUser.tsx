@@ -1,6 +1,13 @@
 import Spinner from "@/components/Spinner";
 import Button from "@/components/ui/button";
-import Form from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import Select from "@/components/ui/select";
 import Switch from "@/components/ui/switch";
 import useAuth from "@/hooks/useAuth";
@@ -73,42 +80,42 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
   ) : (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <Form.field
+        <FormField
           control={form.control}
           name="access"
           render={({ field }) => (
-            <Form.item>
+            <FormItem>
               <div className="flex items-center gap-2">
-                <Form.label className="w-36">Access</Form.label>
-                <Form.control>
+                <FormLabel className="w-36">Access</FormLabel>
+                <FormControl>
                   <Switch
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     disabled={isPending}
                   />
-                </Form.control>
+                </FormControl>
               </div>
-              <Form.message />
-            </Form.item>
+              <FormMessage />
+            </FormItem>
           )}
         />
-        <Form.field
+        <FormField
           control={form.control}
           name="role"
           render={({ field }) => (
-            <Form.item>
+            <FormItem>
               <div className="flex items-center gap-2">
-                <Form.label className="w-36">Role</Form.label>
+                <FormLabel className="w-36">Role</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   disabled={isPending}
                 >
-                  <Form.control>
+                  <FormControl>
                     <Select.trigger>
                       <Select.value placeholder="Select user role" />
                     </Select.trigger>
-                  </Form.control>
+                  </FormControl>
                   <Select.content>
                     <Select.item value="user">user</Select.item>
                     <Select.item value="admin">admin</Select.item>
@@ -116,8 +123,8 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
                   </Select.content>
                 </Select>
               </div>
-              <Form.message />
-            </Form.item>
+              <FormMessage />
+            </FormItem>
           )}
         />
         <div className="flex justify-end">

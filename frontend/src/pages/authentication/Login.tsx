@@ -2,7 +2,7 @@ import InputField from "@/components/InputField";
 import PasswordField from "@/components/PasswordField";
 import Spinner from "@/components/Spinner";
 import Button from "@/components/ui/button";
-import Form from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import { ToastAction } from "@/components/ui/toast";
 import useAuth from "@/hooks/useAuth";
 import errorStatus from "@/lib/errorStatus";
@@ -92,7 +92,7 @@ const Login: FC = () => {
       <h2 className="text-center text-2xl font-bold">Login</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
-          <Form.field
+          <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
@@ -105,7 +105,7 @@ const Login: FC = () => {
               />
             )}
           />
-          <Form.field
+          <FormField
             control={form.control}
             name="password"
             render={({ field }) => (

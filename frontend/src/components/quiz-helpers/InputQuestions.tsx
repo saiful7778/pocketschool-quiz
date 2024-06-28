@@ -29,7 +29,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
 
   const handleAnswerOptions = () => {
     append({
-      questionType: "multipleAnswers",
+      questionType: "multipleAnswer",
       questionText: "",
       timeLimit: 30,
       marks: 30,
@@ -45,6 +45,19 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
       timeLimit: 30,
       marks: 30,
       correctAnswer: "",
+    });
+  };
+
+  const handlePinPointAnswer = () => {
+    append({
+      questionType: "pinPointAnswer",
+      questionText: "",
+      timeLimit: 30,
+      marks: 30,
+      correctPinPointAnswer: {
+        x: 0,
+        y: 0,
+      },
     });
   };
 
@@ -85,6 +98,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
           <TextCursorInput size={15} />
         </Button>
         <Button
+          onClick={handlePinPointAnswer}
           size="icon"
           className="rounded-full"
           variant="outline"

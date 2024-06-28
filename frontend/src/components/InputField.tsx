@@ -1,6 +1,11 @@
 import { type InputProps } from "@/types/inputProps";
 import { forwardRef } from "react";
-import Form from "@/components/ui/form";
+import {
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import Input from "@/components/ui/input";
 
 interface InputFieldProps extends InputProps {
@@ -11,17 +16,17 @@ interface InputFieldProps extends InputProps {
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ({ className, type, label, required, ...props }, ref) => {
     return (
-      <Form.item>
+      <FormItem>
         {label && (
-          <Form.label>
+          <FormLabel>
             {label} {required && <span className="text-destructive">*</span>}
-          </Form.label>
+          </FormLabel>
         )}
-        <Form.control>
+        <FormControl>
           <Input ref={ref} className={className} type={type} {...props} />
-        </Form.control>
-        <Form.message />
-      </Form.item>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     );
   },
 );

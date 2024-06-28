@@ -3,9 +3,9 @@ import inputCheck from "../../../../utils/inputCheck";
 import serverHelper from "../../../../utils/serverHelper";
 // models
 import {
-  multipleAnswersQuestion,
-  multipleOptionsQuestion,
-  pinPointerAnswerQuestion,
+  multipleOptionQuestion,
+  multipleAnswerQuestion,
+  pinPointAnswerQuestion,
   quizModel,
   textAnswerQuestion,
 } from "../../../../models/quizModel";
@@ -61,13 +61,13 @@ export default function quizCreateController(
       questions.map(async (question) => {
         switch (question.questionType) {
           case "multipleOption":
-            return multipleOptionsQuestion.create(question);
-          case "multipleAnswers":
-            return multipleAnswersQuestion.create(question);
+            return multipleOptionQuestion.create(question);
+          case "multipleAnswer":
+            return multipleAnswerQuestion.create(question);
           case "textAnswer":
             return textAnswerQuestion.create(question);
-          case "pinPointerAnswer":
-            return pinPointerAnswerQuestion.create(question);
+          case "pinPointAnswer":
+            return pinPointAnswerQuestion.create(question);
           default:
             throw new Error("Invalid question type");
         }

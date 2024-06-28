@@ -14,6 +14,8 @@ import FormFieldContextProvider from "@/context/FormFieldContext";
 import FormItemContextProvider from "@/context/FormItemContext";
 import useFormField from "@/hooks/useFormField";
 
+const Form = FormProvider;
+
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -122,13 +124,12 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
-const Form = Object.assign(FormProvider, {
-  item: FormItem,
-  label: FormLabel,
-  control: FormControl,
-  field: FormField,
-  description: FormDescription,
-  message: FormMessage,
-});
-
-export default Form;
+export {
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
+};

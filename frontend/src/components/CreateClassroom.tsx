@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { createClassroomSchema } from "@/lib/schemas/classroomSchema";
@@ -7,18 +7,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "@/lib/toast/toast";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import Button from "@/components/ui/button";
-import Form from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import Spinner from "@/components/Spinner";
 import InputField from "@/components/InputField";
 import Drawer from "./ui/drawer";
 
 interface CreateClassroomProps {
-  email: string | undefined | null;
-  id: string | undefined;
-  token: string;
+  trigger: ReactNode;
+  id: string;
 }
 
-const CreateClassroom: FC<CreateClassroomProps> = ({ email, id, token }) => {
+const CreateClassroom: FC<CreateClassroomProps> = ({ id, trigger }) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
@@ -34,19 +33,14 @@ const CreateClassroom: FC<CreateClassroomProps> = ({ email, id, token }) => {
     mutationFn: async (
       classroomData: z.infer<typeof createClassroomSchema>,
     ) => {
-      return axiosSecure.post(
-        "/api/classrooms",
-        { title: classroomData.title },
-        {
-          params: { email: email, userId: id },
-          headers: { Authorization: token },
-        },
-      );
+      return axiosSecure.post("/api/classrooms", {
+        title: classroomData.title,
+      });
     },
     onSuccess: (data) => {
       if (data?.status === 201) {
         queryClient.invalidateQueries({
-          queryKey: ["classrooms", email, id, token],
+          queryKey: ["joined", "classrooms", { userId: id }],
         });
         form.reset();
         setOpenDrawer(false);
@@ -70,12 +64,7 @@ const CreateClassroom: FC<CreateClassroomProps> = ({ email, id, token }) => {
 
   return (
     <Drawer open={openDrawer} onOpenChange={setOpenDrawer}>
-      <Drawer.trigger asChild>
-        <Button variant="outline" size="sm">
-          Create new
-          <span className="sr-only">create new classroom</span>
-        </Button>
-      </Drawer.trigger>
+      <Drawer.trigger asChild>{trigger}</Drawer.trigger>
       <Drawer.content>
         <div className="mx-auto w-full max-w-sm">
           <Drawer.header>
@@ -86,7 +75,7 @@ const CreateClassroom: FC<CreateClassroomProps> = ({ email, id, token }) => {
               onSubmit={form.handleSubmit(handleSubmit)}
               className="space-y-4"
             >
-              <Form.field
+              <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
@@ -101,7 +90,7 @@ const CreateClassroom: FC<CreateClassroomProps> = ({ email, id, token }) => {
               />
               <Drawer.footer>
                 <Button className="w-full" type="submit" disabled={isPending}>
-                  {isPending ? <Spinner size={20} /> : "Create"}
+                  {isPending ? <Spinner size={20} /> : "Create new classroom"}
                 </Button>
                 <Drawer.close>
                   <Button type="button" className="w-full" variant="outline">

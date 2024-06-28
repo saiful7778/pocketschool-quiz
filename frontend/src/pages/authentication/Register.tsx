@@ -2,7 +2,14 @@ import InputField from "@/components/InputField";
 import PasswordField from "@/components/PasswordField";
 import Spinner from "@/components/Spinner";
 import Button from "@/components/ui/button";
-import Form from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import Switch from "@/components/ui/switch";
 import useAuth from "@/hooks/useAuth";
 import { useAxios } from "@/hooks/useAxios";
@@ -101,7 +108,7 @@ const Register: FC = () => {
       <h2 className="text-center text-2xl font-bold">Register your account</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
-          <Form.field
+          <FormField
             control={form.control}
             name="fullName"
             render={({ field }) => (
@@ -114,7 +121,7 @@ const Register: FC = () => {
               />
             )}
           />
-          <Form.field
+          <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
@@ -127,7 +134,7 @@ const Register: FC = () => {
               />
             )}
           />
-          <Form.field
+          <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
@@ -139,7 +146,7 @@ const Register: FC = () => {
               />
             )}
           />
-          <Form.field
+          <FormField
             control={form.control}
             name="confirmPassword"
             render={({ field }) => (
@@ -152,23 +159,23 @@ const Register: FC = () => {
             )}
           />
           {typeof classroomId === "undefined" && (
-            <Form.field
+            <FormField
               control={form.control}
               name="adminAccess"
               render={({ field }) => (
-                <Form.item>
+                <FormItem>
                   <div className="flex items-center justify-between rounded-md border p-4">
-                    <Form.label>Request for admin access</Form.label>
-                    <Form.control>
+                    <FormLabel>Request for admin access</FormLabel>
+                    <FormControl>
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
                         disabled={loading}
                       />
-                    </Form.control>
+                    </FormControl>
                   </div>
-                  <Form.message />
-                </Form.item>
+                  <FormMessage />
+                </FormItem>
               )}
             />
           )}

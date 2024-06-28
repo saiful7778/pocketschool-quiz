@@ -2,7 +2,7 @@ import * as z from "zod";
 
 const optionSchema = z.object({
   text: z
-    .string({ required_error: "Options is required" })
+    .string({ required_error: "Option is required" })
     .min(1, "Option is required"),
 });
 
@@ -12,11 +12,11 @@ const baseQuestionSchema = z.object({
     .string({ required_error: "Question is required" })
     .min(1, "Question is required"),
   timeLimit: z
-    .number()
+    .number({ required_error: "Time limit must be at least 1 second" })
     .min(1, "Time limit must be at least 1 second")
     .max(120, "Time limit must be at most 120 seconds (2 minutes)"),
   marks: z
-    .number()
+    .number({ required_error: "Marks must be at least 1" })
     .min(1, "Marks must be at least 1")
     .max(100, "Marks must be at most 100"),
 });
@@ -28,22 +28,22 @@ const multipleOptionQuestionSchema = baseQuestionSchema.extend({
     .min(2, "At least two options are required")
     .max(5, "At most five options are allowed"),
   correctAnswerIndex: z
-    .number()
+    .number({ required_error: "Correct answer is required" })
     .min(1, "Correct answer index must be at least 1")
     .max(5, "Correct answer index must be at most 5"),
 });
 
-const multipleAnswersQuestionSchema = baseQuestionSchema.extend({
-  questionType: z.literal("multipleAnswers"),
+const multipleAnswerQuestionSchema = baseQuestionSchema.extend({
+  questionType: z.literal("multipleAnswer"),
   options: z
     .array(optionSchema)
     .min(2, "At least two options are required")
     .max(5, "At most five options are allowed"),
   correctAnswerIndices: z.array(
     z
-      .number()
-      .min(1, "Correct answer index must be at least 1")
-      .max(5, "Correct answer index must be at most 5"),
+      .number({ required_error: "Correct answer Indices is required" })
+      .min(1, "Correct answer Indices must be at least 1")
+      .max(5, "Correct answer Indices must be at most 5"),
   ),
 });
 
@@ -55,16 +55,25 @@ const textAnswerQuestionSchema = baseQuestionSchema.extend({
     .max(100, "Correct answer must be at most 100 characters long"),
 });
 
-const pinPointerAnswerQuestionSchema = baseQuestionSchema.extend({
-  questionType: z.literal("pinPointerAnswer"),
-  correctAnswer: z.number(),
+const pinPointAnswerQuestionSchema = baseQuestionSchema.extend({
+  questionType: z.literal("pinPointAnswer"),
+  correctPinPointAnswer: z.object({
+    x: z
+      .number({ required_error: "x value is required" })
+      .min(1, "x value is required")
+      .max(800, "x value must be between 1px to 800px"),
+    y: z
+      .number({ required_error: "y value is required" })
+      .min(1, "y value is required")
+      .max(800, "y value must be between 1px to 800px"),
+  }),
 });
 
 export const questionSchema = z.union([
   multipleOptionQuestionSchema,
-  multipleAnswersQuestionSchema,
+  multipleAnswerQuestionSchema,
   textAnswerQuestionSchema,
-  pinPointerAnswerQuestionSchema,
+  pinPointAnswerQuestionSchema,
 ]);
 
 export const quizSchema = z.object({

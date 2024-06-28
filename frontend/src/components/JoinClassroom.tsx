@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Button from "./ui/button";
-import Form from "./ui/form";
+import { Form, FormField } from "./ui/form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "@/lib/toast/toast";
 import InputField from "./InputField";
@@ -74,7 +74,7 @@ const JoinClassroom: FC<JoinClassroomProps> = ({ trigger }) => {
               onSubmit={form.handleSubmit(handleSubmit)}
               className="space-y-4"
             >
-              <Form.field
+              <FormField
                 control={form.control}
                 name="_id"
                 render={({ field }) => (
