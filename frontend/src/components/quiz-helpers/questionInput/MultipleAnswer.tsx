@@ -1,4 +1,8 @@
 import { FC } from "react";
+import { useFieldArray } from "react-hook-form";
+import type { QuizInput } from "@/types/quiz";
+import Button from "@/components/ui/button";
+import { X } from "lucide-react";
 import {
   FormControl,
   FormField,
@@ -6,18 +10,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { QuizInput } from "@/types/quiz";
-import { useFieldArray } from "react-hook-form";
-import RadioGroup from "@/components/ui/radio-group";
+import Checkbox from "@/components/ui/checkbox";
 import Input from "@/components/ui/input";
-import Button from "@/components/ui/button";
-import { X } from "lucide-react";
 
-interface MultipleOptionProps extends QuizInput {
+interface MultipleAnswerProps extends QuizInput {
   index: number;
 }
 
-const MultipleOption: FC<MultipleOptionProps> = ({
+const MultipleAnswer: FC<MultipleAnswerProps> = ({
   control,
   loading,
   index,
@@ -31,27 +31,30 @@ const MultipleOption: FC<MultipleOptionProps> = ({
     <>
       <FormField
         control={control}
-        name={`questions.${index}.correctAnswerIndex`}
+        name={`questions.${index}.correctAnswerIndices`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>Question options</FormLabel>
             <FormControl>
-              <RadioGroup
-                onValueChange={(e) => field.onChange(Number(e))}
-                defaultValue={String(field.value)}
-                className="flex w-full flex-wrap items-start justify-center gap-4"
-              >
+              <div className="space-y-2">
                 {fields.map((_, idx) => (
                   <div
-                    className="relative flex items-start gap-2 md:w-[48.5%]"
                     key={`questions-${index}-options-${idx}`}
+                    className="relative flex items-start gap-2"
                   >
-                    <div className="mt-2.5">
-                      <RadioGroup.item
-                        value={`${idx}`}
-                        id={`questions-${index}-options-${idx}`}
-                      />
-                    </div>
+                    <Checkbox
+                      disabled={loading}
+                      className="mt-3"
+                      checked={field.value.includes(idx)}
+                      onCheckedChange={(checked) => {
+                        const updatedIndices = checked
+                          ? [...field.value, idx]
+                          : field.value.filter(
+                              (valueIdx: number) => valueIdx !== idx,
+                            );
+                        field.onChange(updatedIndices);
+                      }}
+                    />
                     <FormField
                       control={control}
                       name={`questions.${index}.options.${idx}.text`}
@@ -59,7 +62,6 @@ const MultipleOption: FC<MultipleOptionProps> = ({
                         <FormItem className="w-full">
                           <FormControl>
                             <Input
-                              className="pl-7"
                               placeholder="option"
                               type="text"
                               disabled={loading}
@@ -82,7 +84,7 @@ const MultipleOption: FC<MultipleOptionProps> = ({
                     </Button>
                   </div>
                 ))}
-              </RadioGroup>
+              </div>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -100,4 +102,4 @@ const MultipleOption: FC<MultipleOptionProps> = ({
   );
 };
 
-export default MultipleOption;
+export default MultipleAnswer;

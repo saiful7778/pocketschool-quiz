@@ -45,7 +45,7 @@ export default function quizCreateController(
       !question?.questionType ||
       !question?.questionText ||
       !question?.timeLimit ||
-      !question?.marks
+      !question?.mark
     ) {
       return undefined;
     }

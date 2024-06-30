@@ -12,7 +12,8 @@ export default async function serverHelper(
 ) {
   try {
     await inputFunction();
-  } catch {
+  } catch (err) {
+    console.error(err);
     return next(createHttpError(500, "server error from serverHelper"));
   }
 }

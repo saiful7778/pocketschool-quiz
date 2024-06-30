@@ -2,13 +2,13 @@ import { FC } from "react";
 import InputQuestions from "./InputQuestions";
 import { useFieldArray } from "react-hook-form";
 import type { QuizInput } from "@/types/quiz";
-import Question from "./Question";
-import MultipleOption from "./questionTypes/MultipleOption";
-import MultipleAnswer from "./questionTypes/MultipleAnswer";
-import TextAnswer from "./questionTypes/TextAnswer";
-import PinPointAnswer from "./questionTypes/PinPointAnswer";
+import QuestionInputBase from "./questionInput/QuestionInputBase";
+import MultipleOption from "./questionInput/MultipleOption";
+import MultipleAnswer from "./questionInput/MultipleAnswer";
+import TextAnswer from "./questionInput/TextAnswer";
+import PinPointAnswer from "./questionInput/PinPointAnswer";
 
-const RenderQuestions: FC<QuizInput> = ({ control, loading }) => {
+const QuestionsRender: FC<QuizInput> = ({ control, loading }) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "questions",
@@ -17,7 +17,7 @@ const RenderQuestions: FC<QuizInput> = ({ control, loading }) => {
   return (
     <>
       {fields.map(({ questionType }, index) => (
-        <Question
+        <QuestionInputBase
           key={`question-${index}`}
           control={control}
           loading={loading}
@@ -31,7 +31,7 @@ const RenderQuestions: FC<QuizInput> = ({ control, loading }) => {
             index={index}
             questionType={questionType}
           />
-        </Question>
+        </QuestionInputBase>
       ))}
       <InputQuestions append={append} loading={loading} />
     </>
@@ -68,4 +68,4 @@ const QuestionTypeOption: FC<QuestionTypeOptionProps> = ({
   }
 };
 
-export default RenderQuestions;
+export default QuestionsRender;

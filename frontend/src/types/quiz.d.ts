@@ -36,3 +36,23 @@ export interface AdminQuiz extends z.infer<typeof quizSchema> {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface QuizPublic {
+  _id: string;
+  title: string;
+  questions: Question[];
+  startTime: Date;
+}
+
+export interface Question {
+  _id: Types.ObjectId | string;
+  questionType?:
+    | "multipleOption"
+    | "multipleAnswer"
+    | "textAnswer"
+    | "pinPointAnswer";
+  questionText: string;
+  timeLimit: number;
+  mark: number;
+  options?: { _id: string; text: string }[];
+}

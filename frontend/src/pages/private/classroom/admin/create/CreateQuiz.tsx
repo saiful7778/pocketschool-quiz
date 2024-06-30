@@ -68,7 +68,7 @@ const CreateQuiz: FC = () => {
             questionType: "multipleOption",
             questionText: "Simple question title",
             timeLimit: 15,
-            marks: 10,
+            mark: 10,
             options: [
               { text: "option-NO-1" },
               { text: "option-NO-2" },
@@ -80,7 +80,7 @@ const CreateQuiz: FC = () => {
             questionType: "multipleAnswer",
             questionText: "Simple question",
             timeLimit: 15,
-            marks: 20,
+            mark: 20,
             options: [
               { text: "option-No-1" },
               { text: "option-No-2" },

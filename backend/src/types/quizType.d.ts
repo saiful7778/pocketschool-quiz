@@ -47,7 +47,7 @@ export interface Question {
     | "pinPointAnswer";
   questionText: string;
   timeLimit: number;
-  marks: number;
+  mark: number;
   createdAt: Date;
   updatedAt: Date;
   __v?: number;

@@ -56,7 +56,7 @@ const MainTable = <TData,>({
           placeholder={placeholder}
           value={(table.getState().globalFilter as string) ?? ""}
           onChange={handleSearchChange}
-          className="my-4 mr-auto h-8 w-full max-w-xs"
+          className="my-4 mr-auto w-full max-w-xs"
         />
 
         <Select
@@ -65,7 +65,7 @@ const MainTable = <TData,>({
             table.setPageSize(Number(value));
           }}
         >
-          <Select.trigger className="h-7 w-fit">
+          <Select.trigger className="h-9 w-fit">
             <Select.value placeholder={table.getState().pagination.pageSize} />
           </Select.trigger>
           <Select.content side="left">
@@ -77,7 +77,7 @@ const MainTable = <TData,>({
           </Select.content>
         </Select>
         {typeof reFetch !== "undefined" && (
-          <Button onClick={reFetch} variant="default" size="sm">
+          <Button onClick={reFetch} variant="default" size="md">
             Refrash
           </Button>
         )}
@@ -124,7 +124,7 @@ const MainTable = <TData,>({
           )}
         </Table.body>
       </Table>
-      <div className="mb-10 flex items-center justify-end gap-2 py-4 text-sm italic text-muted-foreground">
+      <div className="mb-10 flex items-center justify-end gap-2 py-4 text-sm italic">
         <span>Page</span>
         <span>{table.getState().pagination.pageIndex + 1}</span>
         <span>of</span>

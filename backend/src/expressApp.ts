@@ -13,6 +13,7 @@ import devDebug from "./utils/devDebug";
 import userRoute from "./apis/user/userRoute";
 import classroomRoute from "./apis/classroom/classroomRoute";
 import quizRoute from "./apis/quiz/quizRoute";
+// import imageRoute from "./apis/image/imageRoute";
 
 export default function expressApp() {
   const app = express();
@@ -23,7 +24,7 @@ export default function expressApp() {
 
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
+    max: 200, // limit each IP to 100 requests per windowMs
     message:
       "Too many requests from this IP, please try again after 15 minutes",
     headers: true,
@@ -59,6 +60,7 @@ export default function expressApp() {
     });
   });
 
+  // app.use("/generate_image", imageRoute);
   app.use("/api/users", userRoute);
   app.use("/api/classrooms", classroomRoute);
   app.use("/api/classrooms/quizzes", quizRoute);

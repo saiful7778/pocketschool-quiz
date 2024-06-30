@@ -20,7 +20,7 @@ const questionSchema = new Schema<Question>(
       type: Number,
       required: [true, "Question time limit is required"],
     },
-    marks: { type: Number, required: [true, "Question mark is required"] },
+    mark: { type: Number, required: [true, "Question mark is required"] },
   },
   { discriminatorKey: "questionType", _id: false, strict: false }
 );

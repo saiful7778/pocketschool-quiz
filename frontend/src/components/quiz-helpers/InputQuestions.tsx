@@ -21,7 +21,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
       questionType: "multipleOption",
       questionText: "",
       timeLimit: 15,
-      marks: 10,
+      mark: 10,
       options: [{ text: "" }, { text: "" }, { text: "" }],
       correctAnswerIndex: 1,
     });
@@ -32,7 +32,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
       questionType: "multipleAnswer",
       questionText: "",
       timeLimit: 15,
-      marks: 20,
+      mark: 20,
       options: [{ text: "" }, { text: "" }, { text: "" }],
       correctAnswerIndices: [0, 2],
     });
@@ -43,7 +43,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
       questionType: "textAnswer",
       questionText: "",
       timeLimit: 30,
-      marks: 50,
+      mark: 50,
       correctAnswer: "",
     });
   };
@@ -53,7 +53,7 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
       questionType: "pinPointAnswer",
       questionText: "",
       timeLimit: 10,
-      marks: 40,
+      mark: 40,
       correctPinPointAnswer: {
         x: 0,
         y: 0,

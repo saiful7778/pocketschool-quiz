@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import RenderQuestions from "./RenderQuestions";
+import QuestionsRender from "./QuestionsRender";
 import Button from "../ui/button";
 import Spinner from "../Spinner";
 import { Form, FormField } from "../ui/form";
@@ -35,7 +35,7 @@ const QuizForm: FC<QuizFormProps> = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="mx-auto w-full max-w-2xl space-y-4"
+        className="mx-auto w-full max-w-3xl space-y-4"
       >
         <h2 className="border-b pb-4 text-xl font-semibold">{title}</h2>
         {status && <div>{status}</div>}
@@ -68,7 +68,7 @@ const QuizForm: FC<QuizFormProps> = ({
             )}
           />
         </div>
-        <RenderQuestions control={form.control} loading={isPending} />
+        <QuestionsRender control={form.control} loading={isPending} />
         <Button className="w-full" type="submit" disabled={isPending}>
           {isPending ? <Spinner size={20} /> : submitButtonText}
         </Button>

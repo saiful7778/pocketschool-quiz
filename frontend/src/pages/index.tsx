@@ -8,6 +8,8 @@ import Login from "./authentication/Login";
 import Classroom from "./private/classroom/Classroom";
 import SingleClassroom from "./private/classroom/SingleClassroom";
 import ClassroomAdminLayout from "./private/classroom/admin/ClassroomAdminLayout";
+import ClassroomPublic from "./private/classroom/ClassroomPublic";
+import Quiz from "./private/classroom/Quiz";
 
 export {
   RootLayout,
@@ -17,6 +19,8 @@ export {
   PrivateLayout,
   Classroom,
   SingleClassroom,
+  Quiz,
+  ClassroomPublic,
   ClassroomAdminLayout,
   SuperAdminLayout,
 };

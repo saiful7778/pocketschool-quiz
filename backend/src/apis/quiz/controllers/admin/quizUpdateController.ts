@@ -30,7 +30,7 @@ export default function quizUpdateController(
       !question?.questionType ||
       !question?.questionText ||
       !question?.timeLimit ||
-      !question?.marks
+      !question?.mark
     ) {
       return undefined;
     }

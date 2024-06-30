@@ -65,7 +65,7 @@ const DeleteQuiz: FC<UpdateQuizProps> = ({
           Click cancel button to cancel this process
         </Dialog.description>
         <Dialog.footer className="!justify-center">
-          <Dialog.close>
+          <Dialog.close asChild>
             <Button variant="outline" size="sm">
               Cancel
             </Button>

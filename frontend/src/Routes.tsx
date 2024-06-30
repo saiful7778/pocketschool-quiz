@@ -13,6 +13,8 @@ import {
   Classroom,
   SingleClassroom,
   ClassroomAdminLayout,
+  ClassroomPublic,
+  Quiz,
 } from "@/pages";
 import { z } from "zod";
 import ErrorPage from "@/components/shared/Error";
@@ -76,6 +78,18 @@ const singleClassroomRoute = createRoute({
   getParentRoute: () => classroomRoute,
   path: "/$classroomId",
   component: SingleClassroom,
+});
+
+const singleClassroomPublicRoute = createRoute({
+  getParentRoute: () => singleClassroomRoute,
+  path: "/",
+  component: ClassroomPublic,
+});
+
+const quizRoute = createRoute({
+  getParentRoute: () => singleClassroomRoute,
+  path: "/$quizId",
+  component: Quiz,
 });
 
 const singleClassroomAdminRoute = createRoute({
@@ -149,6 +163,8 @@ const routeTree = rootRoute.addChildren([
   privateRoute.addChildren([
     classroomRoute.addChildren([
       singleClassroomRoute.addChildren([
+        singleClassroomPublicRoute,
+        quizRoute,
         singleClassroomAdminRoute.addChildren([
           singleClassroomAdminQuizzesRoute,
           singleClassroomAdminCreateQuizRoute,

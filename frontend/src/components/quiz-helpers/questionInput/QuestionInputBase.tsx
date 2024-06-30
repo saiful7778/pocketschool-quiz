@@ -1,8 +1,8 @@
 import { FC, ReactNode } from "react";
-import Button from "../ui/button";
 import { X } from "lucide-react";
-import { FormField } from "../ui/form";
-import InputField from "../InputField";
+import { FormField } from "@/components/ui/form";
+import InputField from "@/components/InputField";
+import Button from "@/components/ui/button";
 import type { QuizInput } from "@/types/quiz";
 
 interface QuestionProps extends QuizInput {
@@ -38,7 +38,7 @@ const Question: FC<QuestionProps> = ({
   };
 
   return (
-    <div className="relative space-y-4 rounded-md border-t-2 border-primary p-4 shadow">
+    <div className="relative space-y-4 rounded-lg border-t-[3px] border-primary p-4 shadow">
       <div className="absolute right-2 top-2">
         <Button
           onClick={removeQuestion}
@@ -85,7 +85,7 @@ const Question: FC<QuestionProps> = ({
         />
         <FormField
           control={control}
-          name={`questions.${index}.marks`}
+          name={`questions.${index}.mark`}
           render={({ field }) => (
             <InputField
               type="number"
