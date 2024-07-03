@@ -18,7 +18,7 @@ const ErrorPage: FC<ErrorPageProps> = ({ error, reset, fullPage }) => {
     >
       <div className="space-y-2 text-center">
         <h3 className="text-3xl font-bold">
-          Something went wrong<span className="text-red-600">!</span>
+          Something went wrong<span className="text-destructive">!</span>
         </h3>
         <pre>
           <code>{error.message}</code>

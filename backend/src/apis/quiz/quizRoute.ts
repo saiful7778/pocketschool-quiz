@@ -10,26 +10,36 @@ import quizUpdateController from "./controllers/admin/quizUpdateController";
 import quizDeleteController from "./controllers/admin/quizDeleteController";
 import quizAllController from "./controllers/quizAllController";
 import quizController from "./controllers/quizController";
+import quizResultController from "./controllers/quizResultController";
 
 const quizRoute = Router();
 
-// /api/classrooms/quizzes/user
-quizRoute.get("/user", verifyToken, quizAllController);
+// /api/quizzes/user
+quizRoute.get(
+  "/user",
+  verifyToken,
+  verifyClassroomUser(["user", "admin"]),
+  quizAllController
+);
 
-// /api/classrooms/quizzes/user/:quizId
-quizRoute.get("/user/:quizId", verifyToken, quizController);
+// /api/quizzes/user/:quizId
+quizRoute
+  .route("/user/:quizId")
+  .all(verifyToken)
+  .get(quizController)
+  .post(verifyClassroomUser(["user", "admin"]), quizResultController);
 
-// /api/classrooms/quizzes/admin
+// /api/quizzes/admin
 quizRoute
   .route("/admin")
-  .all(verifyToken, verifyClassroomUser("admin"))
+  .all(verifyToken, verifyClassroomUser(["admin"]))
   .post(quizCreateController)
   .get(quizGetAllController);
 
-// /api/classrooms/quizzes/admin/:quizId
+// /api/quizzes/admin/:quizId
 quizRoute
   .route("/admin/:quizId")
-  .all(verifyToken, verifyClassroomUser("admin"))
+  .all(verifyToken, verifyClassroomUser(["admin"]))
   .get(quizGetController)
   .patch(quizUpdateController)
   .delete(quizDeleteController);

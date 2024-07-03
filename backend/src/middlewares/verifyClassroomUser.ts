@@ -10,7 +10,7 @@ import { Types } from "mongoose";
  * @param next Express next middleware function
  * @returns
  */
-export default function verifyClassroomUser(userRole: "user" | "admin") {
+export default function verifyClassroomUser(userRole: ("user" | "admin")[]) {
   return async (req: Request, _res: Response, next: NextFunction) => {
     const { userId, classroomId } = req.query as {
       userId: string;
@@ -76,7 +76,7 @@ export default function verifyClassroomUser(userRole: "user" | "admin") {
         );
       }
 
-      if (userRole !== isUserAvailable[0].role) {
+      if (!userRole.includes(isUserAvailable[0].role)) {
         return next(
           createHttpError(403, "user haven't access of this classroom")
         );

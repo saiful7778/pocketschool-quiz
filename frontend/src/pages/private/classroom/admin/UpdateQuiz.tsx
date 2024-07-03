@@ -4,7 +4,7 @@ import ErrorPage from "@/components/shared/Error";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { quizSchema } from "@/lib/schemas/quizSchema";
 import toast from "@/lib/toast/toast";
-import type { ApiResponse } from "@/types/apiResponse";
+import type { ApiResponse, UpdateDateResponse } from "@/types/apiResponse";
 import type { AdminQuiz } from "@/types/quiz";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
@@ -30,7 +30,7 @@ const UpdateQuiz: FC = () => {
     queryKey: ["quiz", "admin", { classroomId, quizId }],
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<AdminQuiz>>(
-        `/api/classrooms/quizzes/admin/${quizId}`,
+        `/api/quizzes/admin/${quizId}`,
         { params: { classroomId } },
       );
       if (!data.success) {
@@ -72,14 +72,16 @@ const UpdateQuizForm = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (quizData: z.infer<typeof quizSchema>) => {
-      return axiosSecure.patch(
-        `/api/classrooms/quizzes/admin/${quizId}`,
+      return axiosSecure.patch<ApiResponse<UpdateDateResponse>>(
+        `/api/quizzes/admin/${quizId}`,
         quizData,
-        { params: { classroomId } },
+        {
+          params: { classroomId },
+        },
       );
     },
     onSuccess: (data) => {
-      if (data?.status === 200) {
+      if (data.data?.data?.modifiedCount! > 0) {
         queryClient.invalidateQueries({
           queryKey: ["classroom", "admin", "quizzes", { classroomId }],
         });
@@ -88,6 +90,7 @@ const UpdateQuizForm = ({
           params: { classroomId },
         });
         toast({
+          variant: "success",
           title: "Quiz is updated",
         });
       }

@@ -129,6 +129,7 @@ const Register: FC = () => {
                 type="email"
                 label="Email address"
                 placeholder="Your email"
+                autoComplete="username"
                 disabled={loading}
                 {...field}
               />
@@ -142,6 +143,7 @@ const Register: FC = () => {
                 label="Password"
                 placeholder="Password"
                 disabled={loading}
+                autoComplete="new-password"
                 {...field}
               />
             )}
@@ -153,6 +155,7 @@ const Register: FC = () => {
               <PasswordField
                 label="Confirm Password"
                 placeholder="Confirm Password"
+                autoComplete="new-password"
                 disabled={loading}
                 {...field}
               />

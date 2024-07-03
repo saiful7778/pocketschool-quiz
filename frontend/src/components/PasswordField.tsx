@@ -38,6 +38,7 @@ const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(
               <Button
                 onClick={() => setShowPass((prop) => !prop)}
                 type="button"
+                className="size-7"
                 size="icon"
                 variant="ghost"
                 disabled={disabled}

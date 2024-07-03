@@ -2,6 +2,13 @@ import type { questionSchema, quizSchema } from "@/lib/schemas/quizSchema";
 import type { Control } from "react-hook-form";
 import { z } from "zod";
 
+export interface QuizzesRes {
+  _id: string;
+  title: string;
+  questionsCount: number;
+  newQuiz: boolean;
+}
+
 export interface Quizzes {
   _id: string;
   title: string;
@@ -55,4 +62,29 @@ export interface Question {
   timeLimit: number;
   mark: number;
   options?: { _id: string; text: string }[];
+}
+
+export interface Answer {
+  _id: string;
+  questionType?:
+    | "multipleOption"
+    | "multipleAnswer"
+    | "textAnswer"
+    | "pinPointAnswer";
+  answer: number | number[] | string | { x: number; y: number } | null;
+}
+
+interface SubmitAnswer {
+  question: string;
+  quiz: string;
+  participant: string;
+  isCorrect: boolean;
+  mark: number;
+}
+
+export interface SubmitResult {
+  totalQuestions: number;
+  totalMarks: number;
+  successAnswers: SubmitAnswer[];
+  failedAnswers: SubmitAnswer[];
 }

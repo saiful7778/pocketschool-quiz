@@ -10,7 +10,7 @@ import { loginSchema } from "@/lib/schemas/authenticationSchema";
 import { defaultLoginPage } from "@/lib/staticData";
 import toast from "@/lib/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { getRouteApi } from "@tanstack/react-router";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,7 +22,7 @@ const Login: FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { login } = useAuth();
   const { redirect } = routeData.useSearch();
-  const naviagate = routeData.useNavigate();
+  const naviagate = useNavigate();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -72,6 +72,8 @@ const Login: FC = () => {
         return;
       }
 
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       naviagate({ to: redirect || defaultLoginPage });
 
       toast({
@@ -100,6 +102,7 @@ const Login: FC = () => {
                 type="email"
                 label="Email address"
                 placeholder="Your email"
+                autoComplete="username"
                 disabled={loading}
                 {...field}
               />
@@ -112,6 +115,7 @@ const Login: FC = () => {
               <PasswordField
                 label="Password"
                 placeholder="Password"
+                autoComplete="current-password"
                 disabled={loading}
                 {...field}
               />

@@ -1,7 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import serverHelper from "../../../utils/serverHelper";
-import { quizModel } from "../../../models/quizModel";
-import createHttpError from "http-errors";
+import { quizModel } from "../../../models/quiz.model";
 import { Types } from "mongoose";
 
 export default function quizAllController(
@@ -9,11 +8,10 @@ export default function quizAllController(
   res: Response,
   next: NextFunction
 ) {
-  const { classroomId } = req.query as { classroomId: string };
-
-  if (!classroomId) {
-    return next(createHttpError(400, "classroomId not found"));
-  }
+  const { classroomId, userId } = req.query as {
+    classroomId: string;
+    userId: string;
+  };
 
   serverHelper(async () => {
     const quizzes = await quizModel.aggregate([
@@ -24,13 +22,35 @@ export default function quizAllController(
       },
       {
         $addFields: {
+          newQuiz: {
+            $cond: {
+              if: {
+                $in: [new Types.ObjectId(userId), "$participants"],
+              },
+              then: false,
+              else: true,
+            },
+          },
+        },
+      },
+      {
+        $addFields: {
           questionsCount: { $size: "$questions" },
         },
       },
       {
-        $project: { title: 1, questionsCount: 1 },
+        $project: {
+          title: 1,
+          questionsCount: 1,
+          newQuiz: 1,
+        },
       },
     ]);
+
+    if (quizzes.length === 0) {
+      res.status(404).json({ success: false, message: "no quiz found" });
+      return;
+    }
 
     res.status(200).json({
       success: true,

@@ -23,10 +23,10 @@ const AdminQuizzes: FC = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["classroom", "admin", "quizzes", { classroomId }],
+    queryKey: ["quizzes", "admin", { classroomId }],
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<Quizzes[]>>(
-        "/api/classrooms/quizzes/admin",
+        "/api/quizzes/admin",
         { params: { classroomId } },
       );
       if (!data.success) {

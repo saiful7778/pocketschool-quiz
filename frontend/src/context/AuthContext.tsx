@@ -1,4 +1,3 @@
-import Loading from "@/components/Loading";
 import { useAxios } from "@/hooks/useAxios";
 import { auth } from "@/lib/firebase";
 import toast from "@/lib/toast/toast";
@@ -128,7 +127,7 @@ const AuthContextProvider: FC<Readonly<LayoutProps>> = ({ children }) => {
         loading,
       }}
     >
-      {loading ? <Loading fullPage /> : children}
+      {children}
     </AuthContext.Provider>
   );
 };

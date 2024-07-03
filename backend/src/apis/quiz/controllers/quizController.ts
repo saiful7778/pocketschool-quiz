@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import serverHelper from "../../../utils/serverHelper";
-import { quizModel } from "../../../models/quizModel";
+import { quizAnswerModel, quizModel } from "../../../models/quiz.model";
 
 export default function quizController(
   req: Request,
@@ -8,7 +8,31 @@ export default function quizController(
   next: NextFunction
 ) {
   const quizId = req.params.quizId;
+  const { userId } = req.query;
+
   serverHelper(async () => {
+    const quizResult = await quizAnswerModel
+      .findOne({
+        quiz: quizId,
+        participant: userId,
+      })
+      .populate({
+        path: "answers",
+        select: ["_id", "isCorrect", "mark", "anwerType", "answerIndex"],
+        populate: { path: "question", select: ["_id", "questionText"] },
+      });
+
+    if (quizResult) {
+      res.status(200).json({
+        success: true,
+        data: {
+          participated: true,
+          data: quizResult,
+        },
+      });
+      return;
+    }
+
     const quiz = await quizModel
       .findOne(
         {
@@ -27,6 +51,8 @@ export default function quizController(
         ],
       });
 
-    res.status(200).json({ success: true, data: quiz });
+    res
+      .status(200)
+      .json({ success: true, data: { participated: false, data: quiz } });
   }, next);
 }

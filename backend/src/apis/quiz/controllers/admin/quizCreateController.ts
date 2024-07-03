@@ -2,14 +2,14 @@ import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../../utils/inputCheck";
 import serverHelper from "../../../../utils/serverHelper";
 // models
+import { quizModel } from "../../../../models/quiz.model";
 import {
   multipleOptionQuestion,
   multipleAnswerQuestion,
-  pinPointAnswerQuestion,
-  quizModel,
   textAnswerQuestion,
-} from "../../../../models/quizModel";
-import type { Question } from "../../../../types/quizType";
+  pinPointAnswerQuestion,
+} from "../../../../models/question.model";
+import type { QuestionBase } from "../../../../types/question.type";
 import createHttpError from "http-errors";
 
 export default function quizCreateController(
@@ -25,7 +25,7 @@ export default function quizCreateController(
   const { title, questions, startTime } = req.body as {
     title: string;
     startTime: Date;
-    questions: Question[];
+    questions: QuestionBase[];
   };
 
   // validate

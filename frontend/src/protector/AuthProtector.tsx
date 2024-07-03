@@ -1,12 +1,12 @@
 import Loading from "@/components/Loading";
 import useAuth from "@/hooks/useAuth";
+import { defaultLoginPage } from "@/lib/staticData";
 import type { LayoutProps } from "@/types/layout";
-import { Navigate, useLocation } from "@tanstack/react-router";
+import { Navigate } from "@tanstack/react-router";
 import { FC } from "react";
 
-const PrivateProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
+const AuthProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
   const { user, loading } = useAuth();
-  const location = useLocation();
 
   if (loading) {
     return <Loading />;
@@ -15,10 +15,9 @@ const PrivateProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
   const isAuth = !!user;
 
   if (isAuth) {
-    return children;
+    return <Navigate to={defaultLoginPage} />;
   }
-
-  return <Navigate to="/login" search={{ redirect: location.href }} />;
+  return children;
 };
 
-export default PrivateProtector;
+export default AuthProtector;

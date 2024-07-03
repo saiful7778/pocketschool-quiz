@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../../utils/serverHelper";
-import { questionModel, quizModel } from "../../../../models/quizModel";
+import { quizModel } from "../../../../models/quiz.model";
+import { questionModel } from "../../../../models/question.model";
 import type { Question } from "../../../../types/quizType";
 import { Types } from "mongoose";
 import createHttpError from "http-errors";

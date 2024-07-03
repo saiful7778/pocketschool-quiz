@@ -63,7 +63,7 @@ export default function expressApp() {
   // app.use("/generate_image", imageRoute);
   app.use("/api/users", userRoute);
   app.use("/api/classrooms", classroomRoute);
-  app.use("/api/classrooms/quizzes", quizRoute);
+  app.use("/api/quizzes", quizRoute);
 
   app.use((_req: Request, res: Response) => {
     res.status(404).json({

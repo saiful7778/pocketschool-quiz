@@ -16,7 +16,7 @@ const StartQuiz = ({
 
 const StartQuizCountDown = ({ startTime }: { startTime: Date }) => {
   const targetTime = new Date(startTime).getTime();
-  const { handleStartQuiz } = useQuiz();
+  const { handleStartQuiz, questionLimit } = useQuiz();
 
   const [time, setTime] = useState<number>(
     Math.floor((targetTime - Date.now()) / 1000),
@@ -27,16 +27,18 @@ const StartQuizCountDown = ({ startTime }: { startTime: Date }) => {
   useEffect(() => {
     if (time < 0) return;
 
-    const timer = setInterval(() => {
-      setTime((prev) => prev - 1);
-      if (displayRef.current) {
-        displayRef.current.textContent = formatTime(time);
-      }
-    }, 1000);
+    if (displayRef.current) {
+      const timer = setInterval(() => {
+        if (displayRef.current) {
+          displayRef.current.textContent = formatTime(time);
+        }
+        setTime((prev) => prev - 1);
+      }, 1000);
 
-    return () => {
-      clearInterval(timer);
-    };
+      return () => {
+        clearInterval(timer);
+      };
+    }
   }, [time]);
 
   if (time >= 0) {
@@ -50,7 +52,12 @@ const StartQuizCountDown = ({ startTime }: { startTime: Date }) => {
 
   return (
     <div className="space-y-4 text-center">
-      <div>Click to start quiz now</div>
+      <div className="text-xl font-semibold">
+        Total {questionLimit} questions
+      </div>
+      <div className="text-sm italic text-muted-foreground">
+        Click to start quiz now
+      </div>
       <Button size="lg" onClick={handleStartQuiz}>
         Start Quiz
       </Button>

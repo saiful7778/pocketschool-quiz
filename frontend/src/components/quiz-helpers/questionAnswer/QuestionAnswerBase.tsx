@@ -7,60 +7,16 @@ interface QuestionAnswerBaseProps {
   questionNO: number;
   questionText: string;
   timeLimit: number;
+  questionLimit: number;
 }
 
 const QuestionAnswerBase: FC<QuestionAnswerBaseProps> = ({
   questionNO,
   questionText,
-  // timeLimit,
+  timeLimit,
   children,
+  questionLimit,
 }) => {
-  const timeLimit = 5;
-  const [countdown, setCountdown] = useState<number>(timeLimit);
-  const {
-    questionIdx,
-    handleNextQuestionIdx,
-    handleNullAnswer,
-    questionLimit,
-    resetTimer,
-  } = useQuiz();
-
-  useEffect(() => {
-    if (resetTimer > 0) {
-      setCountdown(timeLimit);
-    }
-  }, [resetTimer, setCountdown, timeLimit]);
-
-  useEffect(() => {
-    if (countdown <= 0) {
-      handleNullAnswer();
-      return () => {};
-    }
-  }, [countdown, handleNullAnswer]);
-
-  useEffect(() => {
-    if (countdown <= 0) {
-      return () => {};
-    }
-
-    const timer = setInterval(() => {
-      setCountdown((prev) => prev - 1);
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [countdown, questionIdx]);
-
-  useEffect(() => {
-    if (countdown === 0) {
-      if (questionIdx < questionLimit - 1) {
-        handleNextQuestionIdx();
-        setCountdown(timeLimit);
-      }
-    }
-  }, [countdown, handleNextQuestionIdx, timeLimit, questionIdx, questionLimit]);
-
   return (
     <div className="w-full max-w-xl">
       <div className="mb-4 flex items-center justify-between">
@@ -68,19 +24,53 @@ const QuestionAnswerBase: FC<QuestionAnswerBaseProps> = ({
           <span>
             <MessageCircleCode className="stroke-muted-foreground" />
           </span>
-          <span>{questionNO}</span>
-        </div>
-        <div className="flex select-none items-center justify-center gap-2 font-bold text-primary">
           <span>
-            <TimerReset className="stroke-primary" size={25} />
+            {questionNO} of {questionLimit}
           </span>
-          <span className="mt-0.5">{countdown}</span>
         </div>
+        <CountdownTimer timeLimit={timeLimit} />
       </div>
-      <div className="space-y-6 rounded-lg border border-t-4 border-t-primary p-4 shadow-sm">
-        <h2 className="text-center text-2xl font-semibold">{questionText}</h2>
+      <div className="rounded-lg border border-t-4 border-t-primary p-4 shadow-sm">
+        <h2 className="mb-6 text-center text-2xl font-semibold">
+          {questionText}
+        </h2>
         <MemoizedChildren>{children}</MemoizedChildren>
       </div>
+    </div>
+  );
+};
+
+const CountdownTimer = ({ timeLimit }: { timeLimit: number }) => {
+  const { resetTimer, handleNextQuestion } = useQuiz();
+  const [countdown, setCountdown] = useState<number>(timeLimit);
+
+  useEffect(() => {
+    if (countdown <= 0) {
+      handleNextQuestion();
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [countdown, handleNextQuestion]);
+
+  useEffect(() => {
+    if (resetTimer > 0) {
+      setCountdown(timeLimit);
+    }
+  }, [resetTimer, timeLimit]);
+
+  return (
+    <div className="flex select-none items-center justify-center gap-2 font-bold text-primary">
+      <span>
+        <TimerReset className="stroke-primary" size={25} />
+      </span>
+      <span className="mt-0.5">{countdown}</span>
     </div>
   );
 };

@@ -1,51 +1,43 @@
 import type { LayoutProps } from "@/types/layout";
-import type { Question } from "@/types/quiz";
-import { FC, createContext, useState } from "react";
+import type { Answer, Question } from "@/types/quiz";
+import { FC, createContext, useCallback, useState } from "react";
 
 interface QuizContextProps {
+  reFetchData: () => void;
   allQuestions: Question[];
-  currentQuestion: Question;
+  answers: Answer[];
   startQuiz: boolean;
   handleStartQuiz: () => void;
+  currentQuestion: Question;
+  resetTimer: number;
   questionIdx: number;
   questionLimit: number;
-  resetTimer: number;
-  questionsAnswers: {
-    _id: string;
-    correctAnswerIndex?: number | undefined;
-    correctAnswerIndices?: number[] | undefined;
-    correctAnswer?: string | undefined;
-  }[];
-  handleNextQuestionIdx: () => void;
-  handleResetTimer: () => void;
-  handleSetQuestionAnswer: (
-    _id: string,
-    answer: number | number[] | string,
+  handleNextQuestion: () => void;
+  handleSubmitAnswer: (
+    questionId: Answer["_id"],
+    answer: Answer["answer"],
+    questionType?: Answer["questionType"],
   ) => void;
-  handleNullAnswer: () => void;
+  complateQuiz: boolean;
 }
 
 export const QuizContext = createContext<QuizContextProps | null>(null);
 
 interface QuizContextProviderProps extends Readonly<LayoutProps> {
   allQuestions: Question[];
+  reFetchQuizData: () => void;
 }
 
 const QuizContextProvider: FC<QuizContextProviderProps> = ({
   allQuestions,
+  reFetchQuizData,
   children,
 }) => {
-  const [questionsAnswers, setQuestionsAnswers] = useState<
-    {
-      _id: string;
-      answer: number | number[] | string | { x: number; y: number } | null;
-    }[]
-  >([]);
   const [startQuiz, setStartQuiz] = useState<boolean>(false);
+  const [complateQuiz, setComplateQuiz] = useState<boolean>(false);
   const [questionIdx, setQuestionIdx] = useState<number>(0);
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [resetTimer, setResetTimer] = useState<number>(0);
-
-  console.log(questionsAnswers);
 
   const currentQuestion = allQuestions[questionIdx];
   const questionLimit = allQuestions.length;
@@ -54,45 +46,52 @@ const QuizContextProvider: FC<QuizContextProviderProps> = ({
     setStartQuiz((prop) => !prop);
   };
 
-  const handleNextQuestionIdx = () => {
-    setQuestionIdx((prev) =>
-      prev < allQuestions.length - 1 ? prev + 1 : prev,
-    );
-  };
+  const handleNextQuestion = useCallback(() => {
+    setQuestionIdx((prev) => {
+      if (prev < questionLimit - 1) {
+        setResetTimer((prev) => prev + 1);
+        return prev + 1;
+      } else {
+        setComplateQuiz(true);
+        return prev;
+      }
+    });
+  }, [questionLimit]);
 
-  const handleResetTimer = () => {
-    setResetTimer((prev) => prev + 1);
-  };
+  const handleSubmitAnswer = useCallback(
+    (
+      questionId: string,
+      answer: Answer["answer"],
+      questionType?: Answer["questionType"],
+    ) => {
+      setAnswers((prev) => [
+        ...prev,
+        { _id: questionId, answer, questionType },
+      ]);
+      if (questionIdx >= questionLimit - 1) {
+        setComplateQuiz(true);
+      }
+    },
+    [questionIdx, questionLimit],
+  );
 
-  const handleNullAnswer = () => {
-    setQuestionsAnswers((prev) => [
-      ...prev,
-      { _id: currentQuestion._id, answer: null },
-    ]);
-  };
-
-  const handleSetQuestionAnswer = (
-    _id: string,
-    answer: number | number[] | string,
-  ) => {
-    setQuestionsAnswers((prev) => [...prev, { _id, answer }]);
-  };
+  const reFetchData = useCallback(reFetchQuizData, [reFetchQuizData]);
 
   return (
     <QuizContext.Provider
       value={{
+        reFetchData,
         allQuestions,
-        currentQuestion,
+        answers,
         startQuiz,
         handleStartQuiz,
+        currentQuestion,
+        resetTimer,
         questionIdx,
         questionLimit,
-        resetTimer,
-        questionsAnswers,
-        handleNextQuestionIdx,
-        handleResetTimer,
-        handleSetQuestionAnswer,
-        handleNullAnswer,
+        handleNextQuestion,
+        handleSubmitAnswer,
+        complateQuiz,
       }}
     >
       {children}

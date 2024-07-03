@@ -19,20 +19,21 @@ const CreateQuiz: FC = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (quizData: z.infer<typeof quizSchema>) => {
-      return axiosSecure.post("/api/classrooms/quizzes/admin", quizData, {
+      return axiosSecure.post("/api/quizzes/admin", quizData, {
         params: { classroomId },
       });
     },
     onSuccess: (data) => {
       if (data?.status === 201) {
         queryClient.invalidateQueries({
-          queryKey: ["classroom", "admin", "quizzes", { classroomId }],
+          queryKey: ["admin", "quizzes", { classroomId }],
         });
         navigate({
           to: "/classroom/$classroomId/quizzes",
           params: { classroomId },
         });
         toast({
+          variant: "success",
           title: "Quiz is created",
         });
       }

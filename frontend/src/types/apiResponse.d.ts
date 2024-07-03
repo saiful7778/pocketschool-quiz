@@ -13,3 +13,11 @@ export interface ApiResponseData<T> {
   success: boolean;
   data: T;
 }
+
+export interface UpdateDateResponse {
+  acknowledged: boolean;
+  modifiedCount: number;
+  upsertedId: string | null;
+  upsertedCount: number;
+  matchedCount: number;
+}

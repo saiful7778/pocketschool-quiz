@@ -1,19 +1,25 @@
 import Button from "@/components/ui/button";
 import useQuiz from "@/hooks/useQuiz";
+import { cn } from "@/lib/utils/shadcn";
 import { CircleCheckBig } from "lucide-react";
 import { FC, useState } from "react";
 
 interface MultipleAnswerQuestionAnswerProps {
   options: { _id: string; text: string }[];
   questionId: string;
+  questionType:
+    | "multipleOption"
+    | "multipleAnswer"
+    | "textAnswer"
+    | "pinPointAnswer";
 }
 
 const MultipleAnswerQuestionAnswer: FC<MultipleAnswerQuestionAnswerProps> = ({
   options,
   questionId,
+  questionType,
 }) => {
-  const { handleNextQuestionIdx, handleResetTimer, handleSetQuestionAnswer } =
-    useQuiz();
+  const { handleSubmitAnswer, handleNextQuestion } = useQuiz();
   const [Loading, setLoading] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<{ idx: number }[]>([]);
   const [errorStatus, setErrorStatus] = useState<string>("");
@@ -21,12 +27,14 @@ const MultipleAnswerQuestionAnswer: FC<MultipleAnswerQuestionAnswerProps> = ({
   const handleSubmit = () => {
     if (selectedOptions.length > 0) {
       setLoading(true);
-      handleNextQuestionIdx();
-      handleResetTimer();
-      handleSetQuestionAnswer(
-        questionId,
-        selectedOptions.map((ele) => ele.idx),
-      );
+      setTimeout(() => {
+        handleSubmitAnswer(
+          questionId,
+          selectedOptions.map((ele) => ele.idx),
+          questionType,
+        );
+        handleNextQuestion();
+      }, 500);
     } else {
       setErrorStatus("Select options");
     }
@@ -34,9 +42,6 @@ const MultipleAnswerQuestionAnswer: FC<MultipleAnswerQuestionAnswerProps> = ({
 
   return (
     <>
-      <div className="text-center text-sm italic text-muted-foreground">
-        Multiple option answer
-      </div>
       <div className="space-y-2">
         {options.map((option, idx) => (
           <AnswerOptions
@@ -79,17 +84,27 @@ const AnswerOptions = ({
   return (
     <button
       type="button"
-      className="flex w-full items-center gap-2 rounded-md border p-4 leading-none disabled:cursor-not-allowed disabled:opacity-50"
+      className={cn(
+        "group flex w-full items-center gap-2 rounded-md border border-sky-200 p-4 text-sm leading-none duration-100 hover:border-primary-foreground hover:bg-primary hover:text-primary-foreground active:bg-primary active:text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50",
+        checked &&
+          "border-primary-foreground bg-primary text-primary-foreground",
+      )}
       disabled={disabled}
       onClick={() => {
         setChecked((prev) => !prev);
         handleOptionSubmit();
       }}
     >
-      {checked && (
-        <span>
-          <CircleCheckBig size={16} />
-        </span>
+      {checked ? (
+        <CircleCheckBig
+          className={cn(
+            "stroke-primary group-hover:stroke-primary-foreground",
+            checked && "stroke-primary-foreground",
+          )}
+          size={16}
+        />
+      ) : (
+        <div className="size-4 rounded border border-sky-200" />
       )}
       <span>{text}</span>
     </button>

@@ -23,14 +23,14 @@ const DeleteQuiz: FC<UpdateQuizProps> = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      return axiosSecure.delete(`/api/classrooms/quizzes/admin/${quizId}`, {
+      return axiosSecure.delete(`/api/quizzes/admin/${quizId}`, {
         params: { classroomId },
       });
     },
     onSuccess: (data) => {
       if (data?.status === 200) {
         queryClient.invalidateQueries({
-          queryKey: ["classroom", "admin", "quizzes", { classroomId }],
+          queryKey: ["quizzes", "admin", { classroomId }],
         });
         toast({
           title: "Quiz is deleted",

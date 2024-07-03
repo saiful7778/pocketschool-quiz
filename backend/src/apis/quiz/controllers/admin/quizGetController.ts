@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../../utils/serverHelper";
-import { quizModel } from "../../../../models/quizModel";
+import { quizModel } from "../../../../models/quiz.model";
 
 export default function quizGetController(
   req: Request,
