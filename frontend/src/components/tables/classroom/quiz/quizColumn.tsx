@@ -18,7 +18,20 @@ export default function getQuizColumns(classroomId: string) {
     {
       id: "questions",
       accessorKey: "questionsCount",
-      header: "Questions",
+      header: () => <div className="text-center">Questions</div>,
+      cell: ({ renderValue }) => {
+        const questionCount = renderValue() as string;
+        return <div className="text-center">{questionCount}</div>;
+      },
+    },
+    {
+      id: "participants",
+      accessorKey: "participantCount",
+      header: () => <div className="text-center">Participants</div>,
+      cell: ({ getValue }) => {
+        const participantCount = getValue<Quizzes["participantCount"]>();
+        return <div className="text-center">{participantCount}</div>;
+      },
     },
     {
       id: "author",
@@ -26,17 +39,41 @@ export default function getQuizColumns(classroomId: string) {
       header: "Author",
       cell: ({ getValue }) => {
         const author = getValue<Quizzes["author"]>();
-        return author?.email;
+
+        return <div className="text-xs">{author?.email}</div>;
       },
     },
     {
       id: "startTime",
       accessorKey: "startTime",
       header: () => <div className="min-w-36">Quiz will start</div>,
-      cell: ({ row }) => {
-        const startTime = row.getValue<Quizzes["startTime"]>("startTime");
+      cell: ({ getValue }) => {
+        const startTime = getValue<Quizzes["startTime"]>();
         const quizStartTime = moment(startTime).format("DD/MM/YYYY hh:mm a");
-        return quizStartTime;
+
+        return <div className="text-xs">{quizStartTime}</div>;
+      },
+    },
+    {
+      id: "status",
+      header: () => <div className="text-center">Status</div>,
+      cell: ({ row }) => {
+        const createdAt = row.original.createdAt;
+        const updatedAt = row.original.updatedAt;
+
+        const created = moment(createdAt).format("DD/MM/YYYY hh:mm a");
+        const updated = moment(updatedAt).format("DD/MM/YYYY hh:mm a");
+
+        return (
+          <div className="whitespace-nowrap text-xs text-muted-foreground">
+            <div>
+              <span>Created :</span> <span>{created}</span>
+            </div>
+            <div>
+              <span>updated :</span> <span>{updated}</span>
+            </div>
+          </div>
+        );
       },
     },
     {

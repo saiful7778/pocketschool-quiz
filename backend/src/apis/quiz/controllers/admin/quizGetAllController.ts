@@ -43,9 +43,15 @@ export default function quizGetAllController(
         },
       },
       {
+        $addFields: {
+          participantCount: { $size: "$participants" },
+        },
+      },
+      {
         $project: {
           classroom: 0,
           __v: 0,
+          participants: 0,
           questions: 0,
         },
       },

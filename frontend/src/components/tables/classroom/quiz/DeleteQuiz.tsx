@@ -1,27 +1,29 @@
-import Spinner from "@/components/Spinner";
-import Button from "@/components/ui/button";
-import Dialog from "@/components/ui/dialog";
+import DeleteConfirm from "@/components/DeleteConfirm";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import toast from "@/lib/toast/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Trash2 } from "lucide-react";
 import { FC } from "react";
 
 interface UpdateQuizProps {
   quizId: string;
   classroomId: string;
   quiztitle: string;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DeleteQuiz: FC<UpdateQuizProps> = ({
   quiztitle,
   quizId,
   classroomId,
+  isOpen,
+  setIsOpen,
 }) => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
+    mutationKey: ["quizzes", "delete", "admin", { classroomId }],
     mutationFn: async () => {
       return axiosSecure.delete(`/api/quizzes/admin/${quizId}`, {
         params: { classroomId },
@@ -33,6 +35,7 @@ const DeleteQuiz: FC<UpdateQuizProps> = ({
           queryKey: ["quizzes", "admin", { classroomId }],
         });
         toast({
+          variant: "success",
           title: "Quiz is deleted",
         });
       }
@@ -47,35 +50,13 @@ const DeleteQuiz: FC<UpdateQuizProps> = ({
   });
 
   return (
-    <Dialog>
-      <Dialog.trigger asChild>
-        <Button size="sm" className="w-full" variant="destructive">
-          <Trash2 className="mr-2" size={16} />
-          <span>Delete</span>
-        </Button>
-      </Dialog.trigger>
-      <Dialog.content className="w-full sm:max-w-md">
-        <Dialog.title className="text-center text-2xl">
-          Do you want to delete this?
-        </Dialog.title>
-        <Dialog.description className="text-center">
-          {`'${quiztitle}' it will be delete by clicking the delete button`}
-        </Dialog.description>
-        <Dialog.description className="text-center">
-          Click cancel button to cancel this process
-        </Dialog.description>
-        <Dialog.footer className="!justify-center">
-          <Dialog.close asChild>
-            <Button variant="outline" size="sm">
-              Cancel
-            </Button>
-          </Dialog.close>
-          <Button onClick={() => mutate()} variant="destructive" size="sm">
-            {isPending ? <Spinner size={20} /> : "Yes, Delete!"}
-          </Button>
-        </Dialog.footer>
-      </Dialog.content>
-    </Dialog>
+    <DeleteConfirm
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      isConfirm={isPending}
+      description={`'${quiztitle}' it will be delete by clicking the delete button`}
+      confirmClick={() => mutate()}
+    />
   );
 };
 

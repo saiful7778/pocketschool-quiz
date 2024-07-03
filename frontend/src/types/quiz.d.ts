@@ -18,6 +18,7 @@ export interface Quizzes {
     email: string;
   };
   questionsCount: number;
+  participantCount: number;
   startTime: Date;
   createdAt: Date;
   updatedAt: Date;

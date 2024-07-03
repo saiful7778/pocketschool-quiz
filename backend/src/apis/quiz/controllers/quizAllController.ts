@@ -47,11 +47,6 @@ export default function quizAllController(
       },
     ]);
 
-    if (quizzes.length === 0) {
-      res.status(404).json({ success: false, message: "no quiz found" });
-      return;
-    }
-
     res.status(200).json({
       success: true,
       data: quizzes,

@@ -15,14 +15,14 @@ const QuizMainItem: FC<QuizMainItemProp> = ({
   questionsCount,
   children,
 }) => {
+  const titleLimit = 20;
   const imageText = {
-    textLimit: 20,
-    fontSize: (96 / (title.length > 20 ? 20 : title.length)) * 3,
-    text: title.length > 20 ? title.slice(0, 20) + "..." : title,
-    thisTextLimit: this,
+    fontSize:
+      (90 / (title.length > titleLimit ? titleLimit : title.length)) * 3,
+    text:
+      title.length > titleLimit ? title.slice(0, titleLimit) + "..." : title,
   };
 
-  console.log(imageText);
   return (
     <div className="w-[255px] space-y-2 rounded-md border p-4 shadow">
       <div className="relative overflow-hidden rounded-md border">
