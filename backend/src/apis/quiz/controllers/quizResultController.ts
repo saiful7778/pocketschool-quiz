@@ -14,6 +14,7 @@ import {
   textAnswerQuestion,
 } from "../../../models/question.model";
 import { quizAnswerModel, quizModel } from "../../../models/quiz.model";
+import { Types } from "mongoose";
 
 export default function quizResultController(
   req: Request,
@@ -249,7 +250,7 @@ export default function quizResultController(
       })
     );
 
-    await quizAnswerModel.create({
+    const quizAnswer = await quizAnswerModel.create({
       quiz: quizId,
       participant: userId,
       classroom: classroomId,
@@ -258,10 +259,16 @@ export default function quizResultController(
       answers: questionAnswers.map((answer) => answer._id),
     });
 
-    await quizModel.updateOne({
-      _id: quizId,
-      participants: [userId],
-    });
+    await quizModel.updateOne(
+      {
+        _id: new Types.ObjectId(quizId),
+      },
+      {
+        $push: {
+          participants: { user: userId, answer: quizAnswer._id },
+        },
+      }
+    );
 
     const successAnswers = questionAnswers.filter((answer) => answer.isCorrect);
 

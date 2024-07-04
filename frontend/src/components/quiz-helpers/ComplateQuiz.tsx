@@ -4,7 +4,8 @@ import Loading from "../Loading";
 import { getRouteApi } from "@tanstack/react-router";
 import useQuiz from "@/hooks/useQuiz";
 import Button from "../ui/button";
-import { SubmitResult } from "@/types/quiz";
+import type { SubmitResult } from "@/types/question";
+import type { ApiResponse } from "@/types/apiResponse";
 
 const routeData = getRouteApi("/private/classroom/$classroomId/quiz/$quizId");
 
@@ -44,7 +45,7 @@ const ComplateQuiz: FC = () => {
     setIsError(false);
     setError("");
     try {
-      const { data } = await axiosSecure.post(
+      const { data } = await axiosSecure.post<ApiResponse<SubmitResult>>(
         `/api/quizzes/user/${quizId}`,
         { answers: allAnswers },
         { params: { classroomId } },
@@ -54,7 +55,7 @@ const ComplateQuiz: FC = () => {
         throw new Error("Quiz not submitted");
       }
 
-      setApiResData(data.data);
+      setApiResData(data.data!);
     } catch (err) {
       if (err instanceof Error) {
         setIsError(true);

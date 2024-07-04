@@ -1,6 +1,20 @@
 import { Schema, model } from "mongoose";
 import type { Quiz, QuizAnswer } from "../types/quiz.type";
 
+const participantSchema = new Schema(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+    answer: {
+      type: Schema.Types.ObjectId,
+      ref: "answer",
+    },
+  },
+  { _id: false }
+);
+
 const quizSchema = new Schema<Quiz>(
   {
     title: { type: String, required: [true, "Title is required"] },
@@ -24,12 +38,7 @@ const quizSchema = new Schema<Quiz>(
       required: [true, "Question is required"],
     },
     participants: {
-      type: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "user",
-        },
-      ],
+      type: [participantSchema],
     },
     startTime: { type: Date, required: [true, "Start time is required"] },
   },

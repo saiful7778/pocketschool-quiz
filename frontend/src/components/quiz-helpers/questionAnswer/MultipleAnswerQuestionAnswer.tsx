@@ -1,17 +1,14 @@
 import Button from "@/components/ui/button";
 import useQuiz from "@/hooks/useQuiz";
 import { cn } from "@/lib/utils/shadcn";
+import type { questionType } from "@/types/question";
 import { CircleCheckBig } from "lucide-react";
 import { FC, useState } from "react";
 
 interface MultipleAnswerQuestionAnswerProps {
   options: { _id: string; text: string }[];
   questionId: string;
-  questionType:
-    | "multipleOption"
-    | "multipleAnswer"
-    | "textAnswer"
-    | "pinPointAnswer";
+  questionType: questionType;
 }
 
 const MultipleAnswerQuestionAnswer: FC<MultipleAnswerQuestionAnswerProps> = ({

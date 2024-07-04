@@ -13,7 +13,7 @@ export interface ApiResponseData<T> {
   success: boolean;
   data: T;
 }
-
+// TODO: add update response
 export interface UpdateDateResponse {
   acknowledged: boolean;
   modifiedCount: number;

@@ -6,14 +6,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { QuizInput } from "@/types/quiz";
+import type { QuestionInput } from "@/types/question";
 import { useFieldArray } from "react-hook-form";
 import RadioGroup from "@/components/ui/radio-group";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { X } from "lucide-react";
 
-interface MultipleOptionProps extends QuizInput {
+interface MultipleOptionProps extends QuestionInput {
   index: number;
 }
 
@@ -70,7 +70,7 @@ const MultipleOption: FC<MultipleOptionProps> = ({
                       )}
                     />
                     <Button
-                      className="absolute right-1.5 top-1.5"
+                      className="absolute right-1.5 top-0.5"
                       size="icon"
                       variant="ghost"
                       type="button"

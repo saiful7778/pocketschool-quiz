@@ -4,7 +4,7 @@ import QuestionAnswerBase from "./questionAnswer/QuestionAnswerBase";
 import MultipleOptionQuestionAnswer from "./questionAnswer/MultipleOptionQuestionAnswer";
 import MultipleAnswerQuestionAnswer from "./questionAnswer/MultipleAnswerQuestionAnswer";
 import TextAnswerQuestionAnswer from "./questionAnswer/TextAnswerQuestionAnswer";
-import type { Question } from "@/types/quiz";
+import type { Question } from "@/types/question";
 import { motion } from "framer-motion";
 import ComplateQuiz from "./ComplateQuiz";
 

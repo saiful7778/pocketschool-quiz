@@ -1,5 +1,4 @@
-import type { questionSchema, quizSchema } from "@/lib/schemas/quizSchema";
-import type { Control } from "react-hook-form";
+import type { quizSchema } from "@/lib/schemas/quizSchema";
 import { z } from "zod";
 
 export interface QuizzesRes {
@@ -24,18 +23,15 @@ export interface Quizzes {
   updatedAt: Date;
 }
 
-export interface Quiz {
+export interface AdminQuizDetails extends z.infer<typeof quizSchema> {
   _id: string;
-  title: string;
-  question: z.infer<typeof questionSchema>;
-  startTime: Date;
+  author: {
+    _id: string;
+    fullName: string;
+    email: string;
+  };
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface QuizInput {
-  control: Control<z.infer<typeof quizSchema>>;
-  loading: boolean;
 }
 
 export interface AdminQuiz extends z.infer<typeof quizSchema> {

@@ -6,7 +6,10 @@ export interface Quiz {
   author: Types.ObjectId | string;
   classroom: Types.ObjectId | string;
   questions: Types.ObjectId[] | string[];
-  participants: Types.ObjectId[] | string[];
+  participants: {
+    user: Types.ObjectId | string;
+    answer: Types.ObjectId | string;
+  }[];
   startTime: Date;
   createdAt: Date;
   updatedAt: Date;

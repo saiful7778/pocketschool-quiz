@@ -1,12 +1,14 @@
 import type { Types } from "mongoose";
 
+export type QuestionType =
+  | "multipleOption"
+  | "multipleAnswer"
+  | "textAnswer"
+  | "pinPointAnswer";
+
 export interface QuestionBase {
   _id: Types.ObjectId | string;
-  questionType?:
-    | "multipleOption"
-    | "multipleAnswer"
-    | "textAnswer"
-    | "pinPointAnswer";
+  questionType?: QuestionType;
   questionText: string;
   timeLimit: number;
   mark: number;
@@ -43,11 +45,7 @@ export interface PinPointAnswer extends QuestionBase {
 export interface AnswerBase {
   _id: Types.ObjectId | string;
   question: Types.ObjectId | string;
-  questionType?:
-    | "multipleOption"
-    | "multipleAnswer"
-    | "textAnswer"
-    | "pinPointAnswer";
+  questionType?: QuestionType;
   quiz: Types.ObjectId | string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   answer?: number[] | number | string | { x: number; y: number } | null | any;

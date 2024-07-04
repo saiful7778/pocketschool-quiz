@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useFieldArray } from "react-hook-form";
-import type { QuizInput } from "@/types/quiz";
+import type { QuestionInput } from "@/types/question";
 import Button from "@/components/ui/button";
 import { X } from "lucide-react";
 import {
@@ -13,7 +13,7 @@ import {
 import Checkbox from "@/components/ui/checkbox";
 import Input from "@/components/ui/input";
 
-interface MultipleAnswerProps extends QuizInput {
+interface MultipleAnswerProps extends QuestionInput {
   index: number;
 }
 
@@ -73,7 +73,7 @@ const MultipleAnswer: FC<MultipleAnswerProps> = ({
                       )}
                     />
                     <Button
-                      className="absolute right-1.5 top-1.5"
+                      className="absolute right-1.5 top-0.5"
                       size="icon"
                       variant="ghost"
                       type="button"

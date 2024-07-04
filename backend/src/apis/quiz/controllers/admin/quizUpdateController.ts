@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../../utils/serverHelper";
 import { quizModel } from "../../../../models/quiz.model";
 import { questionModel } from "../../../../models/question.model";
-import type { Question } from "../../../../types/quizType";
+import type { QuestionBase } from "../../../../types/question.type";
 import { Types } from "mongoose";
 import createHttpError from "http-errors";
 
@@ -15,7 +15,7 @@ export default function quizUpdateController(
   const { title, startTime, questions } = req.body as {
     title: string;
     startTime: Date;
-    questions: Question[];
+    questions: QuestionBase[];
   };
 
   if (!Array.isArray(questions)) {
@@ -66,7 +66,7 @@ export default function quizUpdateController(
 }
 
 async function questionPromises(
-  questions: Question[],
+  questions: QuestionBase[],
   quizQuestions: string[]
 ) {
   const allPromises = [];

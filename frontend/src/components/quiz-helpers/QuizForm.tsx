@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import QuestionsRender from "./QuestionsRender";
 import Button from "../ui/button";
 import Spinner from "../Spinner";
@@ -15,7 +15,6 @@ interface QuizFormProps {
   isPending: boolean;
   defaultValues: z.infer<typeof quizSchema>;
   handleSubmit: (e: z.infer<typeof quizSchema>) => void;
-  status?: ReactNode;
 }
 
 const QuizForm: FC<QuizFormProps> = ({
@@ -24,7 +23,6 @@ const QuizForm: FC<QuizFormProps> = ({
   defaultValues,
   handleSubmit,
   isPending,
-  status,
 }) => {
   const form = useForm<z.infer<typeof quizSchema>>({
     resolver: zodResolver(quizSchema),
@@ -38,7 +36,6 @@ const QuizForm: FC<QuizFormProps> = ({
         className="mx-auto w-full max-w-3xl space-y-4"
       >
         <h2 className="border-b pb-4 text-xl font-semibold">{title}</h2>
-        {status && <div>{status}</div>}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
             control={form.control}

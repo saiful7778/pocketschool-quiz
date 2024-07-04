@@ -6,10 +6,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { FC } from "react";
-import type { QuizInput } from "@/types/quiz";
+import type { QuestionInput } from "@/types/question";
 import Textarea from "@/components/ui/textarea";
 
-interface TextAnswerProps extends QuizInput {
+interface TextAnswerProps extends QuestionInput {
   index: number;
 }
 

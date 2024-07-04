@@ -8,7 +8,6 @@ import type { ApiResponse, UpdateDateResponse } from "@/types/apiResponse";
 import type { AdminQuiz } from "@/types/quiz";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
-import moment from "moment";
 import { FC } from "react";
 import { z } from "zod";
 
@@ -104,9 +103,6 @@ const UpdateQuizForm = ({
     },
   });
 
-  const created = moment(defaultValues.createdAt).format("DD/MM/YYYY hh:mm a");
-  const updated = moment(defaultValues.updatedAt).format("DD/MM/YYYY hh:mm a");
-
   const dateTimeLocalNow = () => {
     return new Date(
       new Date(defaultValues.startTime).getTime() -
@@ -119,16 +115,6 @@ const UpdateQuizForm = ({
   return (
     <QuizForm
       title={`Update '${defaultValues.title}' quiz`}
-      status={
-        <div className="text-sm">
-          <div>
-            <span>Created at: </span> <span>{created}</span>
-          </div>
-          <div>
-            <span>Updated at: </span> <span>{updated}</span>
-          </div>
-        </div>
-      }
       submitButtonText="Update quiz"
       isPending={isPending}
       handleSubmit={(e) => mutate(e)}

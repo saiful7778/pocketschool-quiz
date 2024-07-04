@@ -92,7 +92,7 @@ const ClassroomUpdateForm = ({
           queryKey: ["classroom", { classroomId }],
         });
         queryClient.invalidateQueries({
-          queryKey: ["joined", "classrooms", { userId: userData?._id }],
+          queryKey: ["joined", { userId: userData?._id }],
         });
         toast({
           title: "Classroom is updated",

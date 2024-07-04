@@ -12,9 +12,39 @@ export default function quizGetController(
 
   serverHelper(async () => {
     const quiz = await quizModel
-      .findOne({ _id: quizId }, { classroom: 0 })
-      .populate({ path: "questions" })
-      .populate({ path: "author", select: ["_id", "fullName", "email"] });
+      .findOne({ _id: quizId }, { classroom: 0, __v: 0 })
+      .populate({
+        path: "author",
+        model: "user",
+        select: ["fullName", "email"],
+      })
+      .populate({ path: "questions", model: "question" })
+      .populate({
+        path: "participants.user",
+        model: "user",
+        select: ["fullName", "email"],
+      })
+      .populate({
+        path: "participants.answer",
+        model: "quiz-answer",
+        select: ["totalMarks", "totalAnswers", "createdAt"],
+        populate: {
+          path: "answers",
+          model: "answer",
+          select: [
+            "question",
+            "answerIndex",
+            "answerType",
+            "isCorrect",
+            "mark",
+          ],
+          populate: {
+            path: "question",
+            model: "question",
+            select: ["questionText"],
+          },
+        },
+      });
 
     res.status(200).send({ success: true, data: quiz });
   }, next);

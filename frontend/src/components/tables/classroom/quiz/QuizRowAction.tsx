@@ -1,9 +1,10 @@
 import Button from "@/components/ui/button";
 import DropdownMenu from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, PencilLine, Trash2 } from "lucide-react";
+import { MoreHorizontal, PencilLine, ReceiptText, Trash2 } from "lucide-react";
 import { FC, useState } from "react";
 import DeleteQuiz from "./DeleteQuiz";
 import { useNavigate } from "@tanstack/react-router";
+import QuizDetails from "./QuizDetails";
 
 interface QuizRowActionProps {
   classroomId: string;
@@ -18,6 +19,7 @@ const QuizRowAction: FC<QuizRowActionProps> = ({
 }) => {
   const navigate = useNavigate({ from: "/classroom/$classroomId/quizzes" });
   const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
+  const [detailsDialog, setDetailsDialog] = useState<boolean>(false);
 
   return (
     <>
@@ -25,6 +27,12 @@ const QuizRowAction: FC<QuizRowActionProps> = ({
         isOpen={deleteConfirm}
         setIsOpen={setDeleteConfirm}
         quiztitle={quizTitle}
+        quizId={quizId}
+        classroomId={classroomId}
+      />
+      <QuizDetails
+        open={detailsDialog}
+        onOpenChange={setDetailsDialog}
         quizId={quizId}
         classroomId={classroomId}
       />
@@ -36,6 +44,10 @@ const QuizRowAction: FC<QuizRowActionProps> = ({
           </Button>
         </DropdownMenu.trigger>
         <DropdownMenu.content align="end" forceMount>
+          <DropdownMenu.item onClick={() => setDetailsDialog((prev) => !prev)}>
+            <ReceiptText size={16} strokeWidth={1} /> <span>Details</span>
+          </DropdownMenu.item>
+          <DropdownMenu.separator />
           <DropdownMenu.item
             onClick={() =>
               navigate({

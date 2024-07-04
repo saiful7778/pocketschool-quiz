@@ -1,5 +1,5 @@
 import type { LayoutProps } from "@/types/layout";
-import type { Answer, Question } from "@/types/quiz";
+import type { Answer, Question } from "@/types/question";
 import { FC, createContext, useCallback, useState } from "react";
 
 interface QuizContextProps {
@@ -68,11 +68,8 @@ const QuizContextProvider: FC<QuizContextProviderProps> = ({
         ...prev,
         { _id: questionId, answer, questionType },
       ]);
-      if (questionIdx >= questionLimit - 1) {
-        setComplateQuiz(true);
-      }
     },
-    [questionIdx, questionLimit],
+    [],
   );
 
   const reFetchData = useCallback(reFetchQuizData, [reFetchQuizData]);

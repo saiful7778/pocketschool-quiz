@@ -3,7 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 import { FC } from "react";
 import type { ApiResponse } from "@/types/apiResponse";
-import type { QuizPublic, SubmitResult } from "@/types/quiz";
+import type { SubmitResult } from "@/types/question";
+import type { QuizPublic } from "@/types/quiz";
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import StartQuiz from "@/components/quiz-helpers/StartQuiz";
@@ -29,7 +30,7 @@ const Quiz: FC = () => {
       const { data } = await axiosSecure.get<
         ApiResponse<{
           participated: boolean;
-          data: QuizPublic[] | SubmitResult;
+          data: SubmitResult & QuizPublic;
         }>
       >(`/api/quizzes/user/${quizId}`);
       if (!data.success) {
@@ -48,7 +49,14 @@ const Quiz: FC = () => {
   }
 
   if (quiz?.participated) {
-    return <div>Your result</div>;
+    return (
+      <div>
+        <div>Your result</div>
+        <pre>
+          <code>{JSON.stringify(quiz, null, 2)}</code>
+        </pre>
+      </div>
+    );
   }
 
   return (

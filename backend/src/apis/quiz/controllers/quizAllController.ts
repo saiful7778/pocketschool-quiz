@@ -25,7 +25,7 @@ export default function quizAllController(
           newQuiz: {
             $cond: {
               if: {
-                $in: [new Types.ObjectId(userId), "$participants"],
+                $in: [new Types.ObjectId(userId), "$participants.user"],
               },
               then: false,
               else: true,

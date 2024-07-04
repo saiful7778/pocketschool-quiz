@@ -3,20 +3,16 @@ import { X } from "lucide-react";
 import { FormField } from "@/components/ui/form";
 import InputField from "@/components/InputField";
 import Button from "@/components/ui/button";
-import type { QuizInput } from "@/types/quiz";
+import type { QuestionInput, questionType } from "@/types/question";
 
-interface QuestionProps extends QuizInput {
+interface QuestionInputBaseProps extends QuestionInput {
   index: number;
   removeQuestion: () => void;
   children: ReactNode;
-  questionType:
-    | "multipleOption"
-    | "multipleAnswer"
-    | "textAnswer"
-    | "pinPointAnswer";
+  questionType: questionType;
 }
 
-const Question: FC<QuestionProps> = ({
+const QuestionInputBase: FC<QuestionInputBaseProps> = ({
   control,
   loading,
   index,
@@ -105,4 +101,4 @@ const Question: FC<QuestionProps> = ({
   );
 };
 
-export default Question;
+export default QuestionInputBase;
