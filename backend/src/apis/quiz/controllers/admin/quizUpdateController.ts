@@ -46,7 +46,7 @@ export default function quizUpdateController(
     const quizData = (await quizModel.findOne(
       { _id: quizId },
       { questions: 1 }
-    )) as { _id: string; questions: string[] };
+    )) as { _id: string; questions: QuestionBase[] };
 
     const questionIds = await questionPromises(questions, quizData.questions);
 
@@ -67,7 +67,7 @@ export default function quizUpdateController(
 
 async function questionPromises(
   questions: QuestionBase[],
-  quizQuestions: string[]
+  quizQuestions: QuestionBase[]
 ) {
   const allPromises = [];
   const ids: string[] = [];
@@ -86,24 +86,34 @@ async function questionPromises(
     );
   }
 
-  const updateAbleQuestions = quizQuestions
-    .map((quizQuestion) => String(quizQuestion))
-    .filter((questionId) =>
-      questions.find((question) => questionId === question?._id) ? true : false
-    );
+  const updateAbleQuestions = quizQuestions.filter((questionId) =>
+    questions.find((question) => String(questionId) === question?._id)
+      ? true
+      : false
+  );
 
   allPromises.push(
     ...questions.map((question) => {
       if (question?._id) {
         const { _id, ...questionData } = question;
 
-        if (updateAbleQuestions.includes(_id as string)) {
-          ids.push(_id as string);
-          return questionModel.updateOne(
-            { _id: new Types.ObjectId(_id) },
-            { ...questionData }
-          );
+        for (const x of updateAbleQuestions) {
+          if (x._id === _id) {
+            ids.push(_id as string);
+            return questionModel.updateOne(
+              { _id: new Types.ObjectId(_id) },
+              { ...questionData }
+            );
+          }
         }
+
+        // if (updateAbleQuestions.includes(_id as string)) {
+        //   ids.push(_id as string);
+        //   return questionModel.updateOne(
+        //     { _id: new Types.ObjectId(_id) },
+        //     { ...questionData }
+        //   );
+        // }
       } else {
         const newQuestionId = new Types.ObjectId();
         ids.push(String(newQuestionId));
