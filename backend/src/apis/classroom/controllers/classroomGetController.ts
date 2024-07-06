@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
-import { classroomModel } from "../../../models/classroomModel";
+import { classroomModel } from "../../../models/classroom.model";
 import { Types } from "mongoose";
 import createHttpError from "http-errors";
 
@@ -15,21 +15,13 @@ export default function classroomGetController(
 
   serverHelper(async () => {
     // get classroom data by mongodb aggregation pipeline
+
     const classroom = await classroomModel.aggregate([
       {
         $match: {
           _id: new Types.ObjectId(classroomId),
-          // check if userId exist in this classroom admin or user array also her access should be true
-          $or: [
-            {
-              "admins.userId": new Types.ObjectId(userId),
-              "admins.access": true,
-            },
-            {
-              "users.userId": new Types.ObjectId(userId),
-              "users.access": true,
-            },
-          ],
+          "users.user": new Types.ObjectId(userId),
+          "users.access": true,
         },
       },
       {
@@ -37,11 +29,11 @@ export default function classroomGetController(
         $addFields: {
           role: {
             $cond: {
-              if: { $in: [new Types.ObjectId(userId), "$admins.userId"] },
+              if: { $in: ["admin", "$users.role"] },
               then: "admin",
               else: {
                 $cond: {
-                  if: { $in: [new Types.ObjectId(userId), "$users.userId"] },
+                  if: { $in: ["user", "$users.role"] },
                   then: "user",
                   else: null,
                 },
@@ -52,7 +44,6 @@ export default function classroomGetController(
       },
       {
         $project: {
-          admins: 0,
           users: 0,
           __v: 0,
         },

@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
-import { userModel } from "../../../models/userModel";
+import { userModel } from "../../../models/user.model";
 import devDebug from "../../../utils/devDebug";
 import getEnv from "../../../utils/env";
 import { sign } from "jsonwebtoken";

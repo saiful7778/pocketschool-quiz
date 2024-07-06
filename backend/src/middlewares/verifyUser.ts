@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import type { User } from "../types/userType";
-import { userModel } from "../models/userModel";
+import type { User } from "../types/user.type";
+import { userModel } from "../models/user.model";
 import createHttpError from "http-errors";
 
 /**

@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
-import { userModel } from "../../../models/userModel";
-import { classroomModel } from "../../../models/classroomModel";
+import { userModel } from "../../../models/user.model";
+import { classroomModel } from "../../../models/classroom.model";
 
 export default function userCreateController(
   req: Request,
@@ -32,8 +32,14 @@ export default function userCreateController(
         {
           _id: classroomId,
         },
-        { users: [{ userId: user.id, access: true }] },
-        { upsert: true }
+        {
+          $push: {
+            users: {
+              user: user._id,
+              access: true,
+            },
+          },
+        }
       );
     }
 

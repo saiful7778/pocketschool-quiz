@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
-import { classroomModel } from "../../../models/classroomModel";
+import { classroomModel } from "../../../models/classroom.model";
 
 // TODO: update this
 export default function classroomUserController(
@@ -15,12 +15,11 @@ export default function classroomUserController(
     const classroomUser = await classroomModel.findOne(
       {
         _id: classroomId,
-        $or: [
-          { "admins.userId": classroomUserId },
-          { "users.userId": classroomUserId },
-        ],
+        "users.user": classroomUserId,
+        "users.access": true,
+        "users.role": "admin",
       },
-      { admins: 1, users: 1 }
+      { users: 1 }
     );
 
     // send response

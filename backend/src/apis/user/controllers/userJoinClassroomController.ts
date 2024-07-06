@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
-import { classroomModel } from "../../../models/classroomModel";
+import { classroomModel } from "../../../models/classroom.model";
 import { Types } from "mongoose";
 import createHttpError from "http-errors";
 
@@ -14,10 +14,13 @@ export default function userJoinClassroomController(
   const { userId } = req.query;
 
   serverHelper(async () => {
-    const isUserExist = await classroomModel.findOne({
-      _id: new Types.ObjectId(classroomId),
-      $or: [{ "admins.userId": userId }, { "users.userId": userId }],
-    });
+    const isUserExist = await classroomModel.findOne(
+      {
+        _id: new Types.ObjectId(classroomId),
+        "users.user": userId,
+      },
+      { _id: 1 }
+    );
 
     if (isUserExist) {
       return next(createHttpError(400, "user is already joined"));
@@ -26,7 +29,11 @@ export default function userJoinClassroomController(
     // add user to a classroom
     const classroom = await classroomModel.updateOne(
       { _id: new Types.ObjectId(classroomId) },
-      { users: [{ userId, access: false }] }
+      {
+        $push: {
+          users: { user: userId, access: false },
+        },
+      }
     );
 
     if (classroom.modifiedCount === 0) {

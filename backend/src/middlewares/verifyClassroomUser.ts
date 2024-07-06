@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import createHttpError from "http-errors";
-import { classroomModel } from "../models/classroomModel";
+import { classroomModel } from "../models/classroom.model";
 import { Types } from "mongoose";
 
 /**
@@ -29,29 +29,19 @@ export default function verifyClassroomUser(userRole: ("user" | "admin")[]) {
         {
           $match: {
             _id: new Types.ObjectId(classroomId),
-            // check if userId exist in this classroom admin or user array also her access should be true
-            $or: [
-              {
-                "admins.userId": new Types.ObjectId(userId),
-                "admins.access": true,
-              },
-              {
-                "users.userId": new Types.ObjectId(userId),
-                "users.access": true,
-              },
-            ],
+            "users.user": new Types.ObjectId(userId),
+            "users.access": true,
           },
         },
         {
-          // add a new role field of user in admin or user
           $addFields: {
             role: {
               $cond: {
-                if: { $in: [new Types.ObjectId(userId), "$admins.userId"] },
+                if: { $in: ["admin", "$users.role"] },
                 then: "admin",
                 else: {
                   $cond: {
-                    if: { $in: [new Types.ObjectId(userId), "$users.userId"] },
+                    if: { $in: ["user", "$users.role"] },
                     then: "user",
                     else: null,
                   },

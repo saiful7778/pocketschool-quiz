@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
-import { classroomModel } from "../../../models/classroomModel";
+import { classroomModel } from "../../../models/classroom.model";
 import { Types } from "mongoose";
 
 export default function classroomUpdateController(
@@ -22,8 +22,9 @@ export default function classroomUpdateController(
     const classroom = await classroomModel.updateOne(
       {
         _id: new Types.ObjectId(classroomId),
-        "admins.userId": userId,
-        "admins.access": true,
+        "users.user": userId,
+        "users.role": "admin",
+        "users.access": true,
       },
       { title }
     );

@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
-import { classroomModel } from "../../../models/classroomModel";
+import { classroomModel } from "../../../models/classroom.model";
 
 export default function classroomUsersController(
   req: Request,
@@ -14,17 +14,18 @@ export default function classroomUsersController(
   serverHelper(async () => {
     // find classroom data from classroom mongoose model and schema
     const classroom = await classroomModel
-      .findOne({
-        _id: classroomId,
-        "admins.userId": userId,
-        "admins.access": true,
-      })
+      .findOne(
+        {
+          _id: classroomId,
+          "users.user": userId,
+          "users.role": "admin",
+          "users.access": true,
+        },
+        { users: 1 }
+      )
       .populate({
-        path: "admins.userId",
-        select: ["fullName", "email", "image"],
-      })
-      .populate({
-        path: "users.userId",
+        path: "users.user",
+        model: "user",
         select: ["fullName", "email", "image"],
       });
 

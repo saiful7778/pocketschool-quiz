@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
-import { userModel } from "../../../models/userModel";
+import { userModel } from "../../../models/user.model";
 
 export default function userGetAllController(
   _req: Request,

@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
-import { classroomModel } from "../../../models/classroomModel";
+import { classroomModel } from "../../../models/classroom.model";
 
 export default function classroomCreateController(
   req: Request,
@@ -20,7 +20,7 @@ export default function classroomCreateController(
     // create a new classroom using classroom mongoose model
     await classroomModel.create({
       title,
-      admins: [{ userId: admin, access: true }],
+      users: { user: admin, role: "admin", access: true },
     });
 
     // send response data

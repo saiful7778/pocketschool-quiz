@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
-import { classroomModel } from "../../../models/classroomModel";
+import { classroomModel } from "../../../models/classroom.model";
 
 export default function userJoinedClassroomsController(
   req: Request,
@@ -12,10 +12,8 @@ export default function userJoinedClassroomsController(
   serverHelper(async () => {
     const classrooms = await classroomModel.find(
       {
-        $or: [
-          { "admins.userId": userId, "admins.access": true },
-          { "users.userId": userId, "users.access": true },
-        ],
+        "users.user": userId,
+        "users.access": true,
       },
       { title: 1 }
     );

@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import inputCheck from "../../../utils/inputCheck";
 import serverHelper from "../../../utils/serverHelper";
-import { classroomModel } from "../../../models/classroomModel";
+import { classroomModel } from "../../../models/classroom.model";
 import { Types } from "mongoose";
 import createHttpError from "http-errors";
 
@@ -30,62 +30,23 @@ export default function classroomUserUpdateController(
     const classroom = await classroomModel.updateOne(
       {
         _id: new Types.ObjectId(classroomId),
-        "admins.userId": userId,
-        "admins.access": true,
+        "users.user": userId,
+        "users.role": "admin",
+        "users.access": true,
       },
       {
         $set: {
           "users.$[user].access": access,
-          "admins.$[admin].access": access,
+          "users.$[user].role": role,
         },
       },
       {
-        arrayFilters: [
-          { "user.userId": classroomUserId },
-          { "admin.userId": classroomUserId },
-        ],
+        arrayFilters: [{ "user.user": classroomUserId }],
       }
     );
 
     if (!classroom) {
       return next(createHttpError(404, "classroom not found"));
-    }
-
-    if (typeof role !== "undefined") {
-      if (role === "user") {
-        await classroomModel.updateOne(
-          {
-            _id: new Types.ObjectId(classroomId),
-            "admins.userId": userId,
-            "admins.access": true,
-          },
-          {
-            $pull: {
-              admins: { userId: classroomUserId },
-            },
-            $push: {
-              users: { userId: classroomUserId, access },
-            },
-          }
-        );
-      } else if (role === "admin") {
-        await classroomModel.updateOne(
-          {
-            _id: classroomId,
-            // check if requested user admin and her access true in this classroom
-            "admins.userId": userId,
-            "admins.access": true,
-          },
-          {
-            $pull: {
-              users: { userId: classroomUserId },
-            },
-            $push: {
-              admins: { userId: classroomUserId, access },
-            },
-          }
-        );
-      }
     }
 
     // send response
