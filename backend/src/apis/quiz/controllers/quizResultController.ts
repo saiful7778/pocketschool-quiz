@@ -62,7 +62,6 @@ export default function quizResultController(
     let totalMarks = 0;
     let totalAnswers = 0;
 
-    // TODO: add null answer
     const questionAnswers = await Promise.all(
       answers.map(async (answer) => {
         const questionType = answer.questionType;

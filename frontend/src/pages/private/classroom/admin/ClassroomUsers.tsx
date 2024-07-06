@@ -1,7 +1,6 @@
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import ClassroomUserTable from "@/components/tables/classroom/user/ClassroomUserTable";
-import Tabs from "@/components/ui/tabs";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { ApiResponse } from "@/types/apiResponse";
 import { Classroom } from "@/types/classroom";
@@ -47,28 +46,11 @@ const ClassroomUsers: FC = () => {
   }
 
   return (
-    <Tabs defaultValue="users">
-      <Tabs.list>
-        <Tabs.trigger value="users">Users</Tabs.trigger>
-        <Tabs.trigger value="admins">Admins</Tabs.trigger>
-      </Tabs.list>
-      <Tabs.content value="users">
-        <ClassroomUserTable
-          classroomId={classroom?._id!}
-          data={classroom?.users!}
-          reFetch={refetch}
-          role="user"
-        />
-      </Tabs.content>
-      <Tabs.content value="admins">
-        <ClassroomUserTable
-          classroomId={classroom?._id!}
-          data={classroom?.admins!}
-          reFetch={refetch}
-          role="admin"
-        />
-      </Tabs.content>
-    </Tabs>
+    <ClassroomUserTable
+      classroomId={classroom?._id!}
+      data={classroom?.users!}
+      reFetch={refetch}
+    />
   );
 };
 

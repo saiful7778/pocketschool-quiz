@@ -60,18 +60,16 @@ const Quiz: FC = () => {
   }
 
   return (
-    <>
-      <QuizContextProvider
-        reFetchQuizData={refetch}
-        allQuestions={quiz?.data?.questions!}
-      >
-        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 overflow-hidden py-16">
-          <StartQuiz startTime={quiz?.data?.startTime!}>
-            <QuestionAnswerRender />
-          </StartQuiz>
-        </div>
-      </QuizContextProvider>
-    </>
+    <QuizContextProvider
+      reFetchQuizData={refetch}
+      allQuestions={quiz?.data?.questions!}
+    >
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 overflow-hidden py-16">
+        <StartQuiz startTime={quiz?.data?.startTime!}>
+          <QuestionAnswerRender />
+        </StartQuiz>
+      </div>
+    </QuizContextProvider>
   );
 };
 

@@ -14,7 +14,6 @@ import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { updateClassroomUserSchema } from "@/lib/schemas/userSchema";
 import toast from "@/lib/toast/toast";
-import type { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC } from "react";
@@ -26,7 +25,7 @@ interface UpdateUserProps {
   classroomId: string;
   currentUserEmail: string;
   role: "user" | "admin";
-  access: User["access"];
+  access: boolean;
 }
 
 const UpdateClassroomUser: FC<UpdateUserProps> = ({
@@ -50,13 +49,9 @@ const UpdateClassroomUser: FC<UpdateUserProps> = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: z.infer<typeof updateClassroomUserSchema>) => {
-      const userUpdatedData: typeof data = { access: data.access };
-      if (role !== data.role) {
-        userUpdatedData.role = data.role;
-      }
       return axiosSecure.patch(
         `/api/classrooms/${classroomId}/users/${userId}`,
-        userUpdatedData,
+        data,
       );
     },
     onSuccess: (data) => {

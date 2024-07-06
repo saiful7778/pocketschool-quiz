@@ -1,8 +1,7 @@
 import type { QuizzesRes } from "@/types/quiz";
 import type { UseNavigateResult } from "@tanstack/react-router";
 import { FC, useMemo } from "react";
-import { NewQuizItem, QuizCreateItem, QuizItem } from "./QuizItem";
-import useStateData from "@/hooks/useStateData";
+import { NewQuizItem, QuizItem } from "./QuizItem";
 
 interface QuizItemRenderProps {
   quizzesdata: QuizzesRes[];
@@ -15,8 +14,6 @@ const QuizItemRender: FC<QuizItemRenderProps> = ({
   classroomId,
   navigate,
 }) => {
-  const { classroomRole } = useStateData();
-
   const [newQuizzes, prevQuizzes] = useMemo(() => {
     const newQuizzesData: QuizzesRes[] = [];
     const prevQuizzesData: QuizzesRes[] = [];
@@ -34,37 +31,42 @@ const QuizItemRender: FC<QuizItemRenderProps> = ({
 
   return (
     <>
-      <h3 className="border-b pb-4 text-xl font-semibold">New quizzes</h3>
-      <div className="flex flex-wrap gap-4">
-        {newQuizzes.map((quiz, idx) => (
-          <NewQuizItem
-            key={`new-quiz-${idx}`}
-            _id={quiz._id}
-            classroomId={classroomId}
-            navigate={navigate}
-            questionsCount={quiz.questionsCount}
-            title={quiz.title}
-            newQuiz={quiz.newQuiz}
-          />
-        ))}
-        {classroomRole === "admin" && (
-          <QuizCreateItem classroomId={classroomId} />
-        )}
-      </div>
-      <h3 className="border-b pb-4 text-xl font-semibold">All quizzes</h3>
-      <div className="flex flex-wrap gap-4">
-        {prevQuizzes.map((quiz, idx) => (
-          <QuizItem
-            key={`new-quiz-${idx}`}
-            _id={quiz._id}
-            classroomId={classroomId}
-            navigate={navigate}
-            questionsCount={quiz.questionsCount}
-            title={quiz.title}
-            newQuiz={quiz.newQuiz}
-          />
-        ))}
-      </div>
+      {newQuizzes.length > 0 && (
+        <>
+          <h3 className="border-b pb-4 text-xl font-semibold">New quizzes</h3>
+          <div className="flex flex-wrap gap-4">
+            {newQuizzes.map((quiz, idx) => (
+              <NewQuizItem
+                key={`new-quiz-${idx}`}
+                _id={quiz._id}
+                classroomId={classroomId}
+                navigate={navigate}
+                questionsCount={quiz.questionsCount}
+                title={quiz.title}
+                newQuiz={quiz.newQuiz}
+              />
+            ))}
+          </div>
+        </>
+      )}
+      {prevQuizzes.length > 0 && (
+        <>
+          <h3 className="border-b pb-4 text-xl font-semibold">All quizzes</h3>
+          <div className="flex flex-wrap gap-4">
+            {prevQuizzes.map((quiz, idx) => (
+              <QuizItem
+                key={`new-quiz-${idx}`}
+                _id={quiz._id}
+                classroomId={classroomId}
+                navigate={navigate}
+                questionsCount={quiz.questionsCount}
+                title={quiz.title}
+                newQuiz={quiz.newQuiz}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 };

@@ -85,7 +85,6 @@ const quizAnswerSchema = new Schema<QuizAnswer>(
   {
     timestamps: {
       createdAt: true,
-      // TODO: answer cannot updateble
       updatedAt: false,
     },
   }

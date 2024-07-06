@@ -83,6 +83,14 @@ const Classroom: FC = () => {
             <DropdownMenu.content align="end" forceMount>
               <DropdownMenu.item asChild>
                 <Link
+                  to="/classroom/$classroomId/create_quiz"
+                  params={{ classroomId: classroomId }}
+                >
+                  Create quiz
+                </Link>
+              </DropdownMenu.item>
+              <DropdownMenu.item asChild>
+                <Link
                   to="/classroom/$classroomId/quizzes"
                   params={{ classroomId: classroomId }}
                 >

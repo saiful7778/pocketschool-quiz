@@ -5,7 +5,7 @@ import { FC } from "react";
 import UpdateClassroomUser from "./UpdateClassroomUser";
 
 interface ClassroomUserRowActionProps {
-  id: string;
+  userId: string;
   email: string;
   classroomId: string;
   access: boolean;
@@ -13,7 +13,7 @@ interface ClassroomUserRowActionProps {
 }
 
 const ClassroomUserRowAction: FC<ClassroomUserRowActionProps> = ({
-  id,
+  userId,
   email,
   role,
   access,
@@ -33,7 +33,7 @@ const ClassroomUserRowAction: FC<ClassroomUserRowActionProps> = ({
         </Dialog.header>
         <UpdateClassroomUser
           classroomId={classroomId}
-          userId={id}
+          userId={userId}
           currentUserEmail={email}
           access={access}
           role={role}

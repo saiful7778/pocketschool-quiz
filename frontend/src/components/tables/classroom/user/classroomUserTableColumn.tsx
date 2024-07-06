@@ -3,10 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import type { user } from "@/types/classroom";
 import ClassroomUserRowAction from "./ClassroomUserRowAction";
 
-export default function getColumns(
-  classroomId: string,
-  role: "admin" | "user",
-) {
+export default function getColumns(classroomId: string) {
   const columns: ColumnDef<user>[] = [
     {
       id: "count",
@@ -24,27 +21,32 @@ export default function getColumns(
             <Avatar className="size-8">
               <Avatar.image
                 asChild
-                src={user.userId?.image!}
-                alt={`${user.userId?.fullName} image`}
+                src={user.user?.image!}
+                alt={`${user.user?.fullName} image`}
               >
                 <img
-                  src={user.userId?.image!}
-                  alt={`${user.userId?.fullName} image`}
+                  src={user.user?.image!}
+                  alt={`${user.user?.fullName} image`}
                 />
               </Avatar.image>
               <Avatar.fallback className="font-semibold">
-                {user.userId?.fullName[0] + user.userId?.fullName[1]}
+                {user.user?.fullName[0] + user.user?.fullName[1]}
               </Avatar.fallback>
             </Avatar>
             <div>
               <div className="font-semibold leading-tight">
-                {user.userId?.fullName}
+                {user.user?.fullName}
               </div>
-              <div className="text-xs text-gray-400">{user.userId?.email}</div>
+              <div className="text-xs text-gray-400">{user.user?.email}</div>
             </div>
           </div>
         );
       },
+    },
+    {
+      id: "role",
+      accessorKey: "role",
+      header: "Role",
     },
     {
       id: "access",
@@ -67,9 +69,9 @@ export default function getColumns(
         return (
           <ClassroomUserRowAction
             classroomId={classroomId}
-            id={user.userId._id}
-            role={role}
-            email={user.userId.email}
+            userId={user.user._id}
+            role={user.role}
+            email={user.user.email}
             access={user.access}
           />
         );
