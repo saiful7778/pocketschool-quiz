@@ -1,19 +1,21 @@
-import { FC, ReactNode } from "react";
-import Button from "../ui/button";
+import { FC } from "react";
+import Button from "./ui/button";
 import { MessageCircleCode } from "lucide-react";
 import quizImageTemplate from "@/assets/images/quiz-template.jpg";
-import type { QuizzesRes } from "@/types/quiz";
+import type { NewQuizzesRes } from "@/types/quiz";
 import { type UseNavigateResult } from "@tanstack/react-router";
 
-interface QuizMainItemProp extends QuizzesRes {
-  children: ReactNode;
+interface QuizItemProp extends NewQuizzesRes {
+  classroomId: string;
+  navigate: UseNavigateResult<"/classroom/$classroomId/">;
 }
 
-const QuizMainItem: FC<QuizMainItemProp> = ({
+const QuizItem: FC<QuizItemProp> = ({
   title,
-  newQuiz,
-  questionsCount,
-  children,
+  totalQuestions,
+  navigate,
+  classroomId,
+  _id,
 }) => {
   const titleLimit = 20;
   const imageText = {
@@ -38,16 +40,14 @@ const QuizMainItem: FC<QuizMainItemProp> = ({
               {imageText.text}
             </span>
           </div>
-          {newQuiz && (
-            <span className="absolute right-2 top-2 select-none rounded-full bg-primary px-2 py-1 text-xs font-semibold text-primary-foreground shadow-md">
-              New
-            </span>
-          )}
+          <span className="absolute right-2 top-2 select-none rounded-full bg-primary px-2 py-1 text-xs font-semibold text-primary-foreground shadow-md">
+            New
+          </span>
         </div>
         <h4 className="my-2 text-lg font-semibold leading-none">{title}</h4>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <div>Total questions:</div>
-          <div className="ml-auto">{questionsCount}</div>
+          <div className="ml-auto">{totalQuestions}</div>
           <div>
             <MessageCircleCode
               className="stroke-muted-foreground"
@@ -57,67 +57,6 @@ const QuizMainItem: FC<QuizMainItemProp> = ({
           </div>
         </div>
       </div>
-      <div className="flex gap-2">{children}</div>
-    </div>
-  );
-};
-
-interface QuizItemProp extends QuizzesRes {
-  classroomId: string;
-  navigate: UseNavigateResult<"/classroom/$classroomId/">;
-}
-
-export const QuizItem: FC<QuizItemProp> = ({
-  title,
-  _id,
-  newQuiz,
-  questionsCount,
-  navigate,
-  classroomId,
-}) => {
-  return (
-    <QuizMainItem
-      title={title}
-      _id={_id}
-      newQuiz={newQuiz}
-      questionsCount={questionsCount}
-    >
-      <Button
-        className="w-full"
-        variant="outline"
-        onClick={() =>
-          navigate({
-            to: "/classroom/$classroomId/quiz/$quizId",
-            params: { classroomId, quizId: _id },
-          })
-        }
-      >
-        Show result
-      </Button>
-    </QuizMainItem>
-  );
-};
-
-interface NewQuizItemProp extends QuizzesRes {
-  classroomId: string;
-  navigate: UseNavigateResult<"/classroom/$classroomId/">;
-}
-
-export const NewQuizItem: FC<NewQuizItemProp> = ({
-  title,
-  _id,
-  newQuiz,
-  questionsCount,
-  classroomId,
-  navigate,
-}) => {
-  return (
-    <QuizMainItem
-      title={title}
-      _id={_id}
-      newQuiz={newQuiz}
-      questionsCount={questionsCount}
-    >
       <Button
         className="w-full"
         onClick={() =>
@@ -129,6 +68,7 @@ export const NewQuizItem: FC<NewQuizItemProp> = ({
       >
         Participate
       </Button>
-    </QuizMainItem>
+    </div>
   );
 };
+export default QuizItem;

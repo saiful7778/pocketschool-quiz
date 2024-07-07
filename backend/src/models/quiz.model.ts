@@ -37,6 +37,14 @@ const quizSchema = new Schema<Quiz>(
       ],
       required: [true, "Question is required"],
     },
+    totalQuestions: {
+      type: Number,
+      required: [true, "total question is required"],
+    },
+    totalMarks: {
+      type: Number,
+      required: [true, "total mark is required"],
+    },
     participants: {
       type: [participantSchema],
     },

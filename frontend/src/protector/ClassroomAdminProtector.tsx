@@ -1,6 +1,6 @@
 import Loading from "@/components/Loading";
 import useStateData from "@/hooks/useStateData";
-import type { LayoutProps } from "@/types/layout";
+import type { LayoutProps } from "@/types/types";
 import { Navigate } from "@tanstack/react-router";
 import { FC } from "react";
 

@@ -1,11 +1,23 @@
 import type { quizSchema } from "@/lib/schemas/quizSchema";
 import { z } from "zod";
 
-export interface QuizzesRes {
+export interface NewQuizzesRes {
   _id: string;
   title: string;
-  questionsCount: number;
-  newQuiz: boolean;
+  totalQuestions: number;
+}
+
+export interface AnswerQuizzesRes {
+  _id: string;
+  quiz: {
+    _id: string;
+    title: string;
+    totalMarks: number;
+    totalQuestions: number;
+  };
+  totalMarks: number;
+  totalAnswers: number;
+  createdAt: Date;
 }
 
 export interface Quizzes {

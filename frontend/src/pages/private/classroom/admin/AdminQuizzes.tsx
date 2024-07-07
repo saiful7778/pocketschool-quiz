@@ -19,6 +19,7 @@ const AdminQuizzes: FC = () => {
   const {
     data: quizzes,
     isLoading,
+    isFetching,
     isError,
     error,
     refetch,
@@ -36,7 +37,7 @@ const AdminQuizzes: FC = () => {
     },
   });
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <Loading />;
   }
 

@@ -1,4 +1,4 @@
-import type { LayoutProps } from "@/types/layout";
+import type { LayoutProps } from "@/types/types";
 import { FC, createContext } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
 

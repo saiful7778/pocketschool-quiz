@@ -1,4 +1,4 @@
-import { type InputProps } from "@/types/inputProps";
+import { type InputProps } from "@/types/types";
 import { forwardRef } from "react";
 import {
   FormControl,

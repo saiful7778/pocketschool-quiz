@@ -2,7 +2,7 @@ import { useAxios } from "@/hooks/useAxios";
 import { auth } from "@/lib/firebase";
 import toast from "@/lib/toast/toast";
 import type { ApiResponse } from "@/types/apiResponse";
-import type { LayoutProps } from "@/types/layout";
+import type { LayoutProps } from "@/types/types";
 import { AxiosError } from "axios";
 import {
   type User,

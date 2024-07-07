@@ -98,13 +98,6 @@ const classroomAdminLayoutRoute = createRoute({
   component: ClassroomAdminLayout,
 });
 
-const classroomUsersRoute = createRoute({
-  getParentRoute: () => classroomAdminLayoutRoute,
-  path: "/users",
-  component: lazyRouteComponent(
-    () => import("@/pages/private/classroom/admin/ClassroomUsers"),
-  ),
-});
 const classroomDetailsRoute = createRoute({
   getParentRoute: () => classroomAdminLayoutRoute,
   path: "/details",
@@ -170,7 +163,6 @@ const routeTree = rootLayoutRoute.addChildren([
           classroomAdminCreateQuizRoute,
           classroomAdminQuizUpdateRoute,
           classroomDetailsRoute,
-          classroomUsersRoute,
         ]),
       ]),
     ]),

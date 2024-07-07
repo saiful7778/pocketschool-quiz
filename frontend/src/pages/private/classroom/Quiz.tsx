@@ -10,6 +10,7 @@ import ErrorPage from "@/components/shared/Error";
 import StartQuiz from "@/components/quiz-helpers/StartQuiz";
 import QuizContextProvider from "@/context/QuizContext";
 import QuestionAnswerRender from "@/components/quiz-helpers/QuestionAnswerRender";
+import QuizResult from "./section/QuizResult";
 
 const routeData = getRouteApi("/private/classroom/$classroomId/quiz/$quizId");
 
@@ -49,14 +50,7 @@ const Quiz: FC = () => {
   }
 
   if (quiz?.participated) {
-    return (
-      <div>
-        <div>Your result</div>
-        <pre>
-          <code>{JSON.stringify(quiz, null, 2)}</code>
-        </pre>
-      </div>
-    );
+    return <QuizResult resultData={quiz.data} />;
   }
 
   return (

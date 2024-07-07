@@ -1,4 +1,4 @@
-import type { LayoutProps } from "@/types/layout";
+import type { LayoutProps } from "@/types/types";
 import type { Answer, Question } from "@/types/question";
 import { FC, createContext, useCallback, useState } from "react";
 

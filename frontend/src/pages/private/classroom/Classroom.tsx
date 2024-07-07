@@ -99,14 +99,6 @@ const Classroom: FC = () => {
               </DropdownMenu.item>
               <DropdownMenu.item asChild>
                 <Link
-                  to="/classroom/$classroomId/users"
-                  params={{ classroomId: classroomId }}
-                >
-                  Users
-                </Link>
-              </DropdownMenu.item>
-              <DropdownMenu.item asChild>
-                <Link
                   to="/classroom/$classroomId/details"
                   params={{ classroomId: classroomId }}
                 >

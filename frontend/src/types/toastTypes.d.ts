@@ -1,5 +1,5 @@
-import { ComponentPropsWithoutRef, ReactElement, ReactNode } from "react";
-import Toast from "@/components/ui/toast";
+import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from "react";
+import type Toast from "@/components/ui/toast";
 
 export type ToasterToast = ToastProps & {
   id: string;

@@ -10,6 +10,8 @@ export interface Quiz {
     user: Types.ObjectId | string;
     answer: Types.ObjectId | string;
   }[];
+  totalQuestions: number;
+  totalMarks: number;
   startTime: Date;
   createdAt: Date;
   updatedAt: Date;

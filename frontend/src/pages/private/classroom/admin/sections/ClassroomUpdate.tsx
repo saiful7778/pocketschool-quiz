@@ -1,26 +1,31 @@
+import ClassroomUpdateForm from "@/components/forms/classroom/ClassroomUpdateForm";
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
-import UserTable from "@/components/tables/user/UserTable";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import type { ApiResponse } from "@/types/apiResponse";
-import type { User } from "@/types/user";
+import type { Classroom } from "@/types/classroom";
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
 
-const Users: FC = () => {
+interface ClassroomUpdateProps {
+  classroomId: string;
+}
+
+const ClassroomUpdate: FC<ClassroomUpdateProps> = ({ classroomId }) => {
   const axiosSecure = useAxiosSecure();
 
   const {
-    data: users,
+    data: classroom,
     isLoading,
-    isFetching,
     isError,
     error,
     refetch,
   } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["classroom", { classroomId }],
     queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<User[]>>("/api/users");
+      const { data } = await axiosSecure.get<ApiResponse<Classroom>>(
+        `/api/classrooms/${classroomId}`,
+      );
       if (!data.success) {
         throw new Error(data.message);
       }
@@ -28,22 +33,16 @@ const Users: FC = () => {
     },
   });
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
     return <ErrorPage error={error} reset={refetch} />;
   }
-
   return (
-    <div>
-      <h1 className="text-xl font-semibold">
-        Total user: <span>{users?.length}</span>
-      </h1>
-      <UserTable data={users!} reFetch={refetch} />
-    </div>
+    <ClassroomUpdateForm title={classroom?.title!} classroomId={classroomId} />
   );
 };
 
-export default Users;
+export default ClassroomUpdate;

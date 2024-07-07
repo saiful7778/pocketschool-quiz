@@ -5,20 +5,19 @@ import { useAxiosSecure } from "@/hooks/useAxios";
 import { ApiResponse } from "@/types/apiResponse";
 import { Classroom } from "@/types/classroom";
 import { useQuery } from "@tanstack/react-query";
-import { getRouteApi } from "@tanstack/react-router";
 import { FC } from "react";
 
-const routeData = getRouteApi(
-  "/private/classroom/$classroomId/classroomAdmin/users",
-);
+interface ClassroomUsersProps {
+  classroomId: string;
+}
 
-const ClassroomUsers: FC = () => {
-  const { classroomId } = routeData.useParams();
+const ClassroomUsers: FC<ClassroomUsersProps> = ({ classroomId }) => {
   const axiosSecure = useAxiosSecure();
 
   const {
     data: classroom,
     isLoading,
+    isFetching,
     isError,
     error,
     refetch,
@@ -37,7 +36,7 @@ const ClassroomUsers: FC = () => {
     },
   });
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <Loading />;
   }
 

@@ -74,11 +74,23 @@ export default function quizCreateController(
       })
     );
 
+    const questionIds = [];
+    let totalMarks = 0;
+    let totalQuestions = 0;
+
+    for (const question of quizQuestions) {
+      questionIds.push(question._id);
+      totalMarks += question.mark;
+      totalQuestions++;
+    }
+
     await quizModel.create({
       title,
       author: userId,
       classroom: classroomId,
-      questions: quizQuestions.map((question) => question._id),
+      questions: questionIds,
+      totalMarks: totalMarks,
+      totalQuestions: totalQuestions,
       startTime,
     });
 

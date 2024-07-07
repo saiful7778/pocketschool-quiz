@@ -249,13 +249,26 @@ export default function quizResultController(
       })
     );
 
+    const answerIds = [];
+    const successAnswers = [];
+    const failedAnswers = [];
+
+    for (const answer of questionAnswers) {
+      answerIds.push(answer._id);
+      if (answer.isCorrect) {
+        successAnswers.push(answer);
+      } else {
+        failedAnswers.push(answer);
+      }
+    }
+
     const quizAnswer = await quizAnswerModel.create({
       quiz: quizId,
       participant: userId,
       classroom: classroomId,
       totalMarks,
       totalAnswers,
-      answers: questionAnswers.map((answer) => answer._id),
+      answers: answerIds,
     });
 
     await quizModel.updateOne(
@@ -268,10 +281,6 @@ export default function quizResultController(
         },
       }
     );
-
-    const successAnswers = questionAnswers.filter((answer) => answer.isCorrect);
-
-    const failedAnswers = questionAnswers.filter((answer) => !answer.isCorrect);
 
     res.status(201).json({
       success: true,

@@ -1,6 +1,6 @@
 import useAuth from "@/hooks/useAuth";
 import { defaultLoginPage } from "@/lib/staticData";
-import type { LayoutProps } from "@/types/layout";
+import type { LayoutProps } from "@/types/types";
 import { Navigate } from "@tanstack/react-router";
 import { FC } from "react";
 

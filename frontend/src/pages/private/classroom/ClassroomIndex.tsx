@@ -5,8 +5,10 @@ import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import { getRouteApi } from "@tanstack/react-router";
 import { FC } from "react";
-import type { QuizzesRes } from "@/types/quiz";
-import QuizItemRender from "@/components/quiz/QuizItemRender";
+import type { AnswerQuizzesRes, NewQuizzesRes } from "@/types/quiz";
+// import QuizItemRender from "@/components/quiz/QuizItemRender";
+import QuizItem from "@/components/QuizItem";
+import UserQuizAnswerTable from "@/components/tables/classroom/user-quiz/UserQuizAnswerTable";
 
 const routeData = getRouteApi("/private/classroom/$classroomId/");
 
@@ -18,16 +20,19 @@ const ClassroomIndex: FC = () => {
   const {
     data: quizzes,
     isLoading,
+    isFetching,
     isError,
     error,
     refetch,
   } = useQuery({
     queryKey: ["quizzes", { classroomId }],
     queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<QuizzesRes[]>>(
-        `/api/quizzes/user`,
-        { params: { classroomId } },
-      );
+      const { data } = await axiosSecure.get<
+        ApiResponse<{
+          newQuizzes: NewQuizzesRes[];
+          answerQuizzes: AnswerQuizzesRes[];
+        }>
+      >(`/api/quizzes/user`, { params: { classroomId } });
       if (!data.success) {
         throw new Error(data.message);
       }
@@ -35,7 +40,7 @@ const ClassroomIndex: FC = () => {
     },
   });
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <Loading />;
   }
 
@@ -44,11 +49,31 @@ const ClassroomIndex: FC = () => {
   }
 
   return (
-    <QuizItemRender
-      classroomId={classroomId}
-      navigate={navigate}
-      quizzesdata={quizzes!}
-    />
+    <>
+      {quizzes?.newQuizzes?.length! > 0 && (
+        <>
+          <h3 className="border-b pb-4 font-semibold">New quizzes</h3>
+          <div className="flex flex-wrap gap-4">
+            {quizzes?.newQuizzes.map((newQuiz, idx) => (
+              <QuizItem
+                key={`new-quiz-${idx}`}
+                _id={newQuiz._id}
+                classroomId={classroomId}
+                navigate={navigate}
+                totalQuestions={newQuiz.totalQuestions}
+                title={newQuiz.title}
+              />
+            ))}
+          </div>
+        </>
+      )}
+      <h3 className="border-b pb-4 font-semibold">Quizzes result</h3>
+      <UserQuizAnswerTable
+        data={quizzes?.answerQuizzes!}
+        classroomId={classroomId}
+        reFetch={refetch}
+      />
+    </>
   );
 };
 
