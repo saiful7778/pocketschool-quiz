@@ -39,11 +39,6 @@ export default function quizGetAllController(
       },
       {
         $addFields: {
-          questionsCount: { $size: "$questions" },
-        },
-      },
-      {
-        $addFields: {
           participantCount: { $size: "$participants" },
         },
       },

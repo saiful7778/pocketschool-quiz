@@ -1,21 +1,18 @@
-import type { SubmitResult } from "@/types/question";
+import QuestionItemRender from "@/components/quiz-question-helpers/question-item/QuestionItemRender";
+import type { Result } from "@/types/question";
 import { FC } from "react";
 
 interface QuizResultProps {
-  resultData: SubmitResult;
+  resultData: Result;
 }
 
 const QuizResult: FC<QuizResultProps> = ({ resultData }) => {
+  console.log(resultData);
   return (
-    <div>
+    <>
       <div>QuizResult</div>
-      <div>
-        <div>Your result</div>
-        <pre>
-          <code>{JSON.stringify(resultData, null, 2)}</code>
-        </pre>
-      </div>
-    </div>
+      <QuestionItemRender answers={resultData.answers} />
+    </>
   );
 };
 

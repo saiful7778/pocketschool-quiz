@@ -1,9 +1,9 @@
 import { FC } from "react";
 import useQuiz from "@/hooks/useQuiz";
-import QuestionAnswerBase from "./questionAnswer/QuestionAnswerBase";
-import MultipleOptionQuestionAnswer from "./questionAnswer/MultipleOptionQuestionAnswer";
-import MultipleAnswerQuestionAnswer from "./questionAnswer/MultipleAnswerQuestionAnswer";
-import TextAnswerQuestionAnswer from "./questionAnswer/TextAnswerQuestionAnswer";
+import QuestionAnswerBase from "../quiz-question-helpers/questionAnswer/QuestionAnswerBase";
+import MultipleOptionQuestionAnswer from "../quiz-question-helpers/questionAnswer/MultipleOptionQuestionAnswer";
+import MultipleAnswerQuestionAnswer from "../quiz-question-helpers/questionAnswer/MultipleAnswerQuestionAnswer";
+import TextAnswerQuestionAnswer from "../quiz-question-helpers/questionAnswer/TextAnswerQuestionAnswer";
 import type { Question } from "@/types/question";
 import { motion } from "framer-motion";
 import ComplateQuiz from "./ComplateQuiz";

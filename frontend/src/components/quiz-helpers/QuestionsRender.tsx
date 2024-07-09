@@ -2,11 +2,11 @@ import { FC } from "react";
 import InputQuestions from "./InputQuestions";
 import { useFieldArray } from "react-hook-form";
 import type { QuestionInput, questionType } from "@/types/question";
-import QuestionInputBase from "./questionInput/QuestionInputBase";
-import MultipleOption from "./questionInput/MultipleOption";
-import MultipleAnswer from "./questionInput/MultipleAnswer";
-import TextAnswer from "./questionInput/TextAnswer";
-import PinPointAnswer from "./questionInput/PinPointAnswer";
+import QuestionInputBase from "../quiz-question-helpers/questionInput/QuestionInputBase";
+import MultipleOption from "../quiz-question-helpers/questionInput/MultipleOption";
+import MultipleAnswer from "../quiz-question-helpers/questionInput/MultipleAnswer";
+import TextAnswer from "../quiz-question-helpers/questionInput/TextAnswer";
+import PinPointAnswer from "../quiz-question-helpers/questionInput/PinPointAnswer";
 
 const QuestionsRender: FC<QuestionInput> = ({ control, loading }) => {
   const { fields, append, remove } = useFieldArray({

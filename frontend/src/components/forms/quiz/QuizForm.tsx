@@ -1,9 +1,9 @@
 import { FC } from "react";
-import QuestionsRender from "./QuestionsRender";
-import Button from "../ui/button";
-import Spinner from "../Spinner";
-import { Form, FormField } from "../ui/form";
-import InputField from "../InputField";
+import QuestionsRender from "../../quiz-helpers/QuestionsRender";
+import Button from "../../ui/button";
+import Spinner from "../../Spinner";
+import { Form, FormField } from "../../ui/form";
+import InputField from "../../InputField";
 import { useForm } from "react-hook-form";
 import { quizSchema } from "@/lib/schemas/quizSchema";
 import { z } from "zod";

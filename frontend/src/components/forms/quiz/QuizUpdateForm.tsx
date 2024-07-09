@@ -1,4 +1,4 @@
-import QuizForm from "@/components/quiz-helpers/QuizForm";
+import QuizForm from "@/components/forms/quiz/QuizForm";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { quizSchema } from "@/lib/schemas/quizSchema";
 import toast from "@/lib/toast/toast";

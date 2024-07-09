@@ -19,10 +19,12 @@ export default function quizDeleteController(
       return;
     }
 
+    const deleteQuiz = await quizModel.deleteOne({ _id: quizId });
+
     await questionModel.deleteMany({ _id: { $in: quiz.questions } });
     await quizAnswerModel.deleteOne({ quiz: quiz._id });
     await answerModel.deleteMany({ quiz: quiz._id });
 
-    res.status(200).send({ success: true, data: quiz });
+    res.status(200).send({ success: true, data: deleteQuiz });
   }, next);
 }

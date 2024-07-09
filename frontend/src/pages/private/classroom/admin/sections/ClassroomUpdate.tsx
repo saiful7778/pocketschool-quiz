@@ -40,6 +40,7 @@ const ClassroomUpdate: FC<ClassroomUpdateProps> = ({ classroomId }) => {
   if (isError) {
     return <ErrorPage error={error} reset={refetch} />;
   }
+
   return (
     <ClassroomUpdateForm title={classroom?.title!} classroomId={classroomId} />
   );

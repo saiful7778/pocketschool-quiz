@@ -28,17 +28,67 @@ export interface Answer {
   answer: number | number[] | string | { x: number; y: number } | null;
 }
 
-interface SubmitAnswer {
-  question: string;
-  quiz: string;
-  participant: string;
-  isCorrect: boolean;
+interface QuestionBase {
+  _id: string;
   mark: number;
+  questionText: string;
+  questionType: questionType;
+  timeLimit: number;
 }
 
-export interface SubmitResult {
-  totalQuestions: number;
+type Option = {
+  text: string;
+};
+
+export interface MultipleOption extends QuestionBase {
+  correctAnswerIndex: number;
+  options: Option[];
+}
+
+export interface MultipleAnswer extends QuestionBase {
+  correctAnswerIndices: number[];
+  options: Option[];
+}
+
+export interface TextAnswer extends QuestionBase {
+  correctAnswer: string;
+}
+
+export type Question = MultipleOption | MultipleAnswer | TextAnswer;
+
+interface Answerbase {
+  _id: string;
+  mark: number;
+  isCorrect: boolean;
+  question: QuestionBase;
+  answerType:
+    | "multipleOptionAnswer"
+    | "multipleAnswerAnswer"
+    | "textAnswerAnswer"
+    | "pinPointAnswerAnswer";
+}
+
+export interface MultipleOptionAnswer extends Answerbase {
+  answerIndex: number;
+}
+
+export interface MultipleAnswerAnswer extends Answerbase {
+  answerIndices: number[];
+}
+
+export interface TextAnswerAnswer extends Answerbase {
+  answer: string;
+}
+
+export type Answers =
+  | MultipleOptionAnswer
+  | MultipleAnswerAnswer
+  | TextAnswerAnswer;
+
+export interface Result {
+  _id: string;
+  totalAnswers: number;
   totalMarks: number;
-  successAnswers: SubmitAnswer[];
-  failedAnswers: SubmitAnswer[];
+  quiz: string;
+  answers: Answers[];
 }

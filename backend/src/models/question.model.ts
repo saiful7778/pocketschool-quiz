@@ -15,9 +15,15 @@ import type {
 
 const questionBaseSchema = new Schema<QuestionBase>(
   {
-    questionText: {
+    title: {
       type: String,
-      required: [true, "Question text is required"],
+      required: [true, "Question title is required"],
+    },
+    index: {
+      type: Number,
+      min: [0, "index minimum 0"],
+      max: [50, "index maximum 50"],
+      required: [true, "Question index is required"],
     },
     timeLimit: {
       type: Number,
@@ -127,7 +133,11 @@ const answerBaseSchema = new Schema<AnswerBase>(
     participant: {
       type: Schema.Types.ObjectId,
       ref: "user",
-      required: [true, "user id is required"],
+      required: [true, "participant id is required"],
+    },
+    index: {
+      type: Number,
+      required: [true, "Answer index is required"],
     },
     isCorrect: {
       type: Boolean,

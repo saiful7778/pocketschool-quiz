@@ -8,10 +8,11 @@ export type QuestionType =
 
 export interface QuestionBase {
   _id: Types.ObjectId | string;
-  questionType?: QuestionType;
-  questionText: string;
+  title: string;
+  index: number;
   timeLimit: number;
   mark: number;
+  questionType: QuestionType;
   createdAt: Date;
   updatedAt: Date;
   __v?: number;
@@ -42,17 +43,22 @@ export interface PinPointAnswer extends QuestionBase {
   };
 }
 
+export type AnswerType =
+  | "multipleOptionAnswer"
+  | "multipleAnswerAnswer"
+  | "textAnswerAnswer"
+  | "pinPointAnswerAnswer";
+
 export interface AnswerBase {
   _id: Types.ObjectId | string;
   question: Types.ObjectId | string;
-  questionType?: QuestionType;
   quiz: Types.ObjectId | string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  answer?: number[] | number | string | { x: number; y: number } | null | any;
   participant: Types.ObjectId | string;
+  index: number;
   isCorrect: boolean;
   mark: number;
-  __v?: number;
+  answerType: AnswerType;
+  __v: number;
 }
 
 export interface MultipleOptionAnswer extends AnswerBase {
@@ -71,5 +77,5 @@ export interface PinPointAnswerAnswer extends AnswerBase {
   pinPointAnswer: {
     x: string | null;
     y: string | null;
-  };
+  } | null;
 }

@@ -67,6 +67,11 @@ export default function quizController(
           totalAnswers: { $first: "$totalAnswers" },
         },
       },
+      {
+        $addFields: {
+          answers: { $reverseArray: "$answers" },
+        },
+      },
     ]);
 
     if (quizResult && quizResult.length > 0) {
@@ -90,6 +95,7 @@ export default function quizController(
       .populate({
         path: "questions",
         select: [
+          "index",
           "questionText",
           "questionType",
           "timeLimit",

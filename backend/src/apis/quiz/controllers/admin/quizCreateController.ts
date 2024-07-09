@@ -42,10 +42,11 @@ export default function quizCreateController(
 
   const isQuestionsAvailable = questions.map((question) => {
     if (
-      !question?.questionType ||
-      !question?.questionText ||
+      (question.index < 0 && question.index > 50) ||
+      !question?.title ||
       !question?.timeLimit ||
-      !question?.mark
+      !question?.mark ||
+      !question?.questionType
     ) {
       return undefined;
     }

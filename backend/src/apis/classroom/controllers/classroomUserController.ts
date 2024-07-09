@@ -8,6 +8,7 @@ export default function classroomUserController(
   res: Response,
   next: NextFunction
 ) {
+  // TODO: make it functional
   const classroomId = req.params.classroomId;
   const classroomUserId = req.params.classroomUserId;
 
