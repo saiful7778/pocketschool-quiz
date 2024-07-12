@@ -7,18 +7,18 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  MdKeyboardDoubleArrowLeft,
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdKeyboardDoubleArrowRight,
-} from "react-icons/md";
 import Button from "../ui/button";
 import Table from "../ui/table";
 import Input from "../ui/input";
 import Select from "../ui/select";
 import { tableRowPerPage } from "@/lib/staticData";
 import Spinner from "../Spinner";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 
 interface MainTableProps<TData> {
   data: TData[];
@@ -139,7 +139,7 @@ const MainTable = <TData,>({
           disabled={!table.getCanPreviousPage()}
         >
           <span className="sr-only">Go to first page</span>
-          <MdKeyboardDoubleArrowLeft />
+          <ChevronsLeft size={20} strokeWidth={1} />
         </Button>
         <Button
           variant="outline"
@@ -148,7 +148,7 @@ const MainTable = <TData,>({
           disabled={!table.getCanPreviousPage()}
         >
           <span className="sr-only">Go to previous page</span>
-          <MdKeyboardArrowLeft />
+          <ChevronLeft size={20} strokeWidth={1} />
         </Button>
         <Button
           variant="outline"
@@ -157,7 +157,7 @@ const MainTable = <TData,>({
           disabled={!table.getCanNextPage()}
         >
           <span className="sr-only">Go to next page</span>
-          <MdKeyboardArrowRight />
+          <ChevronsRight size={20} strokeWidth={1} />
         </Button>
         <Button
           size="icon"
@@ -166,7 +166,7 @@ const MainTable = <TData,>({
           disabled={!table.getCanNextPage()}
         >
           <span className="sr-only">Go to last page</span>
-          <MdKeyboardDoubleArrowRight />
+          <ChevronRight size={20} strokeWidth={1} />
         </Button>
       </div>
     </>

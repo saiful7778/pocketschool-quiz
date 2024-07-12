@@ -2,7 +2,7 @@ import Skeleton from "./ui/skeleton";
 
 const TableSkeleton: React.FC = () => {
   return (
-    <div>
+    <div className="space-y-2">
       <div className="flex justify-between gap-4">
         <Skeleton className="mr-auto h-[36px] w-[295px]" />
         <Skeleton className="h-[36px] w-[42px]" />

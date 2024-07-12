@@ -1,4 +1,4 @@
-import { ImSpinner9 } from "react-icons/im";
+import { Loader } from "lucide-react";
 
 interface SpinnerProps {
   size?: number;
@@ -7,7 +7,7 @@ interface SpinnerProps {
 const Spinner: React.FC<SpinnerProps> = ({ size = 20 }) => {
   return (
     <span className="animate-spinner" role="status">
-      <ImSpinner9 size={size} />
+      <Loader size={size} />
     </span>
   );
 };
