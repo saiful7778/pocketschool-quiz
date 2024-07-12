@@ -66,7 +66,7 @@ const Register: React.FC = () => {
         displayName: e.fullName,
       });
 
-      await sendEmailVerification(user);
+      await sendEmailVerification(user, { url: window.location.origin });
       type userDataType = {
         fullName: string;
         email: string;
@@ -88,7 +88,7 @@ const Register: React.FC = () => {
         userData.classroomId = e?.classroomId;
       }
 
-      await axios.post("/user", userData);
+      await axios.post("/api/users", userData);
 
       toast({
         title: "Successfully account is created",

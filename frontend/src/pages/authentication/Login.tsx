@@ -56,7 +56,9 @@ const Login: React.FC = () => {
             <ToastAction
               onClick={async () => {
                 try {
-                  await sendEmailVerification(user);
+                  await sendEmailVerification(user, {
+                    url: window.location.origin,
+                  });
                 } catch (err) {
                   if (err instanceof Error) {
                     throw new Error(err.message);
