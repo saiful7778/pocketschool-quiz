@@ -1,5 +1,6 @@
 import Spinner from "@/components/Spinner";
 import Button from "@/components/ui/button";
+import Dialog from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -12,22 +13,29 @@ import Select from "@/components/ui/select";
 import Switch from "@/components/ui/switch";
 import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
+import { USER_KEY } from "@/lib/queryKeys";
 import { updateUserSchema } from "@/lib/schemas/userSchema";
 import toast from "@/lib/toast/toast";
+import type { ElementOpenProps } from "@/types";
 import type { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FC } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-interface UpdateUserProps {
+interface UpdateUserProps extends ElementOpenProps {
   id: string;
   role: User["role"];
   access: User["access"];
 }
 
-const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
+const UpdateUser: React.FC<UpdateUserProps> = ({
+  id,
+  role,
+  access,
+  open,
+  onOpenChange,
+}) => {
   const { token, user, userData } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
@@ -53,9 +61,10 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
     onSuccess: (data) => {
       if (data?.status === 200) {
         queryClient.invalidateQueries({
-          queryKey: ["users", userData?._id, user?.email, token],
+          queryKey: USER_KEY,
         });
         toast({
+          variant: "success",
           title: "User is updated",
         });
       }
@@ -73,67 +82,81 @@ const UpdateUser: FC<UpdateUserProps> = ({ id, role, access }) => {
     mutate({ access: e.access, role: e.role });
   };
 
-  return userData?._id === id ? (
-    <div className="text-center text-xl font-semibold text-destructive">
-      You can{`'`}t update your role or access
-    </div>
-  ) : (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="access"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
-                <FormLabel className="w-36">Access</FormLabel>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={isPending}
-                  />
-                </FormControl>
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog.content className="w-full sm:max-w-md">
+        <Dialog.header>
+          <Dialog.title>Edit user</Dialog.title>
+        </Dialog.header>
+        {userData?._id === id ? (
+          <div className="text-center text-xl font-semibold text-destructive">
+            You can{`'`}t update your role or access
+          </div>
+        ) : (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="access"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="w-36">Access</FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-2">
+                      <FormLabel className="w-36">Role</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={isPending}
+                      >
+                        <FormControl>
+                          <Select.trigger>
+                            <Select.value placeholder="Select user role" />
+                          </Select.trigger>
+                        </FormControl>
+                        <Select.content>
+                          <Select.item value="user">user</Select.item>
+                          <Select.item value="admin">admin</Select.item>
+                          <Select.item value="superAdmin">
+                            super admin
+                          </Select.item>
+                        </Select.content>
+                      </Select>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end">
+                <Button type="submit">
+                  {isPending ? <Spinner /> : "Update user"}
+                </Button>
               </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
-                <FormLabel className="w-36">Role</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={isPending}
-                >
-                  <FormControl>
-                    <Select.trigger>
-                      <Select.value placeholder="Select user role" />
-                    </Select.trigger>
-                  </FormControl>
-                  <Select.content>
-                    <Select.item value="user">user</Select.item>
-                    <Select.item value="admin">admin</Select.item>
-                    <Select.item value="superAdmin">super admin</Select.item>
-                  </Select.content>
-                </Select>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex justify-end">
-          <Button type="submit">
-            {isPending ? <Spinner /> : "Update user"}
-          </Button>
-        </div>
-      </form>
-    </Form>
+            </form>
+          </Form>
+        )}
+      </Dialog.content>
+    </Dialog>
   );
 };
 

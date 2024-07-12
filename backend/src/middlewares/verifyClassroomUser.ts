@@ -33,26 +33,18 @@ export default function verifyClassroomUser(userRole: ("user" | "admin")[]) {
             "users.access": true,
           },
         },
+        { $unwind: "$users" },
         {
-          $addFields: {
-            role: {
-              $cond: {
-                if: { $in: ["admin", "$users.role"] },
-                then: "admin",
-                else: {
-                  $cond: {
-                    if: { $in: ["user", "$users.role"] },
-                    then: "user",
-                    else: null,
-                  },
-                },
-              },
-            },
+          $match: {
+            "users.user": new Types.ObjectId(userId),
+            "users.access": true,
           },
         },
         {
           $project: {
-            role: 1,
+            users: {
+              role: 1,
+            },
           },
         },
       ]);
@@ -66,7 +58,7 @@ export default function verifyClassroomUser(userRole: ("user" | "admin")[]) {
         );
       }
 
-      if (!userRole.includes(isUserAvailable[0].role)) {
+      if (!userRole.includes(isUserAvailable[0].users.role)) {
         return next(
           createHttpError(403, "user haven't access of this classroom")
         );

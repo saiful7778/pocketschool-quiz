@@ -79,3 +79,20 @@ export interface PinPointAnswerAnswer extends AnswerBase {
     y: string | null;
   } | null;
 }
+
+export type multipleOptionType = number | null;
+export type multipleAnswerType = number[] | null;
+export type textAnswerType = string | null;
+export type pinPointAnswerType = { x: number; y: number } | null;
+
+export interface Answer {
+  _id: string;
+  index: number;
+  answerType: AnswerType;
+  answer:
+    | multipleOptionType
+    | multipleAnswerType
+    | textAnswerType
+    | pinPointAnswerType
+    | null;
+}

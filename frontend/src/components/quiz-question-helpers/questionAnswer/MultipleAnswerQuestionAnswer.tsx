@@ -1,35 +1,31 @@
 import Button from "@/components/ui/button";
 import useQuiz from "@/hooks/useQuiz";
 import { cn } from "@/lib/utils/shadcn";
-import type { questionType } from "@/types/question";
+import type { AnswerType, Option } from "@/types/question";
 import { CircleCheckBig } from "lucide-react";
 import { FC, useState } from "react";
 
 interface MultipleAnswerQuestionAnswerProps {
-  options: { _id: string; text: string }[];
+  options: Option[];
   questionId: string;
-  questionType: questionType;
+  answerType: AnswerType;
 }
 
 const MultipleAnswerQuestionAnswer: FC<MultipleAnswerQuestionAnswerProps> = ({
   options,
   questionId,
-  questionType,
+  answerType,
 }) => {
   const { handleSubmitAnswer, handleNextQuestion } = useQuiz();
   const [Loading, setLoading] = useState<boolean>(false);
-  const [selectedOptions, setSelectedOptions] = useState<{ idx: number }[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
   const [errorStatus, setErrorStatus] = useState<string>("");
 
   const handleSubmit = () => {
     if (selectedOptions.length > 0) {
       setLoading(true);
       setTimeout(() => {
-        handleSubmitAnswer(
-          questionId,
-          selectedOptions.map((ele) => ele.idx),
-          questionType,
-        );
+        handleSubmitAnswer(questionId, selectedOptions, answerType);
         handleNextQuestion();
       }, 500);
     } else {
@@ -47,9 +43,9 @@ const MultipleAnswerQuestionAnswer: FC<MultipleAnswerQuestionAnswerProps> = ({
             text={option.text}
             handleOptionSubmit={() =>
               setSelectedOptions((prevs) =>
-                prevs.find((prev) => prev.idx === idx)
-                  ? prevs.filter((prev) => prev.idx !== idx)
-                  : [...prevs, { idx }],
+                prevs.find((prev) => prev === idx)
+                  ? prevs.filter((prev) => prev !== idx)
+                  : [...prevs, idx],
               )
             }
           />

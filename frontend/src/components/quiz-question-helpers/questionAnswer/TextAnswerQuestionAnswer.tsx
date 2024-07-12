@@ -2,17 +2,17 @@ import Button from "@/components/ui/button";
 import Label from "@/components/ui/label";
 import Textarea from "@/components/ui/textarea";
 import useQuiz from "@/hooks/useQuiz";
-import type { questionType } from "@/types/question";
+import type { AnswerType } from "@/types/question";
 import { FC, useRef, useState } from "react";
 
 interface TextAnswerQuestionAnswerProps {
   questionId: string;
-  questionType: questionType;
+  answerType: AnswerType;
 }
 
 const TextAnswerQuestionAnswer: FC<TextAnswerQuestionAnswerProps> = ({
   questionId,
-  questionType,
+  answerType,
 }) => {
   const { handleSubmitAnswer, handleNextQuestion } = useQuiz();
   const [error, setError] = useState<string>("");
@@ -21,7 +21,7 @@ const TextAnswerQuestionAnswer: FC<TextAnswerQuestionAnswerProps> = ({
   const handleSubmit = () => {
     if (inputRef.current) {
       if (inputRef.current.textLength > 0) {
-        handleSubmitAnswer(questionId, inputRef.current.value, questionType);
+        handleSubmitAnswer(questionId, inputRef.current.value, answerType);
         handleNextQuestion();
       } else {
         setError("Type the answer");

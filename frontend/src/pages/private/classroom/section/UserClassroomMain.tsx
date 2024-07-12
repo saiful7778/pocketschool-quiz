@@ -1,20 +1,25 @@
-import { useAxiosSecure } from "@/hooks/useAxios";
-import { ApiResponse } from "@/types/apiResponse";
-import { useQuery } from "@tanstack/react-query";
 import Loading from "@/components/Loading";
-import ErrorPage from "@/components/shared/Error";
-import { getRouteApi } from "@tanstack/react-router";
-import { FC } from "react";
-import type { AnswerQuizzesRes, NewQuizzesRes } from "@/types/quiz";
-// import QuizItemRender from "@/components/quiz/QuizItemRender";
 import QuizItem from "@/components/QuizItem";
-import UserQuizAnswerTable from "@/components/tables/classroom/user-quiz/UserQuizAnswerTable";
+import ErrorPage from "@/components/shared/Error";
+import { useAxiosSecure } from "@/hooks/useAxios";
+import { useQuery } from "@tanstack/react-query";
+import type { ApiResponse } from "@/types/apiResponse";
+import type { AnswerQuizzesRes, NewQuizzesRes } from "@/types/quiz";
+import type { UseNavigateResult } from "@tanstack/react-router";
+import UndefinedData from "@/components/shared/UndefinedData";
+import UserQuizzesAnswerTable from "@/components/tables/user-quizzes/UserQuizzesAnswerTable";
 
-const routeData = getRouteApi("/private/classroom/$classroomId/");
+interface UserClassroomMainProps {
+  classroomId: string;
+  userId: string;
+  navigate: UseNavigateResult<"/classroom/$classroomId/">;
+}
 
-const ClassroomIndex: FC = () => {
-  const { classroomId } = routeData.useParams();
-  const navigate = routeData.useNavigate();
+const UserClassroomMain: React.FC<UserClassroomMainProps> = ({
+  classroomId,
+  userId,
+  navigate,
+}) => {
   const axiosSecure = useAxiosSecure();
 
   const {
@@ -25,7 +30,7 @@ const ClassroomIndex: FC = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["quizzes", { classroomId }],
+    queryKey: ["quizzes", { classroomId, userId }],
     queryFn: async () => {
       const { data } = await axiosSecure.get<
         ApiResponse<{
@@ -40,12 +45,16 @@ const ClassroomIndex: FC = () => {
     },
   });
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <Loading />;
   }
 
   if (isError) {
     return <ErrorPage error={error} reset={refetch} />;
+  }
+
+  if (!quizzes) {
+    return <UndefinedData />;
   }
 
   return (
@@ -68,13 +77,14 @@ const ClassroomIndex: FC = () => {
         </>
       )}
       <h3 className="border-b pb-4 font-semibold">Quizzes result</h3>
-      <UserQuizAnswerTable
+      <UserQuizzesAnswerTable
         data={quizzes?.answerQuizzes!}
         classroomId={classroomId}
         reFetch={refetch}
+        isFetching={isFetching}
       />
     </>
   );
 };
 
-export default ClassroomIndex;
+export default UserClassroomMain;

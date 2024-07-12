@@ -10,11 +10,11 @@ import {
   AuthenticationLayout,
   PrivateLayout,
   SuperAdminLayout,
-  ClassroomLayout,
-  Classroom,
+  ClassroomsLayout,
   ClassroomAdminLayout,
-  ClassroomIndex,
+  Classroom,
   Quiz,
+  SingleClassroomLayout,
 } from "@/pages";
 import { z } from "zod";
 import ErrorPage from "@/components/shared/Error";
@@ -71,19 +71,19 @@ const privateLayoutRoute = createRoute({
 const classroomLayoutRoute = createRoute({
   getParentRoute: () => privateLayoutRoute,
   path: "/classroom",
-  component: ClassroomLayout,
+  component: ClassroomsLayout,
 });
 
 const classroomRoute = createRoute({
   getParentRoute: () => classroomLayoutRoute,
   path: "/$classroomId",
-  component: Classroom,
+  component: SingleClassroomLayout,
 });
 
 const classroomIndexRoute = createRoute({
   getParentRoute: () => classroomRoute,
   path: "/",
-  component: ClassroomIndex,
+  component: Classroom,
 });
 
 const quizRoute = createRoute({
@@ -98,35 +98,43 @@ const classroomAdminLayoutRoute = createRoute({
   component: ClassroomAdminLayout,
 });
 
-const classroomDetailsRoute = createRoute({
+const quizCreateRoute = createRoute({
   getParentRoute: () => classroomAdminLayoutRoute,
-  path: "/details",
+  path: "/admin/quiz/create",
   component: lazyRouteComponent(
-    () => import("@/pages/private/classroom/admin/ClassroomDetails"),
+    () => import("@/pages/private/classroom/admin/create/CreateQuiz"),
   ),
 });
 
-const classroomAdminQuizzesRoute = createRoute({
+const quizUpdateRoute = createRoute({
   getParentRoute: () => classroomAdminLayoutRoute,
-  path: "/quizzes",
-  component: lazyRouteComponent(
-    () => import("@/pages/private/classroom/admin/AdminQuizzes"),
-  ),
-});
-
-const classroomAdminQuizUpdateRoute = createRoute({
-  getParentRoute: () => classroomAdminLayoutRoute,
-  path: "/update_quiz/$quizId",
+  path: "/admin/quiz/update/$quizId",
   component: lazyRouteComponent(
     () => import("@/pages/private/classroom/admin/UpdateQuiz"),
   ),
 });
 
-const classroomAdminCreateQuizRoute = createRoute({
+const quizDataRoute = createRoute({
   getParentRoute: () => classroomAdminLayoutRoute,
-  path: "/create_quiz",
+  path: "/admin/quiz/$quizId",
   component: lazyRouteComponent(
-    () => import("@/pages/private/classroom/admin/create/CreateQuiz"),
+    () => import("@/pages/private/classroom/admin/QuizDetails"),
+  ),
+});
+
+const classroomUsersRoute = createRoute({
+  getParentRoute: () => classroomAdminLayoutRoute,
+  path: "/users",
+  component: lazyRouteComponent(
+    () => import("@/pages/private/classroom/admin/ClassroomUsers"),
+  ),
+});
+
+const classroomDetailsRoute = createRoute({
+  getParentRoute: () => classroomAdminLayoutRoute,
+  path: "/details",
+  component: lazyRouteComponent(
+    () => import("@/pages/private/classroom/admin/ClassroomDetails"),
   ),
 });
 
@@ -159,9 +167,10 @@ const routeTree = rootLayoutRoute.addChildren([
         classroomIndexRoute,
         quizRoute,
         classroomAdminLayoutRoute.addChildren([
-          classroomAdminQuizzesRoute,
-          classroomAdminCreateQuizRoute,
-          classroomAdminQuizUpdateRoute,
+          quizCreateRoute,
+          quizUpdateRoute,
+          quizDataRoute,
+          classroomUsersRoute,
           classroomDetailsRoute,
         ]),
       ]),

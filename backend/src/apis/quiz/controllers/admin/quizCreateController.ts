@@ -63,12 +63,16 @@ export default function quizCreateController(
         switch (question.questionType) {
           case "multipleOption":
             return multipleOptionQuestion.create(question);
+
           case "multipleAnswer":
             return multipleAnswerQuestion.create(question);
+
           case "textAnswer":
             return textAnswerQuestion.create(question);
+
           case "pinPointAnswer":
             return pinPointAnswerQuestion.create(question);
+
           default:
             throw new Error("Invalid question type");
         }

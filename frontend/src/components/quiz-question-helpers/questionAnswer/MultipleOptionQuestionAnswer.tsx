@@ -1,32 +1,31 @@
 import useQuiz from "@/hooks/useQuiz";
 import { FC, useState } from "react";
-import type { questionType } from "@/types/question";
+import type { AnswerType, Option } from "@/types/question";
 import { CircleCheckBig } from "lucide-react";
 import { cn } from "@/lib/utils/shadcn";
 
 interface MultipleOptionQuestionAnswerProps {
-  options: { _id: string; text: string }[];
+  options: Option[];
   questionId: string;
-  questionType: questionType;
+  answerType: AnswerType;
 }
 
 const MultipleOptionQuestionAnswer: FC<MultipleOptionQuestionAnswerProps> = ({
   options,
   questionId,
-  questionType,
+  answerType,
 }) => {
   const { handleSubmitAnswer, handleNextQuestion } = useQuiz();
   const [checked, setChecked] = useState<boolean>(false);
-  const [checkedOption, setCheckedOption] = useState<{
-    _id: string;
-    idx: number;
-  }>({ _id: "", idx: 0 });
+  const [checkedOption, setCheckedOption] = useState<number | undefined>(
+    undefined,
+  );
 
-  const handleClick = (_id: string, idx: number) => {
+  const handleClick = (idx: number) => {
     setChecked(true);
-    setCheckedOption({ _id, idx });
+    setCheckedOption(idx);
     setTimeout(() => {
-      handleSubmitAnswer(questionId, idx, questionType);
+      handleSubmitAnswer(questionId, idx, answerType);
       handleNextQuestion();
     }, 500);
   };
@@ -39,8 +38,8 @@ const MultipleOptionQuestionAnswer: FC<MultipleOptionQuestionAnswerProps> = ({
             key={`multiple-option-${idx}`}
             text={option.text}
             disabled={checked}
-            checked={checked && idx === checkedOption.idx}
-            onClick={() => handleClick(option._id, idx)}
+            checked={checked && idx === checkedOption}
+            onClick={() => handleClick(idx)}
           />
         ))}
       </div>

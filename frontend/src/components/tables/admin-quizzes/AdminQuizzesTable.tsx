@@ -1,19 +1,21 @@
 import { type FilterFn } from "@tanstack/react-table";
 import { FC } from "react";
 import type { Quizzes } from "@/types/quiz";
-import getQuizColumns from "./quizColumn";
+import getAdminQuizColumn from "./adminQuizColumn";
 import MainTable from "@/components/tables/MainTable";
 
 interface QuizzesTableProps {
   data: Quizzes[];
   classroomId: string;
   reFetch: () => void;
+  isFetching: boolean;
 }
 
-const QuizzesTable: FC<QuizzesTableProps> = ({
+const AdminQuizzesTable: FC<QuizzesTableProps> = ({
   data,
   classroomId,
   reFetch,
+  isFetching,
 }) => {
   const globalFilterFn: FilterFn<Quizzes> = (row, _columnId, filterValue) => {
     const quiz = row.original as Quizzes;
@@ -25,12 +27,13 @@ const QuizzesTable: FC<QuizzesTableProps> = ({
     <MainTable
       data={data}
       notFoundText="No quiz found"
-      columns={getQuizColumns(classroomId)}
+      columns={getAdminQuizColumn(classroomId)}
       placeholder="Search quiz"
       globalFilterFn={globalFilterFn}
       reFetch={reFetch}
+      isFetching={isFetching}
     />
   );
 };
 
-export default QuizzesTable;
+export default AdminQuizzesTable;

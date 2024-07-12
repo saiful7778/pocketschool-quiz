@@ -2,14 +2,13 @@ import Button from "@/components/ui/button";
 import DropdownMenu from "@/components/ui/dropdown-menu";
 import { useNavigate } from "@tanstack/react-router";
 import { MoreHorizontal } from "lucide-react";
-import { FC } from "react";
 
 interface QuizAnswerRowActionProps {
   classroomId: string;
   quizId: string;
 }
 
-const QuizAnswerRowAction: FC<QuizAnswerRowActionProps> = ({
+const QuizAnswerRowAction: React.FC<QuizAnswerRowActionProps> = ({
   classroomId,
   quizId,
 }) => {

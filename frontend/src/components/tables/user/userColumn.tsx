@@ -38,11 +38,11 @@ const columns: ColumnDef<User>[] = [
     },
   },
   {
-    accessorKey: "role",
     id: "role",
+    accessorKey: "role",
     header: () => <div className="text-center">Role</div>,
-    cell: ({ row }) => {
-      const role: string = row.getValue("role");
+    cell: ({ getValue }) => {
+      const role = getValue<User["role"]>();
       return <div className="text-center">{role}</div>;
     },
   },
@@ -50,8 +50,8 @@ const columns: ColumnDef<User>[] = [
     id: "access",
     accessorKey: "access",
     header: () => <div className="text-center">Access</div>,
-    cell: ({ row }) => {
-      const access = row.getValue("access");
+    cell: ({ getValue }) => {
+      const access = getValue<User["access"]>();
       return access ? (
         <div className="text-center text-sky-500">true</div>
       ) : (

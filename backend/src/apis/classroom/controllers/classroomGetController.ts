@@ -2,7 +2,6 @@ import type { NextFunction, Request, Response } from "express";
 import serverHelper from "../../../utils/serverHelper";
 import { classroomModel } from "../../../models/classroom.model";
 import { Types } from "mongoose";
-import createHttpError from "http-errors";
 
 export default function classroomGetController(
   req: Request,
@@ -24,35 +23,19 @@ export default function classroomGetController(
           "users.access": true,
         },
       },
+      { $unwind: "$users" },
       {
-        // add a new role field of user in admin or user
-        $addFields: {
-          role: {
-            $cond: {
-              if: { $in: ["admin", "$users.role"] },
-              then: "admin",
-              else: {
-                $cond: {
-                  if: { $in: ["user", "$users.role"] },
-                  then: "user",
-                  else: null,
-                },
-              },
-            },
-          },
+        $match: {
+          "users.user": new Types.ObjectId(userId),
+          "users.access": true,
         },
       },
       {
         $project: {
-          users: 0,
           __v: 0,
         },
       },
     ]);
-
-    if (!classroom || classroom.length === 0) {
-      return next(createHttpError(404, "classroom not found"));
-    }
 
     // send response
     res.status(200).json({

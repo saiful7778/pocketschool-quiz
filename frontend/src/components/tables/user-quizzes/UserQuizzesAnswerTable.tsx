@@ -1,29 +1,31 @@
 import type { AnswerQuizzesRes } from "@/types/quiz";
 import type { FilterFn } from "@tanstack/react-table";
-import { FC } from "react";
-import MainTable from "../../MainTable";
+import MainTable from "../MainTable";
 import getQuizAnswerColumns from "./quizAnswerColumn";
 
 interface UserQuizAnswerTableProps {
   data: AnswerQuizzesRes[];
   classroomId: string;
   reFetch: () => void;
+  isFetching: boolean;
 }
 
-const UserQuizAnswerTable: FC<UserQuizAnswerTableProps> = ({
+const UserQuizzesAnswerTable: React.FC<UserQuizAnswerTableProps> = ({
   data,
   classroomId,
   reFetch,
+  isFetching,
 }) => {
   const globalFilterFn: FilterFn<AnswerQuizzesRes> = (
     row,
     _columnId,
     filterValue,
   ) => {
-    const quizAnswer = row.original as AnswerQuizzesRes;
+    const quizAnswer = row.original.quiz as AnswerQuizzesRes["quiz"];
 
-    return quizAnswer.quiz.title.toLowerCase().includes(filterValue);
+    return quizAnswer.title.toLowerCase().includes(filterValue);
   };
+
   return (
     <MainTable
       data={data}
@@ -32,8 +34,9 @@ const UserQuizAnswerTable: FC<UserQuizAnswerTableProps> = ({
       placeholder="Search quiz"
       globalFilterFn={globalFilterFn}
       reFetch={reFetch}
+      isFetching={isFetching}
     />
   );
 };
 
-export default UserQuizAnswerTable;
+export default UserQuizzesAnswerTable;

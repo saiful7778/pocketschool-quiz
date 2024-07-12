@@ -4,7 +4,11 @@ import QuestionAnswerBase from "../quiz-question-helpers/questionAnswer/Question
 import MultipleOptionQuestionAnswer from "../quiz-question-helpers/questionAnswer/MultipleOptionQuestionAnswer";
 import MultipleAnswerQuestionAnswer from "../quiz-question-helpers/questionAnswer/MultipleAnswerQuestionAnswer";
 import TextAnswerQuestionAnswer from "../quiz-question-helpers/questionAnswer/TextAnswerQuestionAnswer";
-import type { Question } from "@/types/question";
+import type {
+  MultipleAnswer,
+  MultipleOption,
+  Question,
+} from "@/types/question";
 import { motion } from "framer-motion";
 import ComplateQuiz from "./ComplateQuiz";
 
@@ -20,7 +24,7 @@ const QuestionAnswerRender: FC = () => {
     <QuestionAnswerBase
       questionLimit={questionLimit}
       questionNO={questionIdx + 1}
-      questionText={currentQuestion?.questionText!}
+      questionText={currentQuestion?.title!}
       timeLimit={currentQuestion?.timeLimit!}
     >
       <QuestionType question={currentQuestion} />
@@ -43,6 +47,7 @@ const QuestionType = ({ question }: { question: Question }) => {
   };
 
   if (question.questionType === "multipleOption") {
+    const questionData = question as MultipleOption;
     return (
       <motion.div
         className="space-y-6"
@@ -56,14 +61,15 @@ const QuestionType = ({ question }: { question: Question }) => {
         </div>
         <MultipleOptionQuestionAnswer
           questionId={question._id}
-          options={question?.options!}
-          questionType={question.questionType}
+          options={questionData.options}
+          answerType="multipleOptionAnswer"
         />
       </motion.div>
     );
   }
 
   if (question.questionType === "multipleAnswer") {
+    const questionData = question as MultipleAnswer;
     return (
       <motion.div
         className="space-y-6"
@@ -77,8 +83,8 @@ const QuestionType = ({ question }: { question: Question }) => {
         </div>
         <MultipleAnswerQuestionAnswer
           questionId={question._id}
-          options={question?.options!}
-          questionType={question.questionType}
+          options={questionData.options!}
+          answerType="multipleAnswerAnswer"
         />
       </motion.div>
     );
@@ -98,11 +104,13 @@ const QuestionType = ({ question }: { question: Question }) => {
         </div>
         <TextAnswerQuestionAnswer
           questionId={question._id}
-          questionType={question.questionType}
+          answerType="textAnswerAnswer"
         />
       </motion.div>
     );
   }
+
+  return <div>Not found</div>;
 };
 
 export default QuestionAnswerRender;

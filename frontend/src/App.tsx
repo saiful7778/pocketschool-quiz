@@ -9,7 +9,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import routeTree from "@/Routes";
 import StateContextProvider from "@/context/StateContext";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 10000,
+    },
+  },
+});
 
 const router = createRouter({
   routeTree,

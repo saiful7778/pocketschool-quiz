@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { type FilterFn } from "@tanstack/react-table";
 import columns from "./userColumn";
 import type { User } from "@/types/user";
@@ -7,9 +6,10 @@ import MainTable from "../MainTable";
 interface UserTableProps {
   data: User[];
   reFetch: () => void;
+  isFetching: boolean;
 }
 
-const UserTable: FC<UserTableProps> = ({ data, reFetch }) => {
+const UserTable: React.FC<UserTableProps> = ({ data, reFetch, isFetching }) => {
   const globalFilterFn: FilterFn<User> = (row, _columnId, filterValue) => {
     const user = row.original as User;
     return (
@@ -26,6 +26,7 @@ const UserTable: FC<UserTableProps> = ({ data, reFetch }) => {
       placeholder="Search user"
       globalFilterFn={globalFilterFn}
       reFetch={reFetch}
+      isFetching={isFetching}
     />
   );
 };

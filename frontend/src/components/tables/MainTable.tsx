@@ -18,11 +18,13 @@ import Table from "../ui/table";
 import Input from "../ui/input";
 import Select from "../ui/select";
 import { tableRowPerPage } from "@/lib/staticData";
+import Spinner from "../Spinner";
 
 interface MainTableProps<TData> {
   data: TData[];
   columns: ColumnDef<TData, unknown>[];
   reFetch: () => void | undefined;
+  isFetching: boolean;
   notFoundText?: string | undefined;
   placeholder: string;
   globalFilterFn: FilterFnOption<TData>;
@@ -32,6 +34,7 @@ const MainTable = <TData,>({
   data,
   columns,
   reFetch,
+  isFetching,
   placeholder,
   notFoundText,
   globalFilterFn,
@@ -78,7 +81,7 @@ const MainTable = <TData,>({
         </Select>
         {typeof reFetch !== "undefined" && (
           <Button onClick={reFetch} variant="default" size="md">
-            Refrash
+            {isFetching ? <Spinner size={20} /> : "Refrash"}
           </Button>
         )}
       </div>

@@ -9,7 +9,7 @@ import { getRouteApi } from "@tanstack/react-router";
 import { FC } from "react";
 
 const routeData = getRouteApi(
-  "/private/classroom/$classroomId/classroomAdmin/update_quiz/$quizId",
+  "/private/classroom/$classroomId/classroomAdmin/admin/quiz/update/$quizId",
 );
 
 const UpdateQuiz: FC = () => {

@@ -1,12 +1,10 @@
-import { FC, ReactNode } from "react";
 import Dialog from "./ui/dialog";
 import Button from "./ui/button";
 import Spinner from "./Spinner";
+import type { ElementOpenProps } from "@/types";
 
-interface DeleteConfirmProps {
-  trigger?: ReactNode;
-  open: boolean;
-  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+interface DeleteConfirmProps extends ElementOpenProps {
+  trigger?: React.ReactNode;
   description?: string;
   isConfirm: boolean;
   confirmClick: () => void;
@@ -14,7 +12,7 @@ interface DeleteConfirmProps {
   cancelButtonText?: string;
 }
 
-const DeleteConfirm: FC<DeleteConfirmProps> = ({
+const DeleteConfirm: React.FC<DeleteConfirmProps> = ({
   trigger,
   open,
   onOpenChange,

@@ -1,9 +1,9 @@
 import { type Quizzes } from "@/types/quiz";
 import { type ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
-import QuizRowAction from "./QuizRowAction";
+import AdminQuizRowAction from "./AdminQuizRowAction";
 
-export default function getQuizColumns(classroomId: string) {
+export default function getAdminQuizColumn(classroomId: string) {
   const columns: ColumnDef<Quizzes>[] = [
     {
       id: "count",
@@ -17,11 +17,20 @@ export default function getQuizColumns(classroomId: string) {
     },
     {
       id: "questions",
-      accessorKey: "questionsCount",
+      accessorKey: "totalQuestions",
       header: () => <div className="text-center">Questions</div>,
-      cell: ({ renderValue }) => {
-        const questionCount = renderValue() as string;
-        return <div className="text-center">{questionCount}</div>;
+      cell: ({ getValue }) => {
+        const totalQuestions = getValue<Quizzes["totalQuestions"]>();
+        return <div className="text-center">{totalQuestions}</div>;
+      },
+    },
+    {
+      id: "marks",
+      accessorKey: "totalMarks",
+      header: () => <div className="text-center">Total Marks</div>,
+      cell: ({ getValue }) => {
+        const totalMarks = getValue<Quizzes["totalMarks"]>();
+        return <div className="text-center">{totalMarks}</div>;
       },
     },
     {
@@ -34,22 +43,12 @@ export default function getQuizColumns(classroomId: string) {
       },
     },
     {
-      id: "author",
-      accessorKey: "author",
-      header: "Author",
-      cell: ({ getValue }) => {
-        const author = getValue<Quizzes["author"]>();
-
-        return <div className="text-xs">{author?.email}</div>;
-      },
-    },
-    {
       id: "startTime",
       accessorKey: "startTime",
       header: () => <div className="min-w-36">Quiz will start</div>,
       cell: ({ getValue }) => {
         const startTime = getValue<Quizzes["startTime"]>();
-        const quizStartTime = moment(startTime).format("DD/MM/YYYY hh:mm a");
+        const quizStartTime = moment(startTime).format("DD MMM YY - hh:mm a");
 
         return <div className="text-xs">{quizStartTime}</div>;
       },
@@ -61,8 +60,8 @@ export default function getQuizColumns(classroomId: string) {
         const createdAt = row.original.createdAt;
         const updatedAt = row.original.updatedAt;
 
-        const created = moment(createdAt).format("DD/MM/YYYY hh:mm a");
-        const updated = moment(updatedAt).format("DD/MM/YYYY hh:mm a");
+        const created = moment(createdAt).format("DD MMM YY - hh:mm a");
+        const updated = moment(updatedAt).format("DD MMM YY - hh:mm a");
 
         return (
           <div className="whitespace-nowrap text-xs text-muted-foreground">
@@ -83,7 +82,7 @@ export default function getQuizColumns(classroomId: string) {
         const quizTitle = row.original.title;
 
         return (
-          <QuizRowAction
+          <AdminQuizRowAction
             classroomId={classroomId}
             quizId={quizId}
             quizTitle={quizTitle}

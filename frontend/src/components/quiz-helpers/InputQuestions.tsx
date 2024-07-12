@@ -12,14 +12,20 @@ import { quizSchema } from "@/lib/schemas/quizSchema";
 
 interface InputQuestionsProps {
   append: UseFieldArrayAppend<z.infer<typeof quizSchema>, "questions">;
+  currentQuestionIdx: number;
   loading: boolean;
 }
 
-const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
+const InputQuestions: FC<InputQuestionsProps> = ({
+  append,
+  loading,
+  currentQuestionIdx,
+}) => {
   const handleMultipuleOptions = () => {
     append({
       questionType: "multipleOption",
-      questionText: "",
+      index: currentQuestionIdx,
+      title: "",
       timeLimit: 15,
       mark: 10,
       options: [{ text: "" }, { text: "" }, { text: "" }],
@@ -30,7 +36,8 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
   const handleAnswerOptions = () => {
     append({
       questionType: "multipleAnswer",
-      questionText: "",
+      index: currentQuestionIdx,
+      title: "",
       timeLimit: 15,
       mark: 20,
       options: [{ text: "" }, { text: "" }, { text: "" }],
@@ -41,7 +48,8 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
   const handleTextAnswer = () => {
     append({
       questionType: "textAnswer",
-      questionText: "",
+      index: currentQuestionIdx,
+      title: "",
       timeLimit: 30,
       mark: 50,
       correctAnswer: "",
@@ -51,7 +59,8 @@ const InputQuestions: FC<InputQuestionsProps> = ({ append, loading }) => {
   const handlePinPointAnswer = () => {
     append({
       questionType: "pinPointAnswer",
-      questionText: "",
+      index: currentQuestionIdx,
+      title: "",
       timeLimit: 10,
       mark: 40,
       correctPinPointAnswer: {

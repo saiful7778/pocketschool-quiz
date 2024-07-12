@@ -1,4 +1,4 @@
-import { CheckCheck, X } from "lucide-react";
+import { CheckCheck, X, TimerReset } from "lucide-react";
 import { FC, ReactNode } from "react";
 
 interface QuestionItemBaseProps {
@@ -22,18 +22,10 @@ const QuestionItemBase: FC<QuestionItemBaseProps> = ({
 }) => {
   return (
     <div className="space-y-2 rounded-lg border border-t-4 border-t-primary p-4 shadow-sm">
-      <h2 className="mb-6 text-center text-2xl font-semibold">
-        {questionIdx}. {questionText}
-      </h2>
-      <div>
-        <span>Time limit: </span> <span>{timeLimit}s</span>
-      </div>
-      <div>
-        <span>Question mark: </span> <span>{questionMarks}</span>
-      </div>
       <div className="flex items-center gap-2">
-        <span>Result: </span>
-        <span>{result}</span>
+        <h2 className="text-2xl font-semibold">
+          {questionIdx}. {questionText}
+        </h2>
         {isCorrect ? (
           <span className="flex size-6 items-center justify-center rounded bg-primary text-primary-foreground">
             <CheckCheck size={15} />
@@ -43,6 +35,17 @@ const QuestionItemBase: FC<QuestionItemBaseProps> = ({
             <X size={15} />
           </span>
         )}
+        <span className="ml-auto">
+          <TimerReset className="stroke-primary" size={25} />
+        </span>
+        <span className="mt-0.5">{timeLimit}s</span>
+      </div>
+      <div>
+        <span>Mark: </span> <span>{questionMarks}</span>
+        <div className="flex items-center gap-2">
+          <span>Result: </span>
+          <span>{result}</span>
+        </div>
       </div>
       {children}
     </div>

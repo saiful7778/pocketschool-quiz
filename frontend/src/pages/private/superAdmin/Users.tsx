@@ -1,7 +1,9 @@
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
+import UndefinedData from "@/components/shared/UndefinedData";
 import UserTable from "@/components/tables/user/UserTable";
 import { useAxiosSecure } from "@/hooks/useAxios";
+import { USER_KEY } from "@/lib/queryKeys";
 import type { ApiResponse } from "@/types/apiResponse";
 import type { User } from "@/types/user";
 import { useQuery } from "@tanstack/react-query";
@@ -18,7 +20,7 @@ const Users: FC = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["users"],
+    queryKey: USER_KEY,
     queryFn: async () => {
       const { data } = await axiosSecure.get<ApiResponse<User[]>>("/api/users");
       if (!data.success) {
@@ -28,7 +30,7 @@ const Users: FC = () => {
     },
   });
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <Loading />;
   }
 
@@ -36,12 +38,16 @@ const Users: FC = () => {
     return <ErrorPage error={error} reset={refetch} />;
   }
 
+  if (!users) {
+    return <UndefinedData />;
+  }
+
   return (
     <div>
       <h1 className="text-xl font-semibold">
         Total user: <span>{users?.length}</span>
       </h1>
-      <UserTable data={users!} reFetch={refetch} />
+      <UserTable data={users!} reFetch={refetch} isFetching={isFetching} />
     </div>
   );
 };

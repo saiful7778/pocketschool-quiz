@@ -1,5 +1,6 @@
 import QuizForm from "@/components/forms/quiz/QuizForm";
 import { useAxiosSecure } from "@/hooks/useAxios";
+import { QUIZZES_KEY } from "@/lib/queryKeys";
 import { quizSchema } from "@/lib/schemas/quizSchema";
 import toast from "@/lib/toast/toast";
 import type { ApiResponse, UpdateDateResponse } from "@/types/apiResponse";
@@ -39,10 +40,10 @@ const QuizUpdateForm: FC<QuizUpdateFormProps> = ({
     onSuccess: (data) => {
       if (data.data?.data?.modifiedCount! > 0) {
         queryClient.invalidateQueries({
-          queryKey: ["classroom", "admin", "quizzes", { classroomId }],
+          queryKey: QUIZZES_KEY(classroomId),
         });
         navigate({
-          to: "/classroom/$classroomId/quizzes",
+          to: "/classroom/$classroomId",
           params: { classroomId },
         });
         toast({
@@ -69,12 +70,20 @@ const QuizUpdateForm: FC<QuizUpdateFormProps> = ({
       .slice(0, 16);
   };
 
+  const handleSubmit = (e: z.infer<typeof quizSchema>) => {
+    const quizData = {
+      ...e,
+      questions: e.questions.map((question, index) => ({ index, ...question })),
+    };
+    mutate(quizData);
+  };
+
   return (
     <QuizForm
       title={`Update '${defaultValues.title}' quiz`}
       submitButtonText="Update quiz"
       isPending={isPending}
-      handleSubmit={(e) => mutate(e)}
+      handleSubmit={handleSubmit}
       defaultValues={{ ...defaultValues, startTime: dateTimeLocalNow() }}
     />
   );

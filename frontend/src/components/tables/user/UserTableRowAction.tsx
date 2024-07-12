@@ -1,9 +1,9 @@
 import Button from "@/components/ui/button";
-import Dialog from "@/components/ui/dialog";
-import { MoreHorizontal } from "lucide-react";
-import { FC } from "react";
+import { MoreHorizontal, UserCog } from "lucide-react";
 import UpdateUser from "./UpdateUser";
 import type { User } from "@/types/user";
+import DropdownMenu from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 interface UserTableRowActionProps {
   id: string;
@@ -11,26 +11,40 @@ interface UserTableRowActionProps {
   access: boolean;
 }
 
-const UserTableRowAction: FC<UserTableRowActionProps> = ({
+const UserTableRowAction: React.FC<UserTableRowActionProps> = ({
   id,
   role,
   access,
 }) => {
+  const [userUpdateDialog, setUserUpdateDialog] = useState<boolean>(false);
+
   return (
-    <Dialog>
-      <Dialog.trigger asChild>
-        <Button variant="ghost" size="icon">
-          <MoreHorizontal size={18} />
-          <span className="sr-only">Open user manage menu</span>
-        </Button>
-      </Dialog.trigger>
-      <Dialog.content className="w-full sm:max-w-md">
-        <Dialog.header>
-          <Dialog.title>Edit user profile</Dialog.title>
-        </Dialog.header>
-        <UpdateUser id={id} role={role} access={access} />
-      </Dialog.content>
-    </Dialog>
+    <>
+      <UpdateUser
+        id={id}
+        role={role}
+        access={access}
+        open={userUpdateDialog}
+        onOpenChange={setUserUpdateDialog}
+      />
+      <DropdownMenu>
+        <DropdownMenu.trigger asChild>
+          <Button size="icon" variant="ghost">
+            <MoreHorizontal size={18} />
+            <span className="sr-only">open user manage menu</span>
+          </Button>
+        </DropdownMenu.trigger>
+        <DropdownMenu.content align="end" forceMount>
+          <DropdownMenu.label>Manage user</DropdownMenu.label>
+          <DropdownMenu.separator />
+          <DropdownMenu.item
+            onClick={() => setUserUpdateDialog((prev) => !prev)}
+          >
+            <UserCog size={16} strokeWidth={1} /> <span>Update User</span>
+          </DropdownMenu.item>
+        </DropdownMenu.content>
+      </DropdownMenu>
+    </>
   );
 };
 

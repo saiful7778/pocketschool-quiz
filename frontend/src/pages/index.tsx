@@ -2,13 +2,13 @@ import RootLayout from "@/layouts/RootLayout";
 import AuthenticationLayout from "@/layouts/AuthenticationLayout";
 import PrivateLayout from "@/layouts/PrivateLayout";
 import SuperAdminLayout from "@/layouts/SuperAdminLayout";
-import ClassroomLayout from "@/layouts/ClassroomLayout";
+import ClassroomsLayout from "@/layouts/ClassroomsLayout";
+import SingleClassroomLayout from "@/layouts/SingleClassroomLayout";
 import ClassroomAdminLayout from "@/layouts/ClassroomAdminLayout";
 
 import Home from "./Home";
 import Login from "./authentication/Login";
 import Classroom from "./private/classroom/Classroom";
-import ClassroomIndex from "./private/classroom/ClassroomIndex";
 import Quiz from "./private/classroom/Quiz";
 
 export {
@@ -17,10 +17,10 @@ export {
   AuthenticationLayout,
   Login,
   PrivateLayout,
-  ClassroomLayout,
-  Classroom,
+  ClassroomsLayout,
+  SingleClassroomLayout,
   Quiz,
-  ClassroomIndex,
+  Classroom,
   ClassroomAdminLayout,
   SuperAdminLayout,
 };

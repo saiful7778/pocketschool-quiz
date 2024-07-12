@@ -8,9 +8,9 @@ const optionSchema = z.object({
 
 const baseQuestionSchema = z.object({
   _id: z.string().optional(),
-  questionText: z
-    .string({ required_error: "Question is required" })
-    .min(1, "Question is required"),
+  title: z
+    .string({ required_error: "Question title is required" })
+    .min(1, "Question title is required"),
   timeLimit: z
     .number({ required_error: "Time limit must be at least 10 second" })
     .min(10, "Time limit must be at least 10 second")

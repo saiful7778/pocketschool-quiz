@@ -8,7 +8,7 @@ import { FC } from "react";
 import { z } from "zod";
 
 const routeData = getRouteApi(
-  "/private/classroom/$classroomId/classroomAdmin/create_quiz",
+  "/private/classroom/$classroomId/classroomAdmin/admin/quiz/create",
 );
 
 const CreateQuiz: FC = () => {
@@ -29,7 +29,7 @@ const CreateQuiz: FC = () => {
           queryKey: ["admin", "quizzes", { classroomId }],
         });
         navigate({
-          to: "/classroom/$classroomId/quizzes",
+          to: "/classroom/$classroomId",
           params: { classroomId },
         });
         toast({
@@ -55,19 +55,27 @@ const CreateQuiz: FC = () => {
       .slice(0, 16);
   };
 
+  const handleSubmit = (e: z.infer<typeof quizSchema>) => {
+    const quizData = {
+      ...e,
+      questions: e.questions.map((question, index) => ({ index, ...question })),
+    };
+    mutate(quizData);
+  };
+
   return (
     <QuizForm
       title="Create new quiz"
       submitButtonText="Create quiz"
       isPending={isPending}
-      handleSubmit={(e: z.infer<typeof quizSchema>) => mutate(e)}
+      handleSubmit={handleSubmit}
       defaultValues={{
         title: "Quiz title",
         startTime: dateTimeLocalNow(),
         questions: [
           {
             questionType: "multipleOption",
-            questionText: "Simple question title",
+            title: "Simple question title",
             timeLimit: 15,
             mark: 10,
             options: [
@@ -79,7 +87,7 @@ const CreateQuiz: FC = () => {
           },
           {
             questionType: "multipleAnswer",
-            questionText: "Simple question",
+            title: "Simple question",
             timeLimit: 15,
             mark: 20,
             options: [

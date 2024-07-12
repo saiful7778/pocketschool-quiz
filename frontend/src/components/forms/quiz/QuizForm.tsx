@@ -1,13 +1,13 @@
 import { FC } from "react";
-import QuestionsRender from "../../quiz-helpers/QuestionsRender";
 import Button from "../../ui/button";
 import Spinner from "../../Spinner";
 import { Form, FormField } from "../../ui/form";
 import InputField from "../../InputField";
 import { useForm } from "react-hook-form";
 import { quizSchema } from "@/lib/schemas/quizSchema";
-import { z } from "zod";
+import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import QuestionsInput from "@/components/quiz-question-helpers/questionInput/QuestionsInput";
 
 interface QuizFormProps {
   title: string;
@@ -33,7 +33,7 @@ const QuizForm: FC<QuizFormProps> = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="mx-auto w-full max-w-3xl space-y-4"
+        className="mx-auto w-full max-w-xl space-y-4"
       >
         <h2 className="border-b pb-4 text-xl font-semibold">{title}</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -65,7 +65,7 @@ const QuizForm: FC<QuizFormProps> = ({
             )}
           />
         </div>
-        <QuestionsRender control={form.control} loading={isPending} />
+        <QuestionsInput control={form.control} loading={isPending} />
         <Button className="w-full" type="submit" disabled={isPending}>
           {isPending ? <Spinner size={20} /> : submitButtonText}
         </Button>

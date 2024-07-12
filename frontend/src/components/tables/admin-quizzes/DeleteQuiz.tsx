@@ -1,23 +1,22 @@
 import DeleteConfirm from "@/components/DeleteConfirm";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import toast from "@/lib/toast/toast";
+import type { ElementOpenProps } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC } from "react";
 
-interface UpdateQuizProps {
+interface UpdateQuizProps extends ElementOpenProps {
   quizId: string;
   classroomId: string;
   quiztitle: string;
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DeleteQuiz: FC<UpdateQuizProps> = ({
   quiztitle,
   quizId,
   classroomId,
-  isOpen,
-  setIsOpen,
+  open,
+  onOpenChange,
 }) => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
@@ -51,8 +50,8 @@ const DeleteQuiz: FC<UpdateQuizProps> = ({
 
   return (
     <DeleteConfirm
-      open={isOpen}
-      onOpenChange={setIsOpen}
+      open={open}
+      onOpenChange={onOpenChange}
       isConfirm={isPending}
       description={`'${quiztitle}' it will be delete by clicking the delete button`}
       confirmClick={() => mutate()}

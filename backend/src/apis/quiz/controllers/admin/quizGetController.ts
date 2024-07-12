@@ -28,22 +28,6 @@ export default function quizGetController(
         path: "participants.answer",
         model: "quiz-answer",
         select: ["totalMarks", "totalAnswers", "createdAt"],
-        populate: {
-          path: "answers",
-          model: "answer",
-          select: [
-            "question",
-            "answerIndex",
-            "answerType",
-            "isCorrect",
-            "mark",
-          ],
-          populate: {
-            path: "question",
-            model: "question",
-            select: ["questionText"],
-          },
-        },
       });
 
     res.status(200).send({ success: true, data: quiz });

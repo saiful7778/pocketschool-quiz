@@ -14,30 +14,27 @@ export default function getColumns(classroomId: string) {
       id: "userDetails",
       header: "User Details",
       cell: ({ row }) => {
-        const user = row.original;
+        const user = row.original.user;
 
         return (
           <div className="flex items-center gap-2">
             <Avatar className="size-8">
               <Avatar.image
                 asChild
-                src={user.user?.image!}
-                alt={`${user.user?.fullName} image`}
+                src={user?.image!}
+                alt={`${user?.fullName} image`}
               >
-                <img
-                  src={user.user?.image!}
-                  alt={`${user.user?.fullName} image`}
-                />
+                <img src={user?.image!} alt={`${user?.fullName} image`} />
               </Avatar.image>
               <Avatar.fallback className="font-semibold">
-                {user.user?.fullName[0] + user.user?.fullName[1]}
+                {user?.fullName[0] + user?.fullName[1]}
               </Avatar.fallback>
             </Avatar>
             <div>
               <div className="font-semibold leading-tight">
-                {user.user?.fullName}
+                {user?.fullName}
               </div>
-              <div className="text-xs text-gray-400">{user.user?.email}</div>
+              <div className="text-xs text-gray-400">{user?.email}</div>
             </div>
           </div>
         );

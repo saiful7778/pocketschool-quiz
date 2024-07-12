@@ -34,7 +34,7 @@ const QuestionInputBase: FC<QuestionInputBaseProps> = ({
   };
 
   return (
-    <div className="relative space-y-4 rounded-lg border-t-[3px] border-primary p-4 shadow">
+    <div className="relative space-y-4 rounded-md border-t-[4px] border-primary p-4 shadow">
       <div className="absolute right-2 top-2">
         <Button
           onClick={removeQuestion}
@@ -43,7 +43,7 @@ const QuestionInputBase: FC<QuestionInputBaseProps> = ({
           variant="ghost"
           type="button"
         >
-          <X size={15} />
+          <X size={18} />
         </Button>
       </div>
       <div className="!mt-0 select-none text-lg font-semibold">
@@ -51,7 +51,7 @@ const QuestionInputBase: FC<QuestionInputBaseProps> = ({
       </div>
       <FormField
         control={control}
-        name={`questions.${index}.questionText`}
+        name={`questions.${index}.title`}
         render={({ field }) => (
           <InputField
             type="text"

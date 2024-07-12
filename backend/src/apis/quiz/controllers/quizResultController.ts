@@ -1,329 +1,435 @@
 import type { Request, Response, NextFunction } from "express";
 import serverHelper from "../../../utils/serverHelper";
 import type {
-  AnswerBase,
-  MultipleAnswerAnswer,
-  MultipleOptionAnswer,
-  PinPointAnswerAnswer,
-  TextAnswerAnswer,
+  Answer,
+  multipleAnswerType,
+  multipleOptionType,
+  pinPointAnswerType,
+  textAnswerType,
 } from "../../../types/question.type";
 import inputCheck from "../../../utils/inputCheck";
 import createHttpError from "http-errors";
 import {
-  multipleAnswerAnswer,
-  multipleAnswerQuestion,
-  multipleOptionAnswer,
   multipleOptionQuestion,
-  pinPointAnswerAnswer,
-  pinPointAnswerQuestion,
-  textAnswerAnswer,
+  multipleOptionAnswer,
+  multipleAnswerQuestion,
+  multipleAnswerAnswer,
   textAnswerQuestion,
+  textAnswerAnswer,
+  pinPointAnswerQuestion,
+  pinPointAnswerAnswer,
 } from "../../../models/question.model";
 import { quizAnswerModel, quizModel } from "../../../models/quiz.model";
-import { Types } from "mongoose";
+import { ProjectionType, Types } from "mongoose";
 
-export default function quizResultController(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const { classroomId, userId } = req.query as {
-    classroomId: string;
-    userId: string;
+class quizResultController {
+  private answerBaseData = {
+    quiz: "",
+    participant: "",
   };
-  const quizId = req.params.quizId;
-  const { answers } = req.body as {
-    answers: AnswerBase[];
-  };
+  private totalMarks: number = 0;
+  private totalAnswers: number = 0;
 
-  // validate
-  const check = inputCheck([answers], next);
-  if (!check) return;
+  private validateData(answers: Answer[], next: NextFunction): boolean {
+    const check = inputCheck([answers], next);
+    if (!check) return false;
 
-  if (!Array.isArray(answers)) {
-    return next(createHttpError(400, "answers must be an array"));
-  }
-
-  if (answers.length === 0) {
-    return next(createHttpError(400, "question array is empty"));
-  }
-
-  const isAnswersAvailable = answers.map((answer) => {
-    if (
-      (answer.index < 0 && answer.index > 50) ||
-      !answer._id ||
-      !answer.answerType
-    ) {
-      return undefined;
+    if (!Array.isArray(answers)) {
+      next(createHttpError(400, "answers must be an array"));
+      return false;
     }
-    return answer;
-  });
 
-  if (isAnswersAvailable.includes(undefined)) {
-    return next(createHttpError(400, "invalid answers data"));
+    if (answers.length === 0) {
+      next(createHttpError(400, "question array is empty"));
+      return false;
+    }
+
+    const isAnswersAvailable = answers.map((answer) => {
+      if (
+        (answer.index < 0 && answer.index > 50) ||
+        !answer._id ||
+        !answer.answerType
+      ) {
+        return undefined;
+      }
+      return answer;
+    });
+
+    if (isAnswersAvailable.includes(undefined)) {
+      next(createHttpError(400, "invalid answers data"));
+      return false;
+    }
+    return true;
   }
 
-  serverHelper(async () => {
-    const answerBaseData = {
-      quiz: quizId,
-      participant: userId,
-    };
+  private async createNullAnswer(
+    answerType: Answer["answerType"],
+    answerIndex: number,
+    questionId: Types.ObjectId | string
+  ) {
+    switch (answerType) {
+      case "multipleOptionAnswer":
+        return multipleOptionAnswer.create({
+          ...this.answerBaseData,
+          index: answerIndex,
+          answerIndex: null,
+          question: questionId,
+          isCorrect: false,
+          mark: 0,
+        });
 
-    let totalMarks = 0;
-    let totalAnswers = 0;
+      case "multipleAnswerAnswer":
+        return multipleAnswerAnswer.create({
+          ...this.answerBaseData,
+          index: answerIndex,
+          answerIndices: null,
+          question: questionId,
+          isCorrect: false,
+          mark: 0,
+        });
 
-    const questionAnswers = await Promise.all(
+      case "textAnswerAnswer":
+        return textAnswerAnswer.create({
+          ...this.answerBaseData,
+          index: answerIndex,
+          answer: null,
+          question: questionId,
+          isCorrect: false,
+          mark: 0,
+        });
+
+      case "pinPointAnswerAnswer":
+        return pinPointAnswerAnswer.create({
+          ...this.answerBaseData,
+          index: answerIndex,
+          pinPointAnswer: null,
+          question: questionId,
+          isCorrect: false,
+          mark: 0,
+        });
+    }
+  }
+
+  private async getQuestionData<T>(
+    answerType: Answer["answerType"],
+    answerId: Answer["_id"],
+    options: ProjectionType<T>
+  ) {
+    switch (answerType) {
+      case "multipleOptionAnswer":
+        return multipleOptionQuestion.findOne<T>({ _id: answerId }, options);
+
+      case "multipleAnswerAnswer":
+        return multipleAnswerQuestion.findOne<T>({ _id: answerId }, options);
+
+      case "textAnswerAnswer":
+        return textAnswerQuestion.findOne<T>({ _id: answerId }, options);
+
+      case "pinPointAnswerAnswer":
+        return pinPointAnswerQuestion.findOne<T>({ _id: answerId }, options);
+    }
+  }
+
+  private async multipleOption(answerData: Answer) {
+    const questionData = await this.getQuestionData<{
+      _id: string;
+      correctAnswerIndex: number;
+      mark: number;
+    }>("multipleOptionAnswer", answerData._id, {
+      correctAnswerIndex: 1,
+      mark: 1,
+    });
+    const answer = answerData.answer as multipleOptionType;
+
+    if (answer === null) {
+      return this.createNullAnswer(
+        "multipleOptionAnswer",
+        answerData.index,
+        questionData._id
+      );
+    }
+    this.totalAnswers++;
+
+    if (questionData.correctAnswerIndex === answerData.answer) {
+      this.totalMarks += questionData.mark;
+
+      return multipleOptionAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answerIndex: answerData.answer,
+        question: questionData._id,
+        isCorrect: true,
+        mark: questionData.mark,
+      });
+    } else {
+      return multipleOptionAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answerIndex: answerData.answer,
+        question: questionData._id,
+        isCorrect: false,
+        mark: 0,
+      });
+    }
+  }
+  private async multipleAnswer(answerData: Answer) {
+    const questionData = await this.getQuestionData<{
+      _id: string;
+      correctAnswerIndices: number[];
+      mark: number;
+    }>("multipleAnswerAnswer", answerData._id, {
+      correctAnswerIndices: 1,
+      mark: 1,
+    });
+
+    const answer = answerData.answer as multipleAnswerType;
+
+    if (answer === null) {
+      return this.createNullAnswer(
+        "multipleAnswerAnswer",
+        answerData.index,
+        questionData._id
+      );
+    }
+    this.totalAnswers++;
+
+    if (questionData.correctAnswerIndices.length !== answer.length) {
+      return multipleAnswerAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answerIndices: answer,
+        question: questionData._id,
+        isCorrect: false,
+        mark: 0,
+      });
+    }
+
+    const answerIndicesMatched = [];
+
+    for (let i = 0; i < questionData.correctAnswerIndices.length; i++) {
+      if (questionData.correctAnswerIndices[i] !== answer[i]) {
+        answerIndicesMatched.push(undefined);
+      }
+    }
+
+    if (answerIndicesMatched.includes(undefined)) {
+      return multipleAnswerAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answerIndices: answer,
+        question: questionData._id,
+        isCorrect: false,
+        mark: 0,
+      });
+    } else {
+      this.totalMarks += questionData.mark;
+
+      return multipleAnswerAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answerIndices: answer,
+        question: questionData._id,
+        isCorrect: true,
+        mark: questionData.mark,
+      });
+    }
+  }
+  private async textAnswer(answerData: Answer) {
+    const questionData = await this.getQuestionData<{
+      _id: string;
+      correctAnswer: string;
+      mark: number;
+    }>("textAnswerAnswer", answerData._id, { correctAnswer: 1, mark: 1 });
+
+    const answer = answerData.answer as textAnswerType;
+
+    if (answer === null) {
+      return this.createNullAnswer(
+        "textAnswerAnswer",
+        answerData.index,
+        questionData._id
+      );
+    }
+    this.totalAnswers++;
+
+    if (questionData.correctAnswer.length !== answer.length) {
+      return textAnswerAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answer: answer,
+        question: questionData._id,
+        isCorrect: false,
+        mark: 0,
+      });
+    }
+
+    if (questionData.correctAnswer !== answer) {
+      return textAnswerAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answer: answer,
+        question: questionData._id,
+        isCorrect: false,
+        mark: 0,
+      });
+    } else {
+      this.totalMarks += questionData.mark;
+
+      return textAnswerAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answer: answer,
+        question: questionData._id,
+        isCorrect: true,
+        mark: questionData.mark,
+      });
+    }
+  }
+  private async pinPointAnswer(answerData: Answer) {
+    const questionData = await this.getQuestionData<{
+      _id: string;
+      correctPinPointAnswer: {
+        x: number;
+        y: number;
+      };
+      mark: number;
+    }>("pinPointAnswerAnswer", answerData._id, {
+      correctPinPointAnswer: 1,
+      mark: 1,
+    });
+
+    const answer = answerData.answer as pinPointAnswerType;
+
+    if (answer === null) {
+      return this.createNullAnswer(
+        "pinPointAnswerAnswer",
+        answerData.index,
+        questionData._id
+      );
+    }
+    this.totalAnswers++;
+
+    if (
+      questionData.correctPinPointAnswer.x === answer.x &&
+      questionData.correctPinPointAnswer.y === answer.y
+    ) {
+      this.totalMarks += questionData.mark;
+
+      return pinPointAnswerAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answer: answer,
+        question: questionData._id,
+        isCorrect: true,
+        mark: questionData.mark,
+      });
+    } else {
+      return pinPointAnswerAnswer.create({
+        ...this.answerBaseData,
+        index: answerData.index,
+        answer: answer,
+        question: questionData._id,
+        isCorrect: false,
+        mark: 0,
+      });
+    }
+  }
+
+  private async createQuestionAnswers(answers: Answer[]) {
+    return Promise.all(
       answers.map(async (answer) => {
         const answerType = answer.answerType;
 
         if (answerType === "multipleOptionAnswer") {
-          const questionData = await multipleOptionQuestion.findOne(
-            { _id: answer._id },
-            { correctAnswerIndex: 1, mark: 1 }
-          );
-          totalAnswers++;
-          const answerData = answer as MultipleOptionAnswer;
-
-          if (answerData.answerIndex === null) {
-            return multipleOptionAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answerIndex: null,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          }
-
-          if (questionData.correctAnswerIndex === answerData.answerIndex) {
-            totalMarks += questionData.mark;
-
-            return multipleOptionAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answerIndex: answerData.answerIndex,
-              question: questionData._id,
-              isCorrect: true,
-              mark: questionData.mark,
-            });
-          } else {
-            return multipleOptionAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answerIndex: answerData.answerIndex,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          }
+          return this.multipleOption(answer);
         }
 
         if (answerType === "multipleAnswerAnswer") {
-          const questionData = await multipleAnswerQuestion.findOne(
-            { _id: answer._id },
-            { correctAnswerIndices: 1, mark: 1 }
-          );
-          totalAnswers++;
-          const answerData = answer as MultipleAnswerAnswer;
-          if (answerData.answerIndices === null) {
-            return multipleAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answerIndices: null,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          }
-
-          if (
-            questionData.correctAnswerIndices.length !==
-            answerData.answerIndices.length
-          ) {
-            return multipleAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answerIndices: answerData.answerIndices,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          }
-
-          const answerIndicesMatched = [];
-
-          for (let i = 0; i < questionData.correctAnswerIndices.length; i++) {
-            if (
-              questionData.correctAnswerIndices[i] !==
-              answerData.answerIndices[i]
-            ) {
-              answerIndicesMatched.push(undefined);
-            }
-          }
-
-          if (answerIndicesMatched.includes(undefined)) {
-            return multipleAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answerIndices: answerData.answerIndices,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          } else {
-            totalMarks += questionData.mark;
-
-            return multipleAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answerIndices: answerData.answerIndices,
-              question: questionData._id,
-              isCorrect: true,
-              mark: questionData.mark,
-            });
-          }
+          return this.multipleAnswer(answer);
         }
 
         if (answerType === "textAnswerAnswer") {
-          const questionData = await textAnswerQuestion.findOne(
-            { _id: answer._id },
-            { correctAnswer: 1, mark: 1 }
-          );
-          totalAnswers++;
-          const answerData = answer as TextAnswerAnswer;
-          if (answerData.answer === null) {
-            return textAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answer: null,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          }
-
-          if (questionData.correctAnswer.length !== answerData.answer.length) {
-            return textAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answer: answerData.answer,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          }
-
-          if (questionData.correctAnswer !== answerData.answer) {
-            return textAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answer: answerData.answer,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          } else {
-            totalMarks += questionData.mark;
-
-            return textAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answer: answerData.answer,
-              question: questionData._id,
-              isCorrect: true,
-              mark: questionData.mark,
-            });
-          }
+          return this.textAnswer(answer);
         }
 
         if (answerType === "pinPointAnswerAnswer") {
-          const questionData = await pinPointAnswerQuestion.findOne(
-            { _id: answer._id },
-            { correctPinPointAnswer: 1, mark: 1 }
-          );
-          totalAnswers++;
-          const answerData = answer as PinPointAnswerAnswer;
-          if (answerData.pinPointAnswer === null) {
-            return pinPointAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answer: null,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          }
-
-          if (
-            questionData.correctPinPointAnswer.x ===
-              answerData.pinPointAnswer.x &&
-            questionData.correctPinPointAnswer.y === answerData.pinPointAnswer.y
-          ) {
-            totalMarks += questionData.mark;
-
-            return pinPointAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answer: answerData.pinPointAnswer,
-              question: questionData._id,
-              isCorrect: true,
-              mark: questionData.mark,
-            });
-          } else {
-            return pinPointAnswerAnswer.create({
-              ...answerBaseData,
-              index: answerData.index,
-              answer: answerData.pinPointAnswer,
-              question: questionData._id,
-              isCorrect: false,
-              mark: 0,
-            });
-          }
+          return this.pinPointAnswer(answer);
         }
       })
     );
+  }
 
-    const answerIds = [];
-    const successAnswers = [];
-    const failedAnswers = [];
+  public createResult(req: Request, res: Response, next: NextFunction) {
+    const { classroomId, userId } = req.query as {
+      classroomId: string;
+      userId: string;
+    };
+    const quizId = req.params.quizId;
+    const { answers } = req.body as {
+      answers: Answer[];
+    };
 
-    for (const answer of questionAnswers) {
-      answerIds.push(answer._id);
-      if (answer.isCorrect) {
-        successAnswers.push(answer);
-      } else {
-        failedAnswers.push(answer);
+    const check = this.validateData(answers, next);
+    if (!check) return;
+
+    serverHelper(async () => {
+      this.answerBaseData.quiz = quizId;
+      this.answerBaseData.participant = userId;
+
+      const questionAnswers = await this.createQuestionAnswers(answers);
+
+      const answerIds = [];
+      const successAnswers = [];
+      const failedAnswers = [];
+
+      for (const answer of questionAnswers) {
+        answerIds.push(answer._id);
+        if (answer.isCorrect) {
+          successAnswers.push(answer);
+        } else {
+          failedAnswers.push(answer);
+        }
       }
-    }
 
-    const quizAnswer = await quizAnswerModel.create({
-      quiz: quizId,
-      participant: userId,
-      classroom: classroomId,
-      totalMarks,
-      totalAnswers,
-      answers: answerIds,
-    });
+      const quizAnswer = await quizAnswerModel.create({
+        quiz: quizId,
+        participant: userId,
+        classroom: classroomId,
+        totalMarks: this.totalMarks,
+        totalAnswers: this.totalAnswers,
+        answers: answerIds,
+      });
 
-    await quizModel.updateOne(
-      {
-        _id: new Types.ObjectId(quizId),
-      },
-      {
-        $push: {
-          participants: { user: userId, answer: quizAnswer._id },
+      await quizModel.updateOne(
+        {
+          _id: new Types.ObjectId(quizId),
         },
-      }
-    );
+        {
+          $push: {
+            participants: { user: userId, answer: quizAnswer._id },
+          },
+        }
+      );
 
-    res.status(201).json({
-      success: true,
-      data: {
-        totalQuestions: totalAnswers,
-        totalMarks,
-        successAnswers,
-        failedAnswers,
-      },
-    });
-  }, next);
+      res.status(201).json({
+        success: true,
+        data: {
+          totalQuestions: this.totalAnswers,
+          totalMarks: this.totalMarks,
+          successAnswers: {
+            count: successAnswers.length,
+            answers: successAnswers,
+          },
+          failedAnswers: {
+            count: failedAnswers.length,
+            answers: failedAnswers,
+          },
+        },
+      });
+    }, next);
+  }
 }
+
+const quizResult = new quizResultController();
+
+export default quizResult.createResult.bind(quizResult);

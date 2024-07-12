@@ -58,6 +58,7 @@ export default function quizUpdateController(
         title,
         startTime,
         questions: questionIds,
+        totalQuestions: questionIds.length,
       }
     );
 
@@ -65,6 +66,7 @@ export default function quizUpdateController(
   }, next);
 }
 
+// TODO: update and fix
 async function questionPromises(
   questions: QuestionBase[],
   quizQuestions: QuestionBase[]

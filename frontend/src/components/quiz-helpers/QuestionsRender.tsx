@@ -33,7 +33,11 @@ const QuestionsRender: FC<QuestionInput> = ({ control, loading }) => {
           />
         </QuestionInputBase>
       ))}
-      <InputQuestions append={append} loading={loading} />
+      <InputQuestions
+        append={append}
+        loading={loading}
+        currentQuestionIdx={fields.length - 1 || 0}
+      />
     </>
   );
 };

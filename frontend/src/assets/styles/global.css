@@ -70,3 +70,20 @@
     @apply text-primary underline hover:text-primary/80;
   }
 }
+
+@layer components {
+  .CircleProgressBar {
+    width: var(--size);
+    height: var(--size);
+  }
+
+  .CircleProgressBar svg circle {
+    animation: CircleProgressBarAnimation 1s linear forwards;
+  }
+
+  @keyframes CircleProgressBarAnimation {
+    100% {
+      stroke-dashoffset: var(--strokeDashoffset);
+    }
+  }
+}

@@ -4,8 +4,10 @@ import Loading from "../Loading";
 import { getRouteApi } from "@tanstack/react-router";
 import useQuiz from "@/hooks/useQuiz";
 import Button from "../ui/button";
-import type { SubmitResult } from "@/types/question";
+import type { AnswerType } from "@/types/question";
+import type { SubmitResult } from "@/types/quiz";
 import type { ApiResponse } from "@/types/apiResponse";
+import CircleProgressBar from "../CircleProgressBar";
 
 const routeData = getRouteApi("/private/classroom/$classroomId/quiz/$quizId");
 
@@ -26,16 +28,34 @@ const ComplateQuiz: FC = () => {
   }, [allQuestions]);
 
   const allAnswers = useMemo(() => {
-    return allQuestions.map((question) => {
+    return allQuestions.map((question, index) => {
       const answer = answers.find((answer) => question._id === answer._id);
       if (!answer) {
+        let answerType: AnswerType = "multipleOptionAnswer";
+
+        switch (question.questionType) {
+          case "multipleOption":
+            answerType = "multipleOptionAnswer";
+            break;
+          case "multipleAnswer":
+            answerType = "multipleAnswerAnswer";
+            break;
+          case "textAnswer":
+            answerType = "textAnswerAnswer";
+            break;
+          case "pinPointAnswer":
+            answerType = "pinPointAnswerAnswer";
+            break;
+        }
+
         return {
           _id: question._id,
           answer: null,
-          questionType: question.questionType,
+          index,
+          answerType,
         };
       } else {
-        return answer;
+        return { ...answer, index };
       }
     });
   }, [allQuestions, answers]);
@@ -96,17 +116,13 @@ const ComplateQuiz: FC = () => {
       </>
     );
   }
-  const result = (
-    (100 / questionLimit) *
-    apiResData?.successAnswers?.length!
-  ).toFixed(0);
+
+  const result =
+    ((100 / questionLimit) * apiResData?.successAnswers?.count!) / 100;
 
   return (
     <>
-      <div className="flex size-32 items-center justify-center rounded-full border-8 border-primary text-3xl font-bold">
-        <span>{result && result}</span>
-        <span>%</span>
-      </div>
+      <CircleProgressBar percentage={result} size={250} />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="rounded-md border border-primary p-4 text-center text-xl font-medium">
           <span>Total question: </span>
@@ -120,11 +136,11 @@ const ComplateQuiz: FC = () => {
         </div>
         <div className="rounded-md border border-primary p-4 text-center text-xl font-medium">
           <span>Right question: </span>
-          <span>{apiResData?.successAnswers?.length}</span>
+          <span>{apiResData?.successAnswers?.count}</span>
         </div>
         <div className="rounded-md border border-primary p-4 text-center text-xl font-medium">
           <span>Wrong question: </span>
-          <span>{apiResData?.failedAnswers?.length}</span>
+          <span>{apiResData?.failedAnswers?.count}</span>
         </div>
       </div>
       <Button onClick={reFetchData} variant="secondary" size="lg">

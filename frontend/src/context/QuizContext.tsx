@@ -1,5 +1,6 @@
 import type { LayoutProps } from "@/types/types";
-import type { Answer, Question } from "@/types/question";
+import type { Question } from "@/types/question";
+import type { Answer } from "@/types/quiz";
 import { FC, createContext, useCallback, useState } from "react";
 
 interface QuizContextProps {
@@ -16,7 +17,7 @@ interface QuizContextProps {
   handleSubmitAnswer: (
     questionId: Answer["_id"],
     answer: Answer["answer"],
-    questionType?: Answer["questionType"],
+    answerType: Answer["answerType"],
   ) => void;
   complateQuiz: boolean;
 }
@@ -62,12 +63,9 @@ const QuizContextProvider: FC<QuizContextProviderProps> = ({
     (
       questionId: string,
       answer: Answer["answer"],
-      questionType?: Answer["questionType"],
+      answerType: Answer["answerType"],
     ) => {
-      setAnswers((prev) => [
-        ...prev,
-        { _id: questionId, answer, questionType },
-      ]);
+      setAnswers((prev) => [...prev, { _id: questionId, answer, answerType }]);
     },
     [],
   );

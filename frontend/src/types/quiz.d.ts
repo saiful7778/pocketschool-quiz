@@ -1,5 +1,6 @@
 import type { quizSchema } from "@/lib/schemas/quizSchema";
 import { z } from "zod";
+import type { AnswerType, Question } from "./question";
 
 export interface NewQuizzesRes {
   _id: string;
@@ -28,13 +29,43 @@ export interface Quizzes {
     fullName: string;
     email: string;
   };
-  questionsCount: number;
+  totalQuestions: number;
+  totalMarks: number;
   participantCount: number;
   startTime: Date;
   createdAt: Date;
   updatedAt: Date;
 }
 
+export interface QuizData {
+  _id: string;
+  title: string;
+  author: {
+    _id: string;
+    fullName: string;
+    email: string;
+  };
+  participants: {
+    user: {
+      _id: string;
+      fullName: string;
+      email: string;
+    };
+    answer: {
+      _id: string;
+      totalMarks: number;
+      totalAnswers: number;
+      createdAt: Date;
+    };
+  }[];
+  totalQuestions: number;
+  totalMarks: number;
+  startTime: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// TODO: update
 export interface AdminQuizDetails extends z.infer<typeof quizSchema> {
   _id: string;
   author: {
@@ -60,27 +91,15 @@ export interface QuizPublic {
   startTime: Date;
 }
 
-export interface Question {
-  _id: Types.ObjectId | string;
-  questionType?:
-    | "multipleOption"
-    | "multipleAnswer"
-    | "textAnswer"
-    | "pinPointAnswer";
-  questionText: string;
-  timeLimit: number;
-  mark: number;
-  options?: { _id: string; text: string }[];
-}
+type multipleOption = number;
+type multipleAnswer = number[];
+type textAnswer = string;
+type pinPointAnswer = { x: number; y: number };
 
 export interface Answer {
   _id: string;
-  questionType?:
-    | "multipleOption"
-    | "multipleAnswer"
-    | "textAnswer"
-    | "pinPointAnswer";
-  answer: number | number[] | string | { x: number; y: number } | null;
+  answerType: AnswerType;
+  answer: multipleOption | multipleAnswer | textAnswer | pinPointAnswer | null;
 }
 
 interface SubmitAnswer {
@@ -94,6 +113,12 @@ interface SubmitAnswer {
 export interface SubmitResult {
   totalQuestions: number;
   totalMarks: number;
-  successAnswers: SubmitAnswer[];
-  failedAnswers: SubmitAnswer[];
+  successAnswers: {
+    count: number;
+    answers: SubmitAnswer[];
+  };
+  failedAnswers: {
+    count: number;
+    answers: SubmitAnswer[];
+  };
 }

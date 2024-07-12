@@ -13,27 +13,13 @@ export type questionType =
   | "textAnswer"
   | "pinPointAnswer";
 
-export interface Question {
-  _id: Types.ObjectId | string;
-  questionType?: questionType;
-  questionText: string;
-  timeLimit: number;
-  mark: number;
-  options?: { _id: string; text: string }[];
-}
-
-export interface Answer {
-  _id: string;
-  questionType?: questionType;
-  answer: number | number[] | string | { x: number; y: number } | null;
-}
-
 interface QuestionBase {
   _id: string;
   mark: number;
-  questionText: string;
+  title: string;
   questionType: questionType;
   timeLimit: number;
+  mark: number;
 }
 
 type Option = {
@@ -54,18 +40,31 @@ export interface TextAnswer extends QuestionBase {
   correctAnswer: string;
 }
 
-export type Question = MultipleOption | MultipleAnswer | TextAnswer;
+export interface PinPointAnswer extends QuestionBase {
+  correctPinPointAnswer: {
+    x: string;
+    y: string;
+  };
+}
+
+export type Question =
+  | MultipleOption
+  | MultipleAnswer
+  | TextAnswer
+  | PinPointAnswer;
+
+export type AnswerType =
+  | "multipleOptionAnswer"
+  | "multipleAnswerAnswer"
+  | "textAnswerAnswer"
+  | "pinPointAnswerAnswer";
 
 interface Answerbase {
   _id: string;
   mark: number;
   isCorrect: boolean;
   question: QuestionBase;
-  answerType:
-    | "multipleOptionAnswer"
-    | "multipleAnswerAnswer"
-    | "textAnswerAnswer"
-    | "pinPointAnswerAnswer";
+  answerType: AnswerType;
 }
 
 export interface MultipleOptionAnswer extends Answerbase {

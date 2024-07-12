@@ -4,7 +4,6 @@ import { MoreHorizontal, PencilLine, ReceiptText, Trash2 } from "lucide-react";
 import { FC, useState } from "react";
 import DeleteQuiz from "./DeleteQuiz";
 import { useNavigate } from "@tanstack/react-router";
-import QuizDetails from "./QuizDetails";
 
 interface QuizRowActionProps {
   classroomId: string;
@@ -12,46 +11,46 @@ interface QuizRowActionProps {
   quizTitle: string;
 }
 
-const QuizRowAction: FC<QuizRowActionProps> = ({
+const AdminQuizRowAction: FC<QuizRowActionProps> = ({
   classroomId,
   quizId,
   quizTitle,
 }) => {
-  const navigate = useNavigate({ from: "/classroom/$classroomId/quizzes" });
+  const navigate = useNavigate({ from: "/classroom/$classroomId" });
   const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
-  const [detailsDialog, setDetailsDialog] = useState<boolean>(false);
 
   return (
     <>
       <DeleteQuiz
-        isOpen={deleteConfirm}
-        setIsOpen={setDeleteConfirm}
+        open={deleteConfirm}
+        onOpenChange={setDeleteConfirm}
         quiztitle={quizTitle}
-        quizId={quizId}
-        classroomId={classroomId}
-      />
-      <QuizDetails
-        open={detailsDialog}
-        onOpenChange={setDetailsDialog}
         quizId={quizId}
         classroomId={classroomId}
       />
       <DropdownMenu>
         <DropdownMenu.trigger asChild>
           <Button size="icon" variant="ghost">
-            <MoreHorizontal size={18} />{" "}
+            <MoreHorizontal size={18} />
             <span className="sr-only">open quiz manage menu</span>
           </Button>
         </DropdownMenu.trigger>
         <DropdownMenu.content align="end" forceMount>
-          <DropdownMenu.item onClick={() => setDetailsDialog((prev) => !prev)}>
+          <DropdownMenu.item
+            onClick={() =>
+              navigate({
+                to: "/classroom/$classroomId/admin/quiz/$quizId",
+                params: { classroomId, quizId },
+              })
+            }
+          >
             <ReceiptText size={16} strokeWidth={1} /> <span>Details</span>
           </DropdownMenu.item>
           <DropdownMenu.separator />
           <DropdownMenu.item
             onClick={() =>
               navigate({
-                to: "/classroom/$classroomId/update_quiz/$quizId",
+                to: "/classroom/$classroomId/admin/quiz/update/$quizId",
                 params: { classroomId, quizId },
               })
             }
@@ -71,4 +70,4 @@ const QuizRowAction: FC<QuizRowActionProps> = ({
   );
 };
 
-export default QuizRowAction;
+export default AdminQuizRowAction;

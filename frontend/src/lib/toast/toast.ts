@@ -1,4 +1,4 @@
-import { Toast, ToasterToast } from "@/types/toastTypes";
+import { Toast, ToasterToast } from "@/types";
 import genId from "./genId";
 import dispatch from "./dispatch";
 

@@ -3,20 +3,13 @@ import serverHelper from "../../../utils/serverHelper";
 import { quizAnswerModel, quizModel } from "../../../models/quiz.model";
 import { Types } from "mongoose";
 
-export default function quizController(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const quizId = req.params.quizId;
-  const { userId } = req.query;
-
-  serverHelper(async () => {
-    const quizResult = await quizAnswerModel.aggregate([
+class quizController {
+  private async answerData(quizId: string, userId: string) {
+    return quizAnswerModel.aggregate([
       {
         $match: {
           quiz: new Types.ObjectId(quizId),
-          participant: new Types.ObjectId(userId as string),
+          participant: new Types.ObjectId(userId),
         },
       },
       {
@@ -67,45 +60,57 @@ export default function quizController(
           totalAnswers: { $first: "$totalAnswers" },
         },
       },
-      {
-        $addFields: {
-          answers: { $reverseArray: "$answers" },
-        },
-      },
     ]);
+  }
 
-    if (quizResult && quizResult.length > 0) {
-      res.status(200).json({
-        success: true,
-        data: {
-          participated: true,
-          data: quizResult[0],
-        },
-      });
-      return;
-    }
+  public getQuiz(req: Request, res: Response, next: NextFunction) {
+    const quizId = req.params.quizId;
+    const { userId } = req.query as { userId: string };
 
-    const quiz = await quizModel
-      .findOne(
-        {
-          _id: quizId,
-        },
-        { title: 1, questions: 1, startTime: 1 }
-      )
-      .populate({
-        path: "questions",
-        select: [
-          "index",
-          "questionText",
-          "questionType",
-          "timeLimit",
-          "mark",
-          "options",
-        ],
+    serverHelper(async () => {
+      const isParticipated = await quizAnswerModel.findOne({
+        quiz: quizId,
+        participant: userId,
       });
 
-    res
-      .status(200)
-      .json({ success: true, data: { participated: false, data: quiz } });
-  }, next);
+      if (isParticipated) {
+        const quizResult = await this.answerData(quizId, userId);
+        res.status(200).json({
+          success: true,
+          data: {
+            participated: true,
+            data: quizResult[0],
+          },
+        });
+        return;
+      }
+
+      const quiz = await quizModel
+        .findOne(
+          {
+            _id: quizId,
+          },
+          { title: 1, questions: 1, startTime: 1 }
+        )
+        .populate({
+          path: "questions",
+          select: [
+            "index",
+            "title",
+            "questionType",
+            "timeLimit",
+            "mark",
+            "options",
+          ],
+        });
+
+      res
+        .status(200)
+        .json({ success: true, data: { participated: false, data: quiz } });
+    }, next);
+  }
 }
+
+const quiz = new quizController();
+
+export default quiz.getQuiz.bind(quiz);
