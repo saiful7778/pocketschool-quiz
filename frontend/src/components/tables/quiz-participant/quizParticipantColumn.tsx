@@ -1,6 +1,8 @@
 import Avatar from "@/components/ui/avatar";
 import type { Participant } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
+import moment from "moment";
+import QuizParticipantRowAction from "./QuizParticipantRowAction";
 
 export default function getQuizAnswerColumns() {
   const columns: ColumnDef<Participant>[] = [
@@ -38,9 +40,35 @@ export default function getQuizAnswerColumns() {
       },
     },
     {
-      id: "actions",
+      id: "marks",
+      header: () => <div className="text-center">Total Marks</div>,
       cell: ({ row }) => {
-        return <div>Action</div>;
+        const totalMarks = row.original.answer.totalMarks;
+        return <div className="text-center">{totalMarks}</div>;
+      },
+    },
+    {
+      id: "answers",
+      header: () => <div className="text-center">Total Answers</div>,
+      cell: ({ row }) => {
+        const totalAnswers = row.original.answer.totalAnswers;
+        return <div className="text-center">{totalAnswers}</div>;
+      },
+    },
+    {
+      id: "submitted",
+      header: () => <div className="text-center">Submitted</div>,
+      cell: ({ row }) => {
+        const submitted = row.original.answer.createdAt;
+        const submittedTime = moment(submitted).format("DD MMM YY - hh:mm a");
+
+        return <div className="text-center text-xs">{submittedTime}</div>;
+      },
+    },
+    {
+      id: "actions",
+      cell: () => {
+        return <QuizParticipantRowAction />;
       },
     },
   ];

@@ -1,4 +1,3 @@
-import Loading from "@/components/Loading";
 import QuizItem from "@/components/QuizItem";
 import ErrorPage from "@/components/shared/Error";
 import { useAxiosSecure } from "@/hooks/useAxios";
@@ -7,6 +6,7 @@ import type { ApiResponse, NewQuiz, AnswerQuiz } from "@/types";
 import type { UseNavigateResult } from "@tanstack/react-router";
 import UndefinedData from "@/components/shared/UndefinedData";
 import UserQuizzesAnswerTable from "@/components/tables/user-quizzes/UserQuizzesAnswerTable";
+import TableSkeleton from "@/components/TableSkeleton";
 
 interface UserClassroomMainProps {
   classroomId: string;
@@ -45,7 +45,7 @@ const UserClassroomMain: React.FC<UserClassroomMainProps> = ({
   });
 
   if (isLoading) {
-    return <Loading />;
+    return <TableSkeleton />;
   }
 
   if (isError) {

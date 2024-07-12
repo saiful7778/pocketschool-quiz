@@ -1,7 +1,7 @@
-import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import UndefinedData from "@/components/shared/UndefinedData";
 import UserTable from "@/components/tables/user/UserTable";
+import TableSkeleton from "@/components/TableSkeleton";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { USER_KEY } from "@/lib/queryKeys";
 import type { ApiResponse, UserType } from "@/types";
@@ -30,7 +30,7 @@ const Users: React.FC = () => {
   });
 
   if (isLoading) {
-    return <Loading />;
+    return <TableSkeleton />;
   }
 
   if (isError) {

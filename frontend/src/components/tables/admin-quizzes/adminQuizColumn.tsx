@@ -45,7 +45,7 @@ export default function getAdminQuizColumn(classroomId: string) {
     {
       id: "startTime",
       accessorKey: "startTime",
-      header: () => <div className="min-w-36">Quiz will start</div>,
+      header: () => <div>Quiz will start</div>,
       cell: ({ getValue }) => {
         const startTime = getValue<AdminQuizzes["startTime"]>();
         const quizStartTime = moment(startTime).format("DD MMM YY - hh:mm a");

@@ -19,9 +19,12 @@ const QuizParticipantTable: React.FC<QuizParticipantTableProps> = ({
     _columnId,
     filterValue,
   ) => {
-    const user = row.original.user as Participant["user"];
+    const user = row.original.user;
 
-    return user.fullName.toLowerCase().includes(filterValue);
+    return (
+      user.fullName.toLowerCase().includes(filterValue) ||
+      user.email.toLowerCase().includes(filterValue)
+    );
   };
 
   return (
