@@ -3,7 +3,6 @@ import { useAxiosSecure } from "@/hooks/useAxios";
 import toast from "@/lib/toast/toast";
 import type { ElementOpenProps } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FC } from "react";
 
 interface UpdateQuizProps extends ElementOpenProps {
   quizId: string;
@@ -11,7 +10,7 @@ interface UpdateQuizProps extends ElementOpenProps {
   quiztitle: string;
 }
 
-const DeleteQuiz: FC<UpdateQuizProps> = ({
+const DeleteQuiz: React.FC<UpdateQuizProps> = ({
   quiztitle,
   quizId,
   classroomId,

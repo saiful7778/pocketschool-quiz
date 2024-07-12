@@ -1,4 +1,4 @@
-import { Action, State } from "@/types/toastTypes";
+import type { Action, State } from "@/types";
 import reducer from "./reducer";
 
 export let memoryState: State = { toasts: [] };

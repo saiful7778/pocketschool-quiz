@@ -1,13 +1,13 @@
 import CircleProgressBar from "@/components/CircleProgressBar";
-import QuestionItemRender from "@/components/quiz-question-helpers/question-item/QuestionItemRender";
-import type { Result } from "@/types/question";
-import { FC, useMemo } from "react";
+import QuestionItem from "@/components/quiz-question-helpers/question-item/QuestionItem";
+import type { Result } from "@/types";
+import { useMemo } from "react";
 
 interface QuizResultProps {
   resultData: Result;
 }
 
-const QuizResult: FC<QuizResultProps> = ({ resultData }) => {
+const QuizResult: React.FC<QuizResultProps> = ({ resultData }) => {
   const [result, questionMarks] = useMemo(() => {
     const totalQuestionMarks = resultData.answers.reduce(
       (sum, curr) => sum + curr.question.mark,
@@ -32,7 +32,7 @@ const QuizResult: FC<QuizResultProps> = ({ resultData }) => {
           <span>Your marks: {resultData.totalMarks}</span>
         </div>
       </div>
-      <QuestionItemRender answers={resultData.answers} />
+      <QuestionItem answers={resultData.answers} />
     </div>
   );
 };

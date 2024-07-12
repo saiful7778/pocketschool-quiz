@@ -1,9 +1,9 @@
 import Avatar from "@/components/ui/avatar";
 import { ColumnDef } from "@tanstack/react-table";
-import type { User } from "@/types/user";
+import type { UserType } from "@/types";
 import UserTableRowAction from "./UserTableRowAction";
 
-const columns: ColumnDef<User>[] = [
+const columns: ColumnDef<UserType>[] = [
   {
     id: "count",
     header: () => <div className="text-center">#NO</div>,
@@ -42,7 +42,7 @@ const columns: ColumnDef<User>[] = [
     accessorKey: "role",
     header: () => <div className="text-center">Role</div>,
     cell: ({ getValue }) => {
-      const role = getValue<User["role"]>();
+      const role = getValue<UserType["role"]>();
       return <div className="text-center">{role}</div>;
     },
   },
@@ -51,7 +51,7 @@ const columns: ColumnDef<User>[] = [
     accessorKey: "access",
     header: () => <div className="text-center">Access</div>,
     cell: ({ getValue }) => {
-      const access = getValue<User["access"]>();
+      const access = getValue<UserType["access"]>();
       return access ? (
         <div className="text-center text-sky-500">true</div>
       ) : (

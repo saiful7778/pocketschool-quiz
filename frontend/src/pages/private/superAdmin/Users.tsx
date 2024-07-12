@@ -4,12 +4,10 @@ import UndefinedData from "@/components/shared/UndefinedData";
 import UserTable from "@/components/tables/user/UserTable";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { USER_KEY } from "@/lib/queryKeys";
-import type { ApiResponse } from "@/types/apiResponse";
-import type { User } from "@/types/user";
+import type { ApiResponse, UserType } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { FC } from "react";
 
-const Users: FC = () => {
+const Users: React.FC = () => {
   const axiosSecure = useAxiosSecure();
 
   const {
@@ -22,7 +20,8 @@ const Users: FC = () => {
   } = useQuery({
     queryKey: USER_KEY,
     queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<User[]>>("/api/users");
+      const { data } =
+        await axiosSecure.get<ApiResponse<UserType[]>>("/api/users");
       if (!data.success) {
         throw new Error(data.message);
       }

@@ -1,14 +1,15 @@
 import type { quizSchema } from "@/lib/schemas/quizSchema";
-import { z } from "zod";
-import type { AnswerType, Question } from "./question";
+import type { z } from "zod";
+import type { AnswerType } from "./question";
+import type { ClassroomUser } from "./user";
 
-export interface NewQuizzesRes {
+export interface NewQuiz {
   _id: string;
   title: string;
   totalQuestions: number;
 }
 
-export interface AnswerQuizzesRes {
+export interface AnswerQuiz {
   _id: string;
   quiz: {
     _id: string;
@@ -21,14 +22,9 @@ export interface AnswerQuizzesRes {
   createdAt: Date;
 }
 
-export interface Quizzes {
+export interface AdminQuizzes {
   _id: string;
   title: string;
-  author: {
-    _id: string;
-    fullName: string;
-    email: string;
-  };
   totalQuestions: number;
   totalMarks: number;
   participantCount: number;
@@ -37,58 +33,24 @@ export interface Quizzes {
   updatedAt: Date;
 }
 
-export interface QuizData {
-  _id: string;
-  title: string;
-  author: {
+interface Participant {
+  user: ClassroomUser["user"];
+  answer: {
     _id: string;
-    fullName: string;
-    email: string;
+    totalMarks: number;
+    totalAnswers: number;
+    createdAt: Date;
   };
-  participants: {
-    user: {
-      _id: string;
-      fullName: string;
-      email: string;
-    };
-    answer: {
-      _id: string;
-      totalMarks: number;
-      totalAnswers: number;
-      createdAt: Date;
-    };
-  }[];
+}
+
+interface QuizData extends z.infer<typeof quizSchema> {
+  _id: string;
+  author: ClassroomUser["user"];
   totalQuestions: number;
+  participants: Participant[];
   totalMarks: number;
-  startTime: Date;
   createdAt: Date;
   updatedAt: Date;
-}
-
-// TODO: update
-export interface AdminQuizDetails extends z.infer<typeof quizSchema> {
-  _id: string;
-  author: {
-    _id: string;
-    fullName: string;
-    email: string;
-  };
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface AdminQuiz extends z.infer<typeof quizSchema> {
-  _id: string;
-  author: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface QuizPublic {
-  _id: string;
-  title: string;
-  questions: Question[];
-  startTime: Date;
 }
 
 type multipleOption = number;

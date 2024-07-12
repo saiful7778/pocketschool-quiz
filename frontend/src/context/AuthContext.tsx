@@ -1,24 +1,22 @@
 import { useAxios } from "@/hooks/useAxios";
 import { auth } from "@/lib/firebase";
 import toast from "@/lib/toast/toast";
-import type { ApiResponse } from "@/types/apiResponse";
-import type { LayoutProps } from "@/types/types";
+import type { ApiResponse, LayoutProps, UserType } from "@/types";
 import { AxiosError } from "axios";
 import {
   type User,
   type UserCredential,
   onAuthStateChanged,
 } from "firebase/auth";
-import { FC, createContext, useEffect, useState } from "react";
-import type { User as UserData } from "@/types/user";
+import { createContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
   user: User | null;
   token: string | null;
   userData: {
-    _id: UserData["_id"];
-    role: UserData["role"];
-    uid: UserData["uid"];
+    _id: UserType["_id"];
+    role: UserType["role"];
+    uid: UserType["uid"];
   } | null;
   login: (email: string, password: string) => Promise<UserCredential>;
   register: (email: string, password: string) => Promise<UserCredential>;
@@ -31,7 +29,7 @@ export const AuthContext = createContext<AuthContextProps>(
   {} as AuthContextProps,
 );
 
-const AuthContextProvider: FC<Readonly<LayoutProps>> = ({ children }) => {
+const AuthContextProvider: React.FC<Readonly<LayoutProps>> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [token, setToken] = useState<string | null>(null);

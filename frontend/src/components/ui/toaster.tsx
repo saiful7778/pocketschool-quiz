@@ -1,8 +1,7 @@
 import useToast from "@/hooks/useToast";
 import Toast from "@/components/ui/toast";
-import { FC } from "react";
 
-const Toaster: FC = () => {
+const Toaster: React.FC = () => {
   const { toasts } = useToast();
 
   return (

@@ -1,17 +1,17 @@
 import { type FilterFn } from "@tanstack/react-table";
 import columns from "./userColumn";
-import type { User } from "@/types/user";
+import type { UserType } from "@/types";
 import MainTable from "../MainTable";
 
 interface UserTableProps {
-  data: User[];
+  data: UserType[];
   reFetch: () => void;
   isFetching: boolean;
 }
 
 const UserTable: React.FC<UserTableProps> = ({ data, reFetch, isFetching }) => {
-  const globalFilterFn: FilterFn<User> = (row, _columnId, filterValue) => {
-    const user = row.original as User;
+  const globalFilterFn: FilterFn<UserType> = (row, _columnId, filterValue) => {
+    const user = row.original as UserType;
     return (
       user.fullName.toLowerCase().includes(filterValue) ||
       user.email.toLowerCase().includes(filterValue)

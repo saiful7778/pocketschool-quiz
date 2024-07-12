@@ -1,5 +1,5 @@
-import type { LayoutProps } from "@/types/types";
-import { FC, createContext } from "react";
+import type { LayoutProps } from "@/types";
+import { createContext } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
 
 type FormFieldContextValue<
@@ -19,10 +19,9 @@ interface FormFieldContextProviderProps<
   name: TName;
 }
 
-const FormFieldContextProvider: FC<Readonly<FormFieldContextProviderProps>> = ({
-  children,
-  name,
-}) => {
+const FormFieldContextProvider: React.FC<
+  Readonly<FormFieldContextProviderProps>
+> = ({ children, name }) => {
   return (
     <FormFieldContext.Provider value={{ name }}>
       {children}

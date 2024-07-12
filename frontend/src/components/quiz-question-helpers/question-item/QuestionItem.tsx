@@ -1,5 +1,4 @@
-import {
-  Result,
+import type {
   Answers,
   MultipleOption,
   MultipleOptionAnswer,
@@ -7,18 +6,17 @@ import {
   MultipleAnswerAnswer,
   TextAnswer,
   TextAnswerAnswer,
-} from "@/types/question";
-import { FC } from "react";
+} from "@/types";
 import QuestionItemBase from "./QuestionItemBase";
 import MultipleOptionQuestionItem from "./MultipleOptionQuestionItem";
 import MultipleAnswerQuestionItem from "./MultipleAnswerQuestionItem";
 import TextAnswerQuestionItem from "./TextAnswerQuestionItem";
 
 interface QuestionItemRenderProps {
-  answers: Result["answers"];
+  answers: Answers[];
 }
 
-const QuestionItemRender: FC<QuestionItemRenderProps> = ({ answers }) => {
+const QuestionItem: React.FC<QuestionItemRenderProps> = ({ answers }) => {
   return (
     <div className="space-y-4">
       {answers.map((answer, idx) => (
@@ -101,4 +99,4 @@ const QuestionItemType = ({ answer }: { answer: Answers }) => {
   }
 };
 
-export default QuestionItemRender;
+export default QuestionItem;

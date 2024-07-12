@@ -1,18 +1,17 @@
-import { FC, ReactNode } from "react";
 import { X } from "lucide-react";
 import { FormField } from "@/components/ui/form";
 import InputField from "@/components/InputField";
 import Button from "@/components/ui/button";
-import type { QuestionInput, questionType } from "@/types/question";
+import type { QuestionInputFieldProps, questionType } from "@/types";
 
-interface QuestionInputBaseProps extends QuestionInput {
+interface QuestionInputBaseProps extends QuestionInputFieldProps {
   index: number;
   removeQuestion: () => void;
-  children: ReactNode;
+  children: React.ReactNode;
   questionType: questionType;
 }
 
-const QuestionInputBase: FC<QuestionInputBaseProps> = ({
+const QuestionInputBase: React.FC<QuestionInputBaseProps> = ({
   control,
   loading,
   index,
@@ -33,6 +32,7 @@ const QuestionInputBase: FC<QuestionInputBaseProps> = ({
     }
   };
 
+  // TODO: add negative marking
   return (
     <div className="relative space-y-4 rounded-md border-t-[4px] border-primary p-4 shadow">
       <div className="absolute right-2 top-2">

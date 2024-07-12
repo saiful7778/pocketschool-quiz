@@ -16,17 +16,16 @@ import { useAxiosSecure } from "@/hooks/useAxios";
 import { USER_KEY } from "@/lib/queryKeys";
 import { updateUserSchema } from "@/lib/schemas/userSchema";
 import toast from "@/lib/toast/toast";
-import type { ElementOpenProps } from "@/types";
-import type { User } from "@/types/user";
+import type { ElementOpenProps, UserType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { z } from "zod";
 
 interface UpdateUserProps extends ElementOpenProps {
   id: string;
-  role: User["role"];
-  access: User["access"];
+  role: UserType["role"];
+  access: UserType["access"];
 }
 
 const UpdateUser: React.FC<UpdateUserProps> = ({
@@ -50,8 +49,8 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (updatedUserData: {
-      role: User["role"];
-      access: User["access"];
+      role: UserType["role"];
+      access: UserType["access"];
     }) => {
       return axiosSecure.patch(`/api/users/${id}`, updatedUserData, {
         params: { email: user?.email, userId: userData?._id },

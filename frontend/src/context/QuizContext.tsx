@@ -1,15 +1,13 @@
-import type { LayoutProps } from "@/types/types";
-import type { Question } from "@/types/question";
-import type { Answer } from "@/types/quiz";
-import { FC, createContext, useCallback, useState } from "react";
+import type { LayoutProps, Answer, QuizData } from "@/types";
+import { createContext, useCallback, useState } from "react";
 
 interface QuizContextProps {
   reFetchData: () => void;
-  allQuestions: Question[];
+  allQuestions: QuizData["questions"];
   answers: Answer[];
   startQuiz: boolean;
   handleStartQuiz: () => void;
-  currentQuestion: Question;
+  currentQuestion: QuizData["questions"][number];
   resetTimer: number;
   questionIdx: number;
   questionLimit: number;
@@ -25,11 +23,11 @@ interface QuizContextProps {
 export const QuizContext = createContext<QuizContextProps | null>(null);
 
 interface QuizContextProviderProps extends Readonly<LayoutProps> {
-  allQuestions: Question[];
+  allQuestions: QuizData["questions"];
   reFetchQuizData: () => void;
 }
 
-const QuizContextProvider: FC<QuizContextProviderProps> = ({
+const QuizContextProvider: React.FC<QuizContextProviderProps> = ({
   allQuestions,
   reFetchQuizData,
   children,

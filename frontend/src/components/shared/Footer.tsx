@@ -1,6 +1,4 @@
-import { FC } from "react";
-
-const Footer: FC = () => {
+const Footer: React.FC = () => {
   const year = new Date().getFullYear();
   return (
     <footer className="container border-t py-10 text-center">

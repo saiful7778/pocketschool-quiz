@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Popover from "@/components/ui/popover";
 import Button from "@/components/ui/button";
 import Command from "@/components/ui/command";
@@ -19,7 +19,7 @@ interface SelectClassroomProps {
   defaultValue?: string;
 }
 
-const SelectClassroom: FC<SelectClassroomProps> = ({
+const SelectClassroom: React.FC<SelectClassroomProps> = ({
   classrooms,
   defaultValue = "",
 }) => {

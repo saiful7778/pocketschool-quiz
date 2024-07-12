@@ -1,6 +1,5 @@
 import "@/assets/styles/global.css";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { FC } from "react";
 import Toaster from "@/components/ui/toaster";
 import ErrorPage from "@/components/shared/Error";
 import NotFound from "@/components/shared/NotFound";
@@ -38,7 +37,7 @@ declare module "@tanstack/react-router" {
   }
 }
 
-const App: FC = () => {
+const App: React.FC = () => {
   return (
     <StateContextProvider>
       <QueryClientProvider client={queryClient}>

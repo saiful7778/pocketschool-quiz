@@ -3,38 +3,19 @@ import ErrorPage from "@/components/shared/Error";
 import UndefinedData from "@/components/shared/UndefinedData";
 import Button from "@/components/ui/button";
 import DropdownMenu from "@/components/ui/dropdown-menu";
-import useAuth from "@/hooks/useAuth";
-import { useAxiosSecure } from "@/hooks/useAxios";
+import useClassroomDetails from "@/hooks/useClassroomDetails";
 import useStateData from "@/hooks/useStateData";
-import type { ApiResponse } from "@/types/apiResponse";
-import { useQuery } from "@tanstack/react-query";
 import { Outlet, useNavigate } from "@tanstack/react-router";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { Copy, NotebookTabs, SquareChevronDown, Users } from "lucide-react";
-import { FC, useEffect } from "react";
-
-interface Classroom {
-  _id: string;
-  title: string;
-  users: {
-    user: string;
-    access: boolean;
-    role: "user" | "admin";
-    createdAt: Date;
-    updatedAt: Date;
-  };
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { useEffect } from "react";
 
 const routeData = getRouteApi("/private/classroom/$classroomId");
 
-const SingleClassroomLayout: FC = () => {
+const SingleClassroomLayout: React.FC = () => {
   const { classroomId } = routeData.useParams();
-  const { classroomRole, setClassroomRole, setClassroomDetailsLoading } =
+  const { classroomRole, handleClassroomRole, setClassroomDetailsLoading } =
     useStateData();
-  const { userData } = useAuth();
-  const axiosSecure = useAxiosSecure();
 
   const {
     data: classroom,
@@ -42,26 +23,14 @@ const SingleClassroomLayout: FC = () => {
     isError,
     error,
     refetch,
-  } = useQuery({
-    queryKey: ["classroom", { classroomId, userId: userData?._id }],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<Classroom>>(
-        `/api/classrooms/${classroomId}`,
-      );
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-      return data.data;
-    },
-    staleTime: Infinity,
-  });
+  } = useClassroomDetails(classroomId);
 
   useEffect(() => {
     if (classroom?.users) {
-      setClassroomRole(classroom?.users.role);
+      handleClassroomRole(classroom?.users.role);
       setClassroomDetailsLoading(false);
     }
-  }, [classroom, setClassroomRole, setClassroomDetailsLoading]);
+  }, [classroom, handleClassroomRole, setClassroomDetailsLoading]);
 
   if (isLoading) {
     return <Loading />;

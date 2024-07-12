@@ -1,9 +1,9 @@
 import Button from "@/components/ui/button";
 import useQuiz from "@/hooks/useQuiz";
 import { cn } from "@/lib/utils/shadcn";
-import type { AnswerType, Option } from "@/types/question";
+import type { AnswerType, Option } from "@/types";
 import { CircleCheckBig } from "lucide-react";
-import { FC, useState } from "react";
+import { useState } from "react";
 
 interface MultipleAnswerQuestionAnswerProps {
   options: Option[];
@@ -11,11 +11,9 @@ interface MultipleAnswerQuestionAnswerProps {
   answerType: AnswerType;
 }
 
-const MultipleAnswerQuestionAnswer: FC<MultipleAnswerQuestionAnswerProps> = ({
-  options,
-  questionId,
-  answerType,
-}) => {
+const MultipleAnswerQuestionAnswer: React.FC<
+  MultipleAnswerQuestionAnswerProps
+> = ({ options, questionId, answerType }) => {
   const { handleSubmitAnswer, handleNextQuestion } = useQuiz();
   const [Loading, setLoading] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);

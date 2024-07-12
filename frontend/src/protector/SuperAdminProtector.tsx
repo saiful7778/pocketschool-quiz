@@ -1,10 +1,9 @@
 import useAuth from "@/hooks/useAuth";
 import { defaultLoginPage } from "@/lib/staticData";
-import type { LayoutProps } from "@/types/types";
+import type { LayoutProps } from "@/types";
 import { Navigate } from "@tanstack/react-router";
-import { FC } from "react";
 
-const SuperAdminProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
+const SuperAdminProtector: React.FC<Readonly<LayoutProps>> = ({ children }) => {
   const { userData } = useAuth();
 
   if (userData?.role !== "superAdmin") {

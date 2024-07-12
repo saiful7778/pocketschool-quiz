@@ -1,12 +1,11 @@
 import { getRouteApi } from "@tanstack/react-router";
-import { FC } from "react";
 import ClassroomUpdate from "./sections/ClassroomUpdate";
 
 const routeData = getRouteApi(
   "/private/classroom/$classroomId/classroomAdmin/details",
 );
 
-const ClassroomDetails: FC = () => {
+const ClassroomDetails: React.FC = () => {
   const { classroomId } = routeData.useParams();
 
   return (

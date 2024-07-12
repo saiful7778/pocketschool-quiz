@@ -1,8 +1,7 @@
 import ClassroomAdminProtector from "@/protector/ClassroomAdminProtector";
 import { Outlet } from "@tanstack/react-router";
-import { FC } from "react";
 
-const ClassroomAdminLayout: FC = () => {
+const ClassroomAdminLayout: React.FC = () => {
   return (
     <ClassroomAdminProtector>
       <Outlet />

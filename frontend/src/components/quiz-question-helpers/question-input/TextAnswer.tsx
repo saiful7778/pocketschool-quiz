@@ -5,15 +5,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { FC } from "react";
-import type { QuestionInput } from "@/types/question";
+import type { QuestionInputFieldProps } from "@/types";
 import Textarea from "@/components/ui/textarea";
 
-interface TextAnswerProps extends QuestionInput {
+interface TextAnswerProps extends QuestionInputFieldProps {
   index: number;
 }
 
-const TextAnswer: FC<TextAnswerProps> = ({ control, index, loading }) => {
+const TextAnswer: React.FC<TextAnswerProps> = ({ control, index, loading }) => {
   return (
     <FormField
       control={control}
@@ -24,7 +23,6 @@ const TextAnswer: FC<TextAnswerProps> = ({ control, index, loading }) => {
           <FormControl>
             <Textarea
               placeholder="Correct Answer"
-              // className="resize-none"
               disabled={loading}
               {...field}
             />

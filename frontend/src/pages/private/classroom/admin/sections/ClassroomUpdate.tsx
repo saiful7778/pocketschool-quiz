@@ -1,37 +1,21 @@
 import ClassroomUpdateForm from "@/components/forms/classroom/ClassroomUpdateForm";
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
-import { useAxiosSecure } from "@/hooks/useAxios";
-import type { ApiResponse } from "@/types/apiResponse";
-import type { Classroom } from "@/types/classroom";
-import { useQuery } from "@tanstack/react-query";
-import { FC } from "react";
+import UndefinedData from "@/components/shared/UndefinedData";
+import useClassroomDetails from "@/hooks/useClassroomDetails";
 
 interface ClassroomUpdateProps {
   classroomId: string;
 }
 
-const ClassroomUpdate: FC<ClassroomUpdateProps> = ({ classroomId }) => {
-  const axiosSecure = useAxiosSecure();
-
+const ClassroomUpdate: React.FC<ClassroomUpdateProps> = ({ classroomId }) => {
   const {
     data: classroom,
     isLoading,
     isError,
     error,
     refetch,
-  } = useQuery({
-    queryKey: ["classroom", { classroomId }],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<Classroom>>(
-        `/api/classrooms/${classroomId}`,
-      );
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-      return data.data;
-    },
-  });
+  } = useClassroomDetails(classroomId);
 
   if (isLoading) {
     return <Loading />;
@@ -40,6 +24,12 @@ const ClassroomUpdate: FC<ClassroomUpdateProps> = ({ classroomId }) => {
   if (isError) {
     return <ErrorPage error={error} reset={refetch} />;
   }
+
+  if (!classroom) {
+    return <UndefinedData />;
+  }
+
+  console.log(classroom);
 
   return (
     <ClassroomUpdateForm title={classroom?.title!} classroomId={classroomId} />

@@ -1,5 +1,5 @@
 import useQuiz from "@/hooks/useQuiz";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../ui/button";
 
 const StartQuiz = ({
@@ -7,7 +7,7 @@ const StartQuiz = ({
   children,
 }: {
   startTime: Date;
-  children: ReactNode;
+  children: React.ReactNode;
 }) => {
   const { startQuiz } = useQuiz();
 

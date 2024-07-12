@@ -1,31 +1,28 @@
-import { FC } from "react";
 import MainTable from "../MainTable";
 import type { FilterFn } from "@tanstack/react-table";
 import getQuizAnswerColumns from "./quizParticipantColumn";
-import { QuizData } from "@/types/quiz";
+import type { Participant } from "@/types";
 
 interface QuizParticipantTableProps {
-  data: QuizData["participants"];
+  data: Participant[];
   reFetch: () => void;
   isFetching: boolean;
 }
 
-const QuizParticipantTable: FC<QuizParticipantTableProps> = ({
+const QuizParticipantTable: React.FC<QuizParticipantTableProps> = ({
   data,
   reFetch,
   isFetching,
 }) => {
-  const globalFilterFn: FilterFn<QuizData["participants"][number]> = (
+  const globalFilterFn: FilterFn<Participant> = (
     row,
     _columnId,
     filterValue,
   ) => {
-    const user = row.original.user;
+    const user = row.original.user as Participant["user"];
 
     return user.fullName.toLowerCase().includes(filterValue);
   };
-
-  console.log(data);
 
   return (
     <MainTable

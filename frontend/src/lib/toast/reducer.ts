@@ -1,4 +1,4 @@
-import { Action, State } from "@/types/toastTypes";
+import { Action, State } from "@/types";
 import addToRemoveQueue from "./addToRemoveQueue";
 import { TOAST_LIMIT } from "./settings";
 

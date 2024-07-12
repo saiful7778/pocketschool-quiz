@@ -1,10 +1,9 @@
 import Loading from "@/components/Loading";
 import useAuth from "@/hooks/useAuth";
-import type { LayoutProps } from "@/types/types";
+import type { LayoutProps } from "@/types";
 import { Navigate, useLocation } from "@tanstack/react-router";
-import { FC } from "react";
 
-const PrivateProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
+const PrivateProtector: React.FC<Readonly<LayoutProps>> = ({ children }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 

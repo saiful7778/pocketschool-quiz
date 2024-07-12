@@ -1,9 +1,9 @@
 import Avatar from "@/components/ui/avatar";
-import { QuizData } from "@/types/quiz";
+import type { Participant } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 
 export default function getQuizAnswerColumns() {
-  const columns: ColumnDef<QuizData["participants"][number]>[] = [
+  const columns: ColumnDef<Participant>[] = [
     {
       id: "count",
       header: () => <div className="text-center">#NO</div>,

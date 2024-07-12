@@ -1,4 +1,3 @@
-import { FC } from "react";
 import Spinner from "@/components/Spinner";
 import { cn } from "@/lib/utils/shadcn";
 
@@ -6,7 +5,7 @@ interface LoadingProps {
   fullPage?: boolean;
 }
 
-const Loading: FC<LoadingProps> = ({ fullPage }) => {
+const Loading: React.FC<LoadingProps> = ({ fullPage }) => {
   return (
     <div
       className={cn(

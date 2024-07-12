@@ -1,24 +1,27 @@
 import { type FilterFn } from "@tanstack/react-table";
-import { FC } from "react";
-import type { Quizzes } from "@/types/quiz";
+import type { AdminQuizzes } from "@/types";
 import getAdminQuizColumn from "./adminQuizColumn";
 import MainTable from "@/components/tables/MainTable";
 
 interface QuizzesTableProps {
-  data: Quizzes[];
+  data: AdminQuizzes[];
   classroomId: string;
   reFetch: () => void;
   isFetching: boolean;
 }
 
-const AdminQuizzesTable: FC<QuizzesTableProps> = ({
+const AdminQuizzesTable: React.FC<QuizzesTableProps> = ({
   data,
   classroomId,
   reFetch,
   isFetching,
 }) => {
-  const globalFilterFn: FilterFn<Quizzes> = (row, _columnId, filterValue) => {
-    const quiz = row.original as Quizzes;
+  const globalFilterFn: FilterFn<AdminQuizzes> = (
+    row,
+    _columnId,
+    filterValue,
+  ) => {
+    const quiz = row.original as AdminQuizzes;
 
     return quiz.title.toLowerCase().includes(filterValue);
   };

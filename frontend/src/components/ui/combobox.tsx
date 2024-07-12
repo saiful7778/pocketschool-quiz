@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils/shadcn";
 import Button from "@/components/ui/button";
@@ -12,7 +12,7 @@ interface ComboboxProps {
   arrayData: string[];
 }
 
-const Combobox: FC<ComboboxProps> = ({
+const Combobox: React.FC<ComboboxProps> = ({
   placeholder,
   searchPlaceholder,
   emptyText,

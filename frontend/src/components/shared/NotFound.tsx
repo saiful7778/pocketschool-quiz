@@ -1,8 +1,7 @@
 import Button from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { FC } from "react";
 
-const NotFound: FC = () => {
+const NotFound: React.FC = () => {
   return (
     <div className="flex h-[calc(100vh-90px)] w-full items-center justify-center">
       <div className="space-y-3 text-center">

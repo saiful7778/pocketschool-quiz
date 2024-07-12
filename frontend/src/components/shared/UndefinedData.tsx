@@ -1,6 +1,4 @@
-import { FC } from "react";
-
-const UndefinedData: FC = () => {
+const UndefinedData: React.FC = () => {
   return (
     <div className="flex w-full items-center justify-center">
       <div className="space-y-2 text-center">

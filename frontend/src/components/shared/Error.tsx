@@ -1,14 +1,12 @@
 import Button from "@/components/ui/button";
 import { cn } from "@/lib/utils/shadcn";
-import { FC } from "react";
-
 interface ErrorPageProps {
   error: Error;
   reset: () => void;
   fullPage?: boolean;
 }
 
-const ErrorPage: FC<ErrorPageProps> = ({ error, reset, fullPage }) => {
+const ErrorPage: React.FC<ErrorPageProps> = ({ error, reset, fullPage }) => {
   return (
     <div
       className={cn(

@@ -4,17 +4,16 @@ import ErrorPage from "@/components/shared/Error";
 import UndefinedData from "@/components/shared/UndefinedData";
 import useAuth from "@/hooks/useAuth";
 import { useAxiosSecure } from "@/hooks/useAxios";
-import type { ApiResponse } from "@/types/apiResponse";
+import type { ApiResponse } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { Outlet } from "@tanstack/react-router";
-import { FC } from "react";
 
 interface Classrooms {
   _id: string;
   title: string;
 }
 
-const ClassroomsLayout: FC = () => {
+const ClassroomsLayout: React.FC = () => {
   const { userData } = useAuth();
 
   const axiosSecure = useAxiosSecure();

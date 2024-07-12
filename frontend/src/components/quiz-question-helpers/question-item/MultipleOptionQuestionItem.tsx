@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils/shadcn";
-import { MultipleOption, MultipleOptionAnswer } from "@/types/question";
+import type { MultipleOption, MultipleOptionAnswer } from "@/types";
 import { CircleCheckBig, X } from "lucide-react";
-import { FC } from "react";
 
 interface MultipleOptionQuestionItemProps {
   options: MultipleOption["options"];
@@ -9,7 +8,7 @@ interface MultipleOptionQuestionItemProps {
   answerIndex: MultipleOptionAnswer["answerIndex"] | null;
 }
 
-const MultipleOptionQuestionItem: FC<MultipleOptionQuestionItemProps> = ({
+const MultipleOptionQuestionItem: React.FC<MultipleOptionQuestionItemProps> = ({
   options,
   correctAnswerIndex,
   answerIndex,

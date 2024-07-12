@@ -2,15 +2,15 @@ import Button from "@/components/ui/button";
 import Label from "@/components/ui/label";
 import Textarea from "@/components/ui/textarea";
 import useQuiz from "@/hooks/useQuiz";
-import type { AnswerType } from "@/types/question";
-import { FC, useRef, useState } from "react";
+import type { AnswerType } from "@/types";
+import { useRef, useState } from "react";
 
 interface TextAnswerQuestionAnswerProps {
   questionId: string;
   answerType: AnswerType;
 }
 
-const TextAnswerQuestionAnswer: FC<TextAnswerQuestionAnswerProps> = ({
+const TextAnswerQuestionAnswer: React.FC<TextAnswerQuestionAnswerProps> = ({
   questionId,
   answerType,
 }) => {

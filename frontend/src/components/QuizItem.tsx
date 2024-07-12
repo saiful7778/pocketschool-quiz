@@ -1,16 +1,15 @@
-import { FC } from "react";
 import Button from "./ui/button";
 import { MessageCircleCode } from "lucide-react";
 import quizImageTemplate from "@/assets/images/quiz-template.jpg";
-import type { NewQuizzesRes } from "@/types/quiz";
-import { type UseNavigateResult } from "@tanstack/react-router";
+import type { NewQuiz } from "@/types";
+import type { UseNavigateResult } from "@tanstack/react-router";
 
-interface QuizItemProp extends NewQuizzesRes {
+interface QuizItemProp extends NewQuiz {
   classroomId: string;
   navigate: UseNavigateResult<"/classroom/$classroomId/">;
 }
 
-const QuizItem: FC<QuizItemProp> = ({
+const QuizItem: React.FC<QuizItemProp> = ({
   title,
   totalQuestions,
   navigate,

@@ -1,8 +1,7 @@
 import SuperAdminProtector from "@/protector/SuperAdminProtector";
 import { Outlet } from "@tanstack/react-router";
-import { FC } from "react";
 
-const SuperAdminLayout: FC = () => {
+const SuperAdminLayout: React.FC = () => {
   return (
     <SuperAdminProtector>
       <Outlet />

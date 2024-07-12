@@ -1,7 +1,6 @@
-import { FC } from "react";
 import Skeleton from "./ui/skeleton";
 
-const TableSkeleton: FC = () => {
+const TableSkeleton: React.FC = () => {
   return (
     <div>
       <div className="flex justify-between gap-4">

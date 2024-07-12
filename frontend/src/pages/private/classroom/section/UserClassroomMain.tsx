@@ -3,8 +3,7 @@ import QuizItem from "@/components/QuizItem";
 import ErrorPage from "@/components/shared/Error";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
-import type { ApiResponse } from "@/types/apiResponse";
-import type { AnswerQuizzesRes, NewQuizzesRes } from "@/types/quiz";
+import type { ApiResponse, NewQuiz, AnswerQuiz } from "@/types";
 import type { UseNavigateResult } from "@tanstack/react-router";
 import UndefinedData from "@/components/shared/UndefinedData";
 import UserQuizzesAnswerTable from "@/components/tables/user-quizzes/UserQuizzesAnswerTable";
@@ -34,8 +33,8 @@ const UserClassroomMain: React.FC<UserClassroomMainProps> = ({
     queryFn: async () => {
       const { data } = await axiosSecure.get<
         ApiResponse<{
-          newQuizzes: NewQuizzesRes[];
-          answerQuizzes: AnswerQuizzesRes[];
+          newQuizzes: NewQuiz[];
+          answerQuizzes: AnswerQuiz[];
         }>
       >(`/api/quizzes/user`, { params: { classroomId } });
       if (!data.success) {

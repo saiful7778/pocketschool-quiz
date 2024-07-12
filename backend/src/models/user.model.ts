@@ -9,7 +9,10 @@ const userSchema = new Schema<User>(
       unique: true,
       required: [true, "Email is required"],
     },
-    image: String,
+    image: {
+      type: String,
+      default: null,
+    },
     uid: { type: String, required: [true, "User uid is required"] },
     role: {
       type: String,

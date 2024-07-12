@@ -1,7 +1,6 @@
 import Button from "@/components/ui/button";
 import type { quizSchema } from "@/lib/schemas/quizSchema";
 import { Grid2x2Check, ListChecks, MapPin, PencilLine } from "lucide-react";
-import { FC } from "react";
 import type { UseFieldArrayAppend } from "react-hook-form";
 import type { z } from "zod";
 
@@ -10,7 +9,7 @@ interface InputQuestionsProps {
   loading: boolean;
 }
 
-const AddQuestion: FC<InputQuestionsProps> = ({ append, loading }) => {
+const AddQuestion: React.FC<InputQuestionsProps> = ({ append, loading }) => {
   const handleMultipuleOptions = () => {
     append({
       questionType: "multipleOption",

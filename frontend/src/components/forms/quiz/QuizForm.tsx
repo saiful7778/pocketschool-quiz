@@ -1,4 +1,3 @@
-import { FC } from "react";
 import Button from "../../ui/button";
 import Spinner from "../../Spinner";
 import { Form, FormField } from "../../ui/form";
@@ -7,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { quizSchema } from "@/lib/schemas/quizSchema";
 import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import QuestionsInput from "@/components/quiz-question-helpers/questionInput/QuestionsInput";
+import QuestionsInput from "@/components/quiz-question-helpers/question-input/QuestionsInput";
 
 interface QuizFormProps {
   title: string;
@@ -17,7 +16,7 @@ interface QuizFormProps {
   handleSubmit: (e: z.infer<typeof quizSchema>) => void;
 }
 
-const QuizForm: FC<QuizFormProps> = ({
+const QuizForm: React.FC<QuizFormProps> = ({
   title,
   submitButtonText,
   defaultValues,

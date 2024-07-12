@@ -3,21 +3,19 @@ import { useAxiosSecure } from "@/hooks/useAxios";
 import { QUIZZES_KEY } from "@/lib/queryKeys";
 import { quizSchema } from "@/lib/schemas/quizSchema";
 import toast from "@/lib/toast/toast";
-import type { ApiResponse, UpdateDateResponse } from "@/types/apiResponse";
-import type { AdminQuiz } from "@/types/quiz";
+import type { ApiResponse, UpdateDateResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UseNavigateResult } from "@tanstack/react-router";
-import type { FC } from "react";
 import { z } from "zod";
 
 interface QuizUpdateFormProps {
   classroomId: string;
   quizId: string;
-  defaultValues: AdminQuiz;
+  defaultValues: z.infer<typeof quizSchema>;
   navigate: UseNavigateResult<"/classroom/$classroomId/update_quiz/$quizId">;
 }
 
-const QuizUpdateForm: FC<QuizUpdateFormProps> = ({
+const QuizUpdateForm: React.FC<QuizUpdateFormProps> = ({
   classroomId,
   quizId,
   defaultValues,

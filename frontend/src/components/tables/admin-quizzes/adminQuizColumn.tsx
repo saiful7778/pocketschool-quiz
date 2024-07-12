@@ -1,10 +1,10 @@
-import { type Quizzes } from "@/types/quiz";
+import type { AdminQuizzes } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
 import AdminQuizRowAction from "./AdminQuizRowAction";
 
 export default function getAdminQuizColumn(classroomId: string) {
-  const columns: ColumnDef<Quizzes>[] = [
+  const columns: ColumnDef<AdminQuizzes>[] = [
     {
       id: "count",
       header: () => <div className="text-center">#NO</div>,
@@ -20,7 +20,7 @@ export default function getAdminQuizColumn(classroomId: string) {
       accessorKey: "totalQuestions",
       header: () => <div className="text-center">Questions</div>,
       cell: ({ getValue }) => {
-        const totalQuestions = getValue<Quizzes["totalQuestions"]>();
+        const totalQuestions = getValue<AdminQuizzes["totalQuestions"]>();
         return <div className="text-center">{totalQuestions}</div>;
       },
     },
@@ -29,7 +29,7 @@ export default function getAdminQuizColumn(classroomId: string) {
       accessorKey: "totalMarks",
       header: () => <div className="text-center">Total Marks</div>,
       cell: ({ getValue }) => {
-        const totalMarks = getValue<Quizzes["totalMarks"]>();
+        const totalMarks = getValue<AdminQuizzes["totalMarks"]>();
         return <div className="text-center">{totalMarks}</div>;
       },
     },
@@ -38,7 +38,7 @@ export default function getAdminQuizColumn(classroomId: string) {
       accessorKey: "participantCount",
       header: () => <div className="text-center">Participants</div>,
       cell: ({ getValue }) => {
-        const participantCount = getValue<Quizzes["participantCount"]>();
+        const participantCount = getValue<AdminQuizzes["participantCount"]>();
         return <div className="text-center">{participantCount}</div>;
       },
     },
@@ -47,7 +47,7 @@ export default function getAdminQuizColumn(classroomId: string) {
       accessorKey: "startTime",
       header: () => <div className="min-w-36">Quiz will start</div>,
       cell: ({ getValue }) => {
-        const startTime = getValue<Quizzes["startTime"]>();
+        const startTime = getValue<AdminQuizzes["startTime"]>();
         const quizStartTime = moment(startTime).format("DD MMM YY - hh:mm a");
 
         return <div className="text-xs">{quizStartTime}</div>;

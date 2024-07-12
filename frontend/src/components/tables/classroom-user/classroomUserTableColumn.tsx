@@ -1,10 +1,10 @@
 import Avatar from "@/components/ui/avatar";
 import { ColumnDef } from "@tanstack/react-table";
-import type { user } from "@/types/classroom";
+import type { ClassroomUser } from "@/types";
 import ClassroomUserRowAction from "./ClassroomUserRowAction";
 
 export default function getColumns(classroomId: string) {
-  const columns: ColumnDef<user>[] = [
+  const columns: ColumnDef<ClassroomUser>[] = [
     {
       id: "count",
       header: () => <div className="text-center">#NO</div>,

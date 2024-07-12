@@ -1,9 +1,9 @@
 import Button from "@/components/ui/button";
 import DropdownMenu from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PencilLine, ReceiptText, Trash2 } from "lucide-react";
-import { FC, useState } from "react";
 import DeleteQuiz from "./DeleteQuiz";
 import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 
 interface QuizRowActionProps {
   classroomId: string;
@@ -11,7 +11,7 @@ interface QuizRowActionProps {
   quizTitle: string;
 }
 
-const AdminQuizRowAction: FC<QuizRowActionProps> = ({
+const AdminQuizRowAction: React.FC<QuizRowActionProps> = ({
   classroomId,
   quizId,
   quizTitle,

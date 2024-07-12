@@ -1,10 +1,10 @@
-import type { AnswerQuizzesRes } from "@/types/quiz";
+import type { AnswerQuiz } from "@/types";
 import type { FilterFn } from "@tanstack/react-table";
 import MainTable from "../MainTable";
 import getQuizAnswerColumns from "./quizAnswerColumn";
 
 interface UserQuizAnswerTableProps {
-  data: AnswerQuizzesRes[];
+  data: AnswerQuiz[];
   classroomId: string;
   reFetch: () => void;
   isFetching: boolean;
@@ -16,12 +16,12 @@ const UserQuizzesAnswerTable: React.FC<UserQuizAnswerTableProps> = ({
   reFetch,
   isFetching,
 }) => {
-  const globalFilterFn: FilterFn<AnswerQuizzesRes> = (
+  const globalFilterFn: FilterFn<AnswerQuiz> = (
     row,
     _columnId,
     filterValue,
   ) => {
-    const quizAnswer = row.original.quiz as AnswerQuizzesRes["quiz"];
+    const quizAnswer = row.original.quiz as AnswerQuiz["quiz"];
 
     return quizAnswer.title.toLowerCase().includes(filterValue);
   };

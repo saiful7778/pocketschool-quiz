@@ -1,8 +1,7 @@
-import { FC } from "react";
 import DropdownMenu from "@/components/ui/dropdown-menu";
 import Button from "@/components/ui/button";
 import Avatar from "@/components/ui/avatar";
-import { User } from "firebase/auth";
+import type { User } from "firebase/auth";
 import { Link } from "@tanstack/react-router";
 import useAuth from "@/hooks/useAuth";
 
@@ -10,7 +9,7 @@ interface UserAuthDropdownProps {
   user: User | undefined | null;
 }
 
-const UserDropdown: FC<UserAuthDropdownProps> = ({ user }) => {
+const UserDropdown: React.FC<UserAuthDropdownProps> = ({ user }) => {
   const { logOut } = useAuth();
   return (
     <DropdownMenu>

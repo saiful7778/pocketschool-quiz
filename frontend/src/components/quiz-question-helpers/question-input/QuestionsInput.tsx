@@ -1,5 +1,3 @@
-import { FC } from "react";
-import type { QuestionInput, questionType } from "@/types/question";
 import { useFieldArray } from "react-hook-form";
 import QuestionInputBase from "./QuestionInputBase";
 import AddQuestion from "./AddQuestion";
@@ -7,8 +5,12 @@ import MultipleOption from "./MultipleOption";
 import MultipleAnswer from "./MultipleAnswer";
 import TextAnswer from "./TextAnswer";
 import PinPointAnswer from "./PinPointAnswer";
+import type { QuestionInputFieldProps, questionType } from "@/types";
 
-const QuestionsInput: FC<QuestionInput> = ({ control, loading }) => {
+const QuestionsInput: React.FC<QuestionInputFieldProps> = ({
+  control,
+  loading,
+}) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "questions",
@@ -38,12 +40,12 @@ const QuestionsInput: FC<QuestionInput> = ({ control, loading }) => {
   );
 };
 
-interface QuestionTypeOptionProps extends QuestionInput {
+interface QuestionTypeOptionProps extends QuestionInputFieldProps {
   index: number;
   questionType: questionType;
 }
 
-const QuestionTypeOption: FC<QuestionTypeOptionProps> = ({
+const QuestionTypeOption: React.FC<QuestionTypeOptionProps> = ({
   control,
   loading,
   index,

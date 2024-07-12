@@ -1,4 +1,7 @@
-import { FC } from "react";
+import { useFieldArray, type UseFieldArrayRemove } from "react-hook-form";
+import type { QuestionInputFieldProps } from "@/types";
+import Button from "@/components/ui/button";
+import { X } from "lucide-react";
 import {
   FormControl,
   FormField,
@@ -6,18 +9,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { QuestionInput } from "@/types/question";
-import { useFieldArray, type UseFieldArrayRemove } from "react-hook-form";
-import RadioGroup from "@/components/ui/radio-group";
+import Checkbox from "@/components/ui/checkbox";
 import Input from "@/components/ui/input";
-import Button from "@/components/ui/button";
-import { X } from "lucide-react";
 
-interface MultipleOptionProps extends QuestionInput {
+interface MultipleAnswerProps extends QuestionInputFieldProps {
   index: number;
 }
 
-const MultipleOption: FC<MultipleOptionProps> = ({
+const MultipleAnswer: React.FC<MultipleAnswerProps> = ({
   control,
   loading,
   index,
@@ -31,26 +30,26 @@ const MultipleOption: FC<MultipleOptionProps> = ({
     <>
       <FormField
         control={control}
-        name={`questions.${index}.correctAnswerIndex`}
+        name={`questions.${index}.correctAnswerIndices`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>Question options</FormLabel>
             <FormControl>
-              <RadioGroup
-                onValueChange={(e) => field.onChange(Number(e))}
-                defaultValue={String(field.value)}
-              >
+              <div className="space-y-2">
                 {fields.map((_, idx) => (
                   <Option
+                    key={`questions-${index}-options-${idx}`}
                     control={control}
-                    questionIdx={index}
-                    optionIdx={idx}
                     loading={loading}
-                    remove={remove}
                     fieldLength={fields.length}
+                    onChange={field.onChange}
+                    value={field.value}
+                    optionIdx={idx}
+                    questionIdx={index}
+                    remove={remove}
                   />
                 ))}
-              </RadioGroup>
+              </div>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -68,32 +67,40 @@ const MultipleOption: FC<MultipleOptionProps> = ({
   );
 };
 
-interface OptionProps extends QuestionInput {
+interface OptionProps extends QuestionInputFieldProps {
   questionIdx: number;
   optionIdx: number;
+  value: number[];
+  onChange: (event: number[]) => void;
   remove: UseFieldArrayRemove;
   fieldLength: number;
 }
 
-const Option: FC<OptionProps> = ({
+const Option: React.FC<OptionProps> = ({
   control,
   loading,
+  value,
+  onChange,
   questionIdx,
   optionIdx,
   remove,
   fieldLength,
 }) => {
+  const handleChecked = (checked: boolean | "indeterminate") => {
+    const updatedIndices = checked
+      ? [...value, optionIdx]
+      : value.filter((valueIdx: number) => valueIdx !== optionIdx);
+    onChange(updatedIndices);
+  };
+
   return (
-    <div
-      className="relative flex items-start gap-2"
-      key={`questions-${questionIdx}-options-${optionIdx}`}
-    >
-      <div className="mt-2.5">
-        <RadioGroup.item
-          value={`${optionIdx}`}
-          id={`questions-${questionIdx}-options-${optionIdx}`}
-        />
-      </div>
+    <div className="relative flex items-start gap-2">
+      <Checkbox
+        disabled={loading}
+        className="mt-3"
+        checked={value.includes(optionIdx)}
+        onCheckedChange={handleChecked}
+      />
       <FormField
         control={control}
         name={`questions.${questionIdx}.options.${optionIdx}.text`}
@@ -101,7 +108,6 @@ const Option: FC<OptionProps> = ({
           <FormItem className="w-full">
             <FormControl>
               <Input
-                className="pr-10"
                 placeholder="option"
                 type="text"
                 disabled={loading}
@@ -126,4 +132,4 @@ const Option: FC<OptionProps> = ({
   );
 };
 
-export default MultipleOption;
+export default MultipleAnswer;

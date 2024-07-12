@@ -1,4 +1,4 @@
-export interface User {
+export interface UserType {
   _id: string;
   fullName: string;
   email: string;
@@ -9,4 +9,17 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
   __v?: number;
+}
+
+export interface ClassroomUser {
+  user: {
+    _id: string;
+    fullName: string;
+    image?: string | null;
+    email: string;
+  };
+  role: "user" | "admin";
+  access: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

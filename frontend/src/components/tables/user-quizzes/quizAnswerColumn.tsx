@@ -1,10 +1,10 @@
-import type { AnswerQuizzesRes } from "@/types/quiz";
+import type { AnswerQuiz } from "@/types";
 import { type ColumnDef } from "@tanstack/react-table";
 import moment from "moment";
 import QuizAnswerRowAction from "./QuizAnswerRowAction";
 
 export default function getQuizAnswerColumns(classroomId: string) {
-  const columns: ColumnDef<AnswerQuizzesRes>[] = [
+  const columns: ColumnDef<AnswerQuiz>[] = [
     {
       id: "count",
       header: () => <div className="text-center">#NO</div>,
@@ -68,7 +68,7 @@ export default function getQuizAnswerColumns(classroomId: string) {
       accessorKey: "createdAt",
       header: "Time",
       cell: ({ getValue }) => {
-        const createdAt = getValue<AnswerQuizzesRes["createdAt"]>();
+        const createdAt = getValue<AnswerQuiz["createdAt"]>();
         const answerTime = moment(createdAt).format("DD/MM/YYYY hh:mm a");
 
         return <div className="text-xs">{answerTime}</div>;

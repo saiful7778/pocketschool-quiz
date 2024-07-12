@@ -1,10 +1,10 @@
 import type { FilterFn } from "@tanstack/react-table";
-import type { user } from "@/types/classroom";
+import type { ClassroomUser } from "@/types";
 import getColumns from "./classroomUserTableColumn";
 import MainTable from "../MainTable";
 
 interface ClassroomUserTableProps {
-  data: user[];
+  data: ClassroomUser[];
   reFetch: () => void;
   classroomId: string;
   isFetching: boolean;
@@ -16,8 +16,12 @@ const ClassroomUserTable: React.FC<ClassroomUserTableProps> = ({
   classroomId,
   isFetching,
 }) => {
-  const globalFilterFn: FilterFn<user> = (row, _columnId, filterValue) => {
-    const user = row.original.user as user["user"];
+  const globalFilterFn: FilterFn<ClassroomUser> = (
+    row,
+    _columnId,
+    filterValue,
+  ) => {
+    const user = row.original.user as ClassroomUser["user"];
     return (
       user.fullName.toLowerCase().includes(filterValue) ||
       user.email.toLowerCase().includes(filterValue)

@@ -1,11 +1,10 @@
-import { FC } from "react";
 import SiteLogo from "@/components/SiteLogo";
 import useAuth from "@/hooks/useAuth";
 import Button from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import UserDropdown from "@/components/UserDropdown";
 
-const Navbar: FC = () => {
+const Navbar: React.FC = () => {
   const { user } = useAuth();
   return (
     <nav className="flex items-center justify-between gap-2 border-b pb-2">

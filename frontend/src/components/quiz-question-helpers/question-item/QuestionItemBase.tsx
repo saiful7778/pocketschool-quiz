@@ -1,5 +1,4 @@
 import { CheckCheck, X, TimerReset } from "lucide-react";
-import { FC, ReactNode } from "react";
 
 interface QuestionItemBaseProps {
   questionText: string;
@@ -8,10 +7,10 @@ interface QuestionItemBaseProps {
   result: number;
   isCorrect: boolean;
   questionIdx: number;
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-const QuestionItemBase: FC<QuestionItemBaseProps> = ({
+const QuestionItemBase: React.FC<QuestionItemBaseProps> = ({
   questionText,
   timeLimit,
   questionMarks,

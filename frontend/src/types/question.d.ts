@@ -1,12 +1,3 @@
-import type { quizSchema } from "@/lib/schemas/quizSchema";
-import type { Control } from "react-hook-form";
-import type { z } from "zod";
-
-export interface QuestionInput {
-  control: Control<z.infer<typeof quizSchema>>;
-  loading: boolean;
-}
-
 export type questionType =
   | "multipleOption"
   | "multipleAnswer"
@@ -63,7 +54,7 @@ interface Answerbase {
   _id: string;
   mark: number;
   isCorrect: boolean;
-  question: QuestionBase;
+  question: Question;
   answerType: AnswerType;
 }
 

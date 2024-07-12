@@ -1,8 +1,7 @@
 import Button from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { FC } from "react";
 
-const Home: FC = () => {
+const Home: React.FC = () => {
   return (
     <div className="flex min-h-[calc(100vh-190px)] w-full flex-col items-center justify-center gap-4 py-10 text-center">
       <h1 className="text-5xl font-bold">

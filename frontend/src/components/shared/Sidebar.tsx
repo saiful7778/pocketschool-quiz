@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { dashboardLinks } from "@/lib/staticData";
 import useAuth from "@/hooks/useAuth";
 import Separator from "@/components/ui/separator";
@@ -7,7 +6,7 @@ import DropdownMenu from "../ui/dropdown-menu";
 import Button from "../ui/button";
 import { SquareMenuIcon } from "lucide-react";
 
-const Sidebar: FC = () => {
+const Sidebar: React.FC = () => {
   const { userData } = useAuth();
 
   return (

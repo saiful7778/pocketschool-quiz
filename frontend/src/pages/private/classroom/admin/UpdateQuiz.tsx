@@ -1,21 +1,17 @@
 import QuizUpdateForm from "@/components/forms/quiz/QuizUpdateForm";
 import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
-import { useAxiosSecure } from "@/hooks/useAxios";
-import type { ApiResponse } from "@/types/apiResponse";
-import type { AdminQuiz } from "@/types/quiz";
-import { useQuery } from "@tanstack/react-query";
+import UndefinedData from "@/components/shared/UndefinedData";
+import useQuizData from "@/hooks/useQuizData";
 import { getRouteApi } from "@tanstack/react-router";
-import { FC } from "react";
 
 const routeData = getRouteApi(
   "/private/classroom/$classroomId/classroomAdmin/admin/quiz/update/$quizId",
 );
 
-const UpdateQuiz: FC = () => {
+const UpdateQuiz: React.FC = () => {
   const { classroomId, quizId } = routeData.useParams();
   const navigate = routeData.useNavigate();
-  const axiosSecure = useAxiosSecure();
 
   const {
     data: quizData,
@@ -23,19 +19,7 @@ const UpdateQuiz: FC = () => {
     isError,
     error,
     refetch,
-  } = useQuery({
-    queryKey: ["quiz", "admin", { classroomId, quizId }],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<AdminQuiz>>(
-        `/api/quizzes/admin/${quizId}`,
-        { params: { classroomId } },
-      );
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-      return data.data;
-    },
-  });
+  } = useQuizData(classroomId, quizId);
 
   if (isLoading) {
     return <Loading />;
@@ -43,6 +27,10 @@ const UpdateQuiz: FC = () => {
 
   if (isError) {
     return <ErrorPage error={error} reset={refetch} />;
+  }
+
+  if (!quizData) {
+    return <UndefinedData />;
   }
 
   return (

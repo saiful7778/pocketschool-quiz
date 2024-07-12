@@ -4,16 +4,14 @@ import AdminQuizzesTable from "@/components/tables/admin-quizzes/AdminQuizzesTab
 import TableSkeleton from "@/components/TableSkeleton";
 import { useAxiosSecure } from "@/hooks/useAxios";
 import { QUIZZES_KEY } from "@/lib/queryKeys";
-import type { ApiResponse } from "@/types/apiResponse";
-import type { Quizzes as QuizzesType } from "@/types/quiz";
+import type { ApiResponse, AdminQuizzes } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { FC } from "react";
 
 interface QuizzesProps {
   classroomId: string;
 }
 
-const Quizzes: FC<QuizzesProps> = ({ classroomId }) => {
+const Quizzes: React.FC<QuizzesProps> = ({ classroomId }) => {
   const axiosSecure = useAxiosSecure();
 
   const {
@@ -26,7 +24,7 @@ const Quizzes: FC<QuizzesProps> = ({ classroomId }) => {
   } = useQuery({
     queryKey: QUIZZES_KEY(classroomId),
     queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<QuizzesType[]>>(
+      const { data } = await axiosSecure.get<ApiResponse<AdminQuizzes[]>>(
         "/api/quizzes/admin",
         { params: { classroomId } },
       );

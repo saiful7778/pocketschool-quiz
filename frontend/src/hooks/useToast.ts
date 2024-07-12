@@ -1,6 +1,6 @@
 import dispatch, { listeners, memoryState } from "@/lib/toast/dispatch";
 import toast from "@/lib/toast/toast";
-import { State } from "@/types/toastTypes";
+import type { State } from "@/types";
 import { useEffect, useState } from "react";
 
 export default function useToast() {

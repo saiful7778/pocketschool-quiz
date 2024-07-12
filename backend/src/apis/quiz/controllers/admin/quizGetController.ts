@@ -16,13 +16,13 @@ export default function quizGetController(
       .populate({
         path: "author",
         model: "user",
-        select: ["fullName", "email"],
+        select: ["fullName", "email", "image"],
       })
       .populate({ path: "questions", model: "question" })
       .populate({
         path: "participants.user",
         model: "user",
-        select: ["fullName", "email"],
+        select: ["fullName", "email", "image"],
       })
       .populate({
         path: "participants.answer",

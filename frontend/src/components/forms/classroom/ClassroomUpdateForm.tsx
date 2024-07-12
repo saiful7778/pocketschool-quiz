@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import useAuth from "@/hooks/useAuth";
@@ -17,7 +16,7 @@ interface ClassroomUpdateFormProps {
   classroomId: string;
 }
 
-const ClassroomUpdateForm: FC<ClassroomUpdateFormProps> = ({
+const ClassroomUpdateForm: React.FC<ClassroomUpdateFormProps> = ({
   title,
   classroomId,
 }) => {

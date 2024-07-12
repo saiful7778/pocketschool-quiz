@@ -1,13 +1,13 @@
 import Button from "@/components/ui/button";
 import { MoreHorizontal, UserCog } from "lucide-react";
 import UpdateUser from "./UpdateUser";
-import type { User } from "@/types/user";
+import type { UserType } from "@/types";
 import DropdownMenu from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 
 interface UserTableRowActionProps {
   id: string;
-  role: User["role"];
+  role: UserType["role"];
   access: boolean;
 }
 

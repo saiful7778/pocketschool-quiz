@@ -19,25 +19,6 @@ export default function quizGetAllController(
         },
       },
       {
-        $lookup: {
-          from: "users",
-          localField: "author",
-          foreignField: "_id",
-          as: "author",
-          pipeline: [
-            {
-              $project: {
-                fullName: 1,
-                email: 1,
-              },
-            },
-          ],
-        },
-      },
-      {
-        $unwind: "$author",
-      },
-      {
         $addFields: {
           participantCount: { $size: "$participants" },
         },
@@ -48,6 +29,7 @@ export default function quizGetAllController(
           __v: 0,
           participants: 0,
           questions: 0,
+          author: 0,
         },
       },
     ]);

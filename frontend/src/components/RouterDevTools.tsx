@@ -1,7 +1,6 @@
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { FC } from "react";
 
-const RouterDevTools: FC = () => {
+const RouterDevTools: React.FC = () => {
   return <TanStackRouterDevtools initialIsOpen={false} />;
 };
 

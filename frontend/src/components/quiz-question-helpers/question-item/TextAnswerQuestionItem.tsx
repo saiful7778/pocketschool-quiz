@@ -1,11 +1,11 @@
-import { FC } from "react";
+import type { TextAnswer, TextAnswerAnswer } from "@/types";
 
 interface TextAnswerQuestionItemProps {
-  correctAnswer: string;
-  answer: string;
+  correctAnswer: TextAnswer["correctAnswer"];
+  answer: TextAnswerAnswer["answer"];
 }
 
-const TextAnswerQuestionItem: FC<TextAnswerQuestionItemProps> = ({
+const TextAnswerQuestionItem: React.FC<TextAnswerQuestionItemProps> = ({
   correctAnswer,
   answer,
 }) => {

@@ -1,10 +1,11 @@
 import Loading from "@/components/Loading";
 import useStateData from "@/hooks/useStateData";
-import type { LayoutProps } from "@/types/types";
+import type { LayoutProps } from "@/types";
 import { Navigate } from "@tanstack/react-router";
-import { FC } from "react";
 
-const ClassroomAdminProtector: FC<Readonly<LayoutProps>> = ({ children }) => {
+const ClassroomAdminProtector: React.FC<Readonly<LayoutProps>> = ({
+  children,
+}) => {
   const { classroomRole, classroomDetailsLoading } = useStateData();
 
   if (classroomDetailsLoading) {

@@ -12,13 +12,13 @@ import toast from "@/lib/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { getRouteApi } from "@tanstack/react-router";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const routeData = getRouteApi("/authentication/login");
 
-const Login: FC = () => {
+const Login: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { login } = useAuth();
   const { redirect } = routeData.useSearch();

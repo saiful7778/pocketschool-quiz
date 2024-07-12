@@ -1,4 +1,3 @@
-import { FC } from "react";
 import Quizzes from "./sections/Quizzes";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { MessageCircleCode } from "lucide-react";
@@ -6,7 +5,7 @@ import Button from "@/components/ui/button";
 
 const routeData = getRouteApi("/private/classroom/$classroomId/");
 
-const AdminClassroomMain: FC = () => {
+const AdminClassroomMain: React.FC = () => {
   const { classroomId } = routeData.useParams();
 
   return (

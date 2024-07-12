@@ -1,17 +1,15 @@
 import { useAxiosSecure } from "@/hooks/useAxios";
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Loading from "../Loading";
 import { getRouteApi } from "@tanstack/react-router";
 import useQuiz from "@/hooks/useQuiz";
 import Button from "../ui/button";
-import type { AnswerType } from "@/types/question";
-import type { SubmitResult } from "@/types/quiz";
-import type { ApiResponse } from "@/types/apiResponse";
+import type { ApiResponse, AnswerType, SubmitResult } from "@/types";
 import CircleProgressBar from "../CircleProgressBar";
 
 const routeData = getRouteApi("/private/classroom/$classroomId/quiz/$quizId");
 
-const ComplateQuiz: FC = () => {
+const ComplateQuiz: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState<Error["message"]>("");

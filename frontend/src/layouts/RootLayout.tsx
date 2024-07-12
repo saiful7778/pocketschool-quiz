@@ -3,10 +3,9 @@ import AuthContextProvider from "@/context/AuthContext";
 import Navbar from "@/components/shared/Navbar";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import RouterDevTools from "@/components/RouterDevTools";
-import { FC } from "react";
 import Footer from "@/components/shared/Footer";
 
-const RootLayout: FC = () => {
+const RootLayout: React.FC = () => {
   return (
     <AuthContextProvider>
       <div className="min-h-screen w-full overflow-x-hidden">

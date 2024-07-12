@@ -1,16 +1,16 @@
 import { MessageCircleCode } from "lucide-react";
-import { FC, ReactNode, memo } from "react";
+import { memo } from "react";
 import CountdownTimer from "./CountdownTimer";
 
 interface QuestionAnswerBaseProps {
-  children: ReactNode;
+  children: React.ReactNode;
   questionNO: number;
   questionText: string;
   timeLimit: number;
   questionLimit: number;
 }
 
-const QuestionAnswerBase: FC<QuestionAnswerBaseProps> = ({
+const QuestionAnswerBase: React.FC<QuestionAnswerBaseProps> = ({
   questionNO,
   questionText,
   timeLimit,
@@ -40,7 +40,7 @@ const QuestionAnswerBase: FC<QuestionAnswerBaseProps> = ({
   );
 };
 
-const MemoizedChildren = memo(({ children }: { children: ReactNode }) => {
+const MemoizedChildren = memo(({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 });
 

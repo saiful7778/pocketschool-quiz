@@ -1,12 +1,10 @@
-import { FC } from "react";
-
 interface CircleProgressBarProps {
   percentage: number;
   size?: number;
   strokeWidth?: number;
 }
 
-const CircleProgressBar: FC<CircleProgressBarProps> = ({
+const CircleProgressBar: React.FC<CircleProgressBarProps> = ({
   percentage,
   size = 190,
   strokeWidth = 20,

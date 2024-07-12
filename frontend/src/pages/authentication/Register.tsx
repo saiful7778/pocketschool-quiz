@@ -18,13 +18,13 @@ import { registerSchema } from "@/lib/schemas/authenticationSchema";
 import toast from "@/lib/toast/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, getRouteApi } from "@tanstack/react-router";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const routeData = getRouteApi("/authentication/register");
 
-const Register: FC = () => {
+const Register: React.FC = () => {
   const { classroomId } = routeData.useSearch();
   const [loading, setLoading] = useState<boolean>(false);
   const axios = useAxios();

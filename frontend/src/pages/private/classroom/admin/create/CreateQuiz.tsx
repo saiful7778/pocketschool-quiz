@@ -4,20 +4,20 @@ import { quizSchema } from "@/lib/schemas/quizSchema";
 import toast from "@/lib/toast/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
-import { FC } from "react";
 import { z } from "zod";
 
 const routeData = getRouteApi(
   "/private/classroom/$classroomId/classroomAdmin/admin/quiz/create",
 );
 
-const CreateQuiz: FC = () => {
+const CreateQuiz: React.FC = () => {
   const { classroomId } = routeData.useParams();
   const navigate = routeData.useNavigate();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
+    mutationKey: ["create", "quiz"],
     mutationFn: async (quizData: z.infer<typeof quizSchema>) => {
       return axiosSecure.post("/api/quizzes/admin", quizData, {
         params: { classroomId },
@@ -82,6 +82,7 @@ const CreateQuiz: FC = () => {
               { text: "option-NO-1" },
               { text: "option-NO-2" },
               { text: "option-NO-3" },
+              { text: "option-NO-4" },
             ],
             correctAnswerIndex: 1,
           },
@@ -94,6 +95,7 @@ const CreateQuiz: FC = () => {
               { text: "option-No-1" },
               { text: "option-No-2" },
               { text: "option-No-3" },
+              { text: "option-No-4" },
             ],
             correctAnswerIndices: [0, 2],
           },

@@ -2,20 +2,15 @@ import Loading from "@/components/Loading";
 import ErrorPage from "@/components/shared/Error";
 import UndefinedData from "@/components/shared/UndefinedData";
 import QuizParticipantTable from "@/components/tables/quiz-participant/QuizParticipantTable";
-import { useAxiosSecure } from "@/hooks/useAxios";
-import { ApiResponse } from "@/types/apiResponse";
-import { QuizData } from "@/types/quiz";
-import { useQuery } from "@tanstack/react-query";
+import useQuizData from "@/hooks/useQuizData";
 import { getRouteApi } from "@tanstack/react-router";
-import { FC } from "react";
 
 const routeData = getRouteApi(
   "/private/classroom/$classroomId/classroomAdmin/admin/quiz/$quizId",
 );
 
-const QuizDetails: FC = () => {
+const QuizDetails: React.FC = () => {
   const { classroomId, quizId } = routeData.useParams();
-  const axiosSecure = useAxiosSecure();
 
   const {
     data: quiz,
@@ -24,19 +19,7 @@ const QuizDetails: FC = () => {
     isError,
     error,
     refetch,
-  } = useQuery({
-    queryKey: ["quiz", "admin", { classroomId, quizId }],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get<ApiResponse<QuizData>>(
-        `/api/quizzes/admin/${quizId}`,
-        { params: { classroomId } },
-      );
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-      return data.data;
-    },
-  });
+  } = useQuizData(classroomId, quizId);
 
   if (isLoading) {
     return <Loading />;

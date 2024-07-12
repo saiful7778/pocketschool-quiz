@@ -1,6 +1,4 @@
-import { FC } from "react";
-
-const PinPointAnswer: FC = () => {
+const PinPointAnswer: React.FC = () => {
   return <div>PinPointAnswer</div>;
 };
 

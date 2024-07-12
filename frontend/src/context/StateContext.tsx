@@ -1,29 +1,33 @@
-import type { LayoutProps } from "@/types/types";
-import { FC, createContext, useState } from "react";
+import type { LayoutProps } from "@/types";
+import { createContext, useState } from "react";
 
 interface StateContextProps {
   classroomRole: "user" | "admin" | null;
-  setClassroomRole: React.Dispatch<
-    React.SetStateAction<"user" | "admin" | null>
-  >;
+  handleClassroomRole: (role: "user" | "admin" | null) => void;
   classroomDetailsLoading: boolean;
   setClassroomDetailsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const StateContext = createContext<StateContextProps | null>(null);
 
-const StateContextProvider: FC<Readonly<LayoutProps>> = ({ children }) => {
+const StateContextProvider: React.FC<Readonly<LayoutProps>> = ({
+  children,
+}) => {
   const [classroomRole, setClassroomRole] = useState<
     StateContextProps["classroomRole"] | null
   >(null);
   const [classroomDetailsLoading, setClassroomDetailsLoading] =
     useState<boolean>(true);
 
+  const handleClassroomRole = (role: StateContextProps["classroomRole"]) => {
+    setClassroomRole((prev) => (prev === role ? prev : role));
+  };
+
   return (
     <StateContext.Provider
       value={{
         classroomRole,
-        setClassroomRole,
+        handleClassroomRole,
         classroomDetailsLoading,
         setClassroomDetailsLoading,
       }}

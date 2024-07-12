@@ -2,9 +2,8 @@ import Avatar from "@/components/ui/avatar";
 import Button from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
 import toast from "@/lib/toast/toast";
-import { FC } from "react";
 
-const Profile: FC = () => {
+const Profile: React.FC = () => {
   const { forgetPassword, user, userData } = useAuth();
 
   const sendForgetPassword = async () => {
