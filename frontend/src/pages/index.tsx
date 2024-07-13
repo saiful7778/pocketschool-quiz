@@ -10,7 +10,7 @@ import Home from "./Home";
 import Login from "./authentication/Login";
 import Classroom from "./private/classroom/Classroom";
 import Quiz from "./private/classroom/Quiz";
-import Developer from "./private/Developer";
+import Report from "./private/Report";
 
 export {
   RootLayout,
@@ -24,5 +24,5 @@ export {
   Classroom,
   ClassroomAdminLayout,
   SuperAdminLayout,
-  Developer,
+  Report,
 };

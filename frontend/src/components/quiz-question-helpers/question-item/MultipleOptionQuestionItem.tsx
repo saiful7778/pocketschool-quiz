@@ -58,10 +58,14 @@ const Option = ({
         )
       )}
       <span className="mr-auto text-left">{text}</span>
-      {correctAnswer && (
-        <span className="text-xs italic opacity-80">Correct answer</span>
-      )}
-      {answer && <span className="text-xs italic opacity-80">Your answer</span>}
+      <div className="flex flex-col gap-1 md:flex-row">
+        {correctAnswer && (
+          <span className="text-xs italic opacity-80">Correct answer</span>
+        )}
+        {answer && (
+          <span className="text-xs italic opacity-80">Your answer</span>
+        )}
+      </div>
     </div>
   );
 };

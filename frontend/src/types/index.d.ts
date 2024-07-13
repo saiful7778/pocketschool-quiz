@@ -7,6 +7,7 @@ export * from "./apiResponse";
 export * from "./user";
 export * from "./quiz";
 export * from "./question";
+export * from "./report";
 
 export interface LayoutProps {
   children: React.ReactNode;

@@ -1,32 +1,32 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import serverHelper from "../../../utils/serverHelper";
-import { devMessageModel } from "../../../models/devMessage.model";
-import type { DevMessage } from "../../../types/devMessage.type";
+import { reportModel } from "../../../models/report.model";
+import type { Report } from "../../../types/report.type";
 import inputCheck from "../../../utils/inputCheck";
 
-export default function devMessageCreateController(
+export default function reportCreateController(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   const { userId } = req.query as { userId: string };
   const { title, category, message } = req.body as {
-    title: DevMessage["title"];
-    category: DevMessage["category"];
-    message: DevMessage["message"];
+    title: Report["title"];
+    category: Report["category"];
+    message: Report["message"];
   };
 
   const check = inputCheck([title, category, message], next);
   if (!check) return;
 
   serverHelper(async () => {
-    const devMessage = await devMessageModel.create({
+    const report = await reportModel.create({
       user: userId,
       title,
       category,
       message,
     });
 
-    res.status(201).json({ success: true, data: devMessage });
+    res.status(201).json({ success: true, data: report });
   }, next);
 }

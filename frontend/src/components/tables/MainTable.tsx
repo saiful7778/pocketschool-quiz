@@ -54,36 +54,44 @@ const MainTable = <TData,>({
 
   return (
     <>
-      <div className="flex items-center gap-4">
+      <div className="my-4 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <Input
           placeholder={placeholder}
           value={(table.getState().globalFilter as string) ?? ""}
           onChange={handleSearchChange}
-          className="my-4 mr-auto w-full max-w-xs"
+          className="w-full max-w-xs"
         />
-
-        <Select
-          value={`${table.getState().pagination.pageSize}`}
-          onValueChange={(value) => {
-            table.setPageSize(Number(value));
-          }}
-        >
-          <Select.trigger className="h-9 w-fit">
-            <Select.value placeholder={table.getState().pagination.pageSize} />
-          </Select.trigger>
-          <Select.content side="left">
-            {tableRowPerPage.map((pageSize) => (
-              <Select.item key={pageSize} value={`${pageSize}`}>
-                {pageSize}
-              </Select.item>
-            ))}
-          </Select.content>
-        </Select>
-        {typeof reFetch !== "undefined" && (
-          <Button onClick={reFetch} variant="default" size="md">
-            {isFetching ? <Spinner size={20} /> : "Refrash"}
-          </Button>
-        )}
+        <div className="flex gap-4">
+          <Select
+            value={`${table.getState().pagination.pageSize}`}
+            onValueChange={(value) => {
+              table.setPageSize(Number(value));
+            }}
+          >
+            <Select.trigger className="h-9 w-fit">
+              <Select.value
+                placeholder={table.getState().pagination.pageSize}
+              />
+            </Select.trigger>
+            <Select.content side="left">
+              {tableRowPerPage.map((pageSize) => (
+                <Select.item key={pageSize} value={`${pageSize}`}>
+                  {pageSize}
+                </Select.item>
+              ))}
+            </Select.content>
+          </Select>
+          {typeof reFetch !== "undefined" && (
+            <Button
+              onClick={reFetch}
+              className="w-full"
+              variant="default"
+              size="md"
+            >
+              {isFetching ? <Spinner size={20} /> : "Refrash"}
+            </Button>
+          )}
+        </div>
       </div>
       <Table>
         <Table.header>

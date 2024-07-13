@@ -17,8 +17,8 @@ export const dashboardLinks: dashboardLinkTypes[] = [
     access: ["user", "admin", "superAdmin"],
   },
   {
-    navName: "Developer",
-    path: "/developer",
+    navName: "Report",
+    path: "/report",
     access: ["user", "admin", "superAdmin"],
   },
   {

@@ -1,7 +1,26 @@
 import { Schema, model } from "mongoose";
-import type { DevMessage } from "../types/devMessage.type";
+import type { Report, ResponseType } from "../types/report.type";
 
-const devMessageSchema = new Schema<DevMessage>(
+const responseSchema = new Schema<ResponseType>(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+    message: {
+      type: String,
+      min: [1, "Message minimum 1 cher."],
+      max: [500, "Message is too long"],
+    },
+    close: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true, _id: false }
+);
+
+const reportSchema = new Schema<Report>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -11,7 +30,7 @@ const devMessageSchema = new Schema<DevMessage>(
     title: {
       type: String,
       min: [1, "title minimum 1 cher."],
-      max: [30, "title is too long"],
+      max: [50, "title is too long"],
       required: [true, "Title is required"],
     },
     category: {
@@ -25,8 +44,9 @@ const devMessageSchema = new Schema<DevMessage>(
       max: [500, "Message is too long"],
       required: [true, "Message is required"],
     },
+    response: responseSchema,
   },
   { timestamps: true }
 );
 
-export const devMessageModel = model<DevMessage>("message", devMessageSchema);
+export const reportModel = model<Report>("report", reportSchema);

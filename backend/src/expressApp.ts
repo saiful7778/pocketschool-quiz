@@ -13,7 +13,7 @@ import devDebug from "./utils/devDebug";
 import userRoute from "./apis/user/userRoute";
 import classroomRoute from "./apis/classroom/classroomRoute";
 import quizRoute from "./apis/quiz/quizRoute";
-import developerRoute from "./apis/developer/developerRoute";
+import reportRoute from "./apis/report/reportRoute";
 // import imageRoute from "./apis/image/imageRoute";
 
 export default function expressApp() {
@@ -65,7 +65,7 @@ export default function expressApp() {
   app.use("/api/users", userRoute);
   app.use("/api/classrooms", classroomRoute);
   app.use("/api/quizzes", quizRoute);
-  app.use("/api/developer", developerRoute);
+  app.use("/api/report", reportRoute);
 
   app.use((_req: Request, res: Response) => {
     res.status(404).json({

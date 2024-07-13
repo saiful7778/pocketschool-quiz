@@ -15,7 +15,7 @@ import {
   Classroom,
   Quiz,
   SingleClassroomLayout,
-  Developer,
+  Report,
 } from "@/pages";
 import { z } from "zod";
 import ErrorPage from "@/components/shared/Error";
@@ -139,10 +139,10 @@ const classroomDetailsRoute = createRoute({
   ),
 });
 
-const developerRoute = createRoute({
+const reportRoute = createRoute({
   getParentRoute: () => privateLayoutRoute,
-  path: "/developer",
-  component: Developer,
+  path: "/report",
+  component: Report,
 });
 
 const profileRoute = createRoute({
@@ -182,7 +182,7 @@ const routeTree = rootLayoutRoute.addChildren([
         ]),
       ]),
     ]),
-    developerRoute,
+    reportRoute,
     profileRoute,
     superAdminRoute.addChildren([usersRoute]),
   ]),
