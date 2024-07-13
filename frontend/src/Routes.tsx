@@ -15,6 +15,7 @@ import {
   Classroom,
   Quiz,
   SingleClassroomLayout,
+  Developer,
 } from "@/pages";
 import { z } from "zod";
 import ErrorPage from "@/components/shared/Error";
@@ -138,9 +139,15 @@ const classroomDetailsRoute = createRoute({
   ),
 });
 
+const developerRoute = createRoute({
+  getParentRoute: () => privateLayoutRoute,
+  path: "/developer",
+  component: Developer,
+});
+
 const profileRoute = createRoute({
   getParentRoute: () => privateLayoutRoute,
-  path: "profile",
+  path: "/profile",
   component: lazyRouteComponent(() => import("@/pages/private/Profile")),
 });
 
@@ -175,6 +182,7 @@ const routeTree = rootLayoutRoute.addChildren([
         ]),
       ]),
     ]),
+    developerRoute,
     profileRoute,
     superAdminRoute.addChildren([usersRoute]),
   ]),

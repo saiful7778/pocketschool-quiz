@@ -20,11 +20,15 @@ const Sidebar: React.FC = () => {
             </Button>
           </DropdownMenu.trigger>
           <DropdownMenu.content align="end">
-            {dashboardLinks.map((ele, idx) => (
-              <DropdownMenu.item key={"dashboard-menu-link" + idx} asChild>
-                <Navlink path={ele.path} navName={ele.navName} />
-              </DropdownMenu.item>
-            ))}
+            {dashboardLinks.map((ele, idx) => {
+              if (ele.access.includes(userData?.role!)) {
+                return (
+                  <DropdownMenu.item key={"dashboard-menu-link" + idx} asChild>
+                    <Navlink path={ele.path} navName={ele.navName} />
+                  </DropdownMenu.item>
+                );
+              }
+            })}
             <DropdownMenu.separator />
             <DropdownMenu.item asChild>
               <Navlink path="/profile" navName="Profile" />
@@ -37,26 +41,7 @@ const Sidebar: React.FC = () => {
         x-chunk="dashboard-04-chunk-0"
       >
         {dashboardLinks.map((ele, idx) => {
-          if (userData?.role === "superAdmin") {
-            return (
-              <Navlink
-                key={"dashboard-link" + idx}
-                path={ele.path}
-                navName={ele.navName}
-              />
-            );
-          } else if (
-            userData?.role === "admin" &&
-            (ele.access === "user" || ele.access === "admin")
-          ) {
-            return (
-              <Navlink
-                key={"dashboard-link" + idx}
-                path={ele.path}
-                navName={ele.navName}
-              />
-            );
-          } else if (userData?.role === "user" && ele.access === "user") {
+          if (ele.access.includes(userData?.role!)) {
             return (
               <Navlink
                 key={"dashboard-link" + idx}
