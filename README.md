@@ -2,6 +2,8 @@
 
 **Live link :** [pocket-school-quiz.web.app](https://pocket-school-quiz.web.app/)
 
+![Screenshot from 2024-07-13 11-23-16](https://github.com/user-attachments/assets/e8ddbfc2-f12c-42d7-bf33-b039c3f7c44f)
+
 ## Table of Contents
 
 1. [Introduction](#introduction)
